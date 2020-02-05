@@ -40,3 +40,5 @@ module.exports = pool;
 //         database:'mydb'
 //     }
 // }; 
+// simon 
+console.log('si jala ');
