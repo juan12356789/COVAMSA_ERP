@@ -31,3 +31,12 @@ pool.getConnection((err,conexion)=>{
 // para utilizar la conexion 
 pool.query = promisify(pool.query); // utilizar asyn o promesas 
 module.exports = pool; 
+
+// module.exports = {
+//     database:{
+//         host:'localhost',
+//         user:'root',
+//         password:'',
+//         database:'mydb'
+//     }
+// }; 
