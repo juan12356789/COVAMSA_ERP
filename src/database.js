@@ -42,3 +42,5 @@ module.exports = pool;
 // }; 
 // simon 
 console.log('si jala ');
+console.log('hola');
+
