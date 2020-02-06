@@ -4,7 +4,7 @@ const database ={
     host: 'localhost',
     user:'root',
     password:'',
-    database:'mydb'
+    database:'covamsa_desarrollo'
     
 }
 
@@ -32,15 +32,5 @@ pool.getConnection((err,conexion)=>{
 pool.query = promisify(pool.query); // utilizar asyn o promesas 
 module.exports = pool; 
 
-// module.exports = {
-//     database:{
-//         host:'localhost',
-//         user:'root',
-//         password:'',
-//         database:'mydb'
-//     }
-// }; 
-// simon 
-console.log('si jala ');
-console.log('hola');
+
 
