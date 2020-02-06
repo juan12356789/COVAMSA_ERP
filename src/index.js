@@ -11,9 +11,7 @@ const {database} = require('./key');
 //  cambiar conexion en la  otras areas  
 const app = express();
 require('./lib/passport');
-console.log('hola');
-console.log('si');
-console.log('simon|');
+
 
 
 // settings 
