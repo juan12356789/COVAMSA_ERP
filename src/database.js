@@ -2,9 +2,9 @@ const mysql  = require('mysql');
 const  {promisify} = require('util');// se utiliza para usar promesas
 const database ={
     host: 'localhost',
-    user:'root',
-    password:'',
-    database:'covamsa_desarrollo'
+    user:'desarrollo_covamsa',
+    password:'covamsa123',
+    database:'covamsa_desarroll'
     
 }
 
@@ -25,6 +25,8 @@ pool.getConnection((err,conexion)=>{
         }
     }
     if(conexion) conexion.release();
+    console.log(err);
+    
     console.log('db is connected');
     
 });
