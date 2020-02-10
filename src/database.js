@@ -4,7 +4,7 @@ const database ={
     host: 'localhost',
     user:'desarrollo_covamsa',
     password:'covamsa123',
-    database:'covamsa_desarroll'
+    database:'covamsa_desarrollo'
     
 }
 
