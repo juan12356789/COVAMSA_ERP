@@ -1,9 +1,9 @@
 const mysql  = require('mysql'); 
 const  {promisify} = require('util');// se utiliza para usar promesas
 const database ={
-    host: 'localhost',
-    user:'desarrollo_covamsa',
-    password:'covamsa123',
+    host:'localhost',
+    user:'covamsa_covamsa',
+    password:'Covamsa2020proyectoerp',
     database:'covamsa_desarrollo'
     
 }
