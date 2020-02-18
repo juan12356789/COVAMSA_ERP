@@ -56,6 +56,7 @@ app.use((req,res,next)=>{// se usa para ver que variable son accedidadas desde l
 });
 // routes 
 app.use(require('./routes/login'));
+app.use(require('./routes/menu/menu'));
 app.use('/ventas',require('./routes/ventas/ventas')); 
 
 

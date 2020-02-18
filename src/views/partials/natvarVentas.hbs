@@ -7,24 +7,29 @@
 </style>
  
 {{!-- inicio para visualiazar el navbar con sus respectivos href --}}
-  <nav class="navbar navbar-expand  navbar-light bg-dark ml-7">
-        <div id="canvas">
-          <canvas id="canvas" width="300" height="50"></canvas>
-        </div>
-        <div className=" collapse navbar-collapse" >
-          <ul class="navbar-nav m-auto">
-          <li class="nav-item ">
-              <a class="nav-link text-white text-uppercase ml-1" href="#"></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white text-uppercase ml-5 font-italic" href="#">Alta Pedidos</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white text-uppercase ml-5 font-italic" href="#">Busqueda de Pedidos</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white text-uppercase ml-5 font-italic" href="#">Busqueda de Orden de Compra</a>
-            </li>
-         </ul>
-        </div>
-    </nav><br>
+
+
+    <nav class="navbar navbar-expand  navbar-light bg-dark ml-7">
+      <div id="canvas">
+      <canvas id="canvas" width="200" height="50"></canvas>
+      </div>
+  <div class="collapse navbar-collapse" id="">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#"><span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link text-white text-uppercase ml-1" href="#"></a>
+      </li>
+      {{#each user}}
+      <li class="nav-item dropdown">
+         <a class="nav-link text-white text-uppercase ml-5 font-italic" href="{{this.direccion}}">{{this.modulos}}</a>
+      </li>
+      {{/each }}
+    </ul>
+    {{!-- <form class=""> --}}
+      <a class="btn btn-link" href="/logout"><button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Cerrar Sesión</button></a>
+    {{!-- </form> --}}
+  </div>
+</nav>
+    <br>

@@ -21,7 +21,8 @@ passport.serializeUser((user, done)=> {
         done(null, user.idacceso);
 });
 passport.deserializeUser( async (id, done)=> {
-        const rows =   await pool.query('select * from acceso where idacceso = ?',[id]);
-        done(null, rows[0]);
+        const rows =   await pool.query('SELECT   idacceso,c.nombre dep , d.nombre modulos,d.direccion,d.descripcion FROM  empleados inner join  empleados_departamentos using(id_empleados) inner join departamentos c using(id_departamento) inner join modulos d using(id_departamento)  where idacceso = ? ',[id]);
+        console.log(rows);
+        done(null, rows);
 });
 
