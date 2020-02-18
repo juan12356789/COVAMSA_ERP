@@ -5,6 +5,7 @@ const  passport =  require('passport');
 const {isLoggedIn}= require('../lib/auth');
 
 router.get('/',(req,res)=>{
+    if(req.user)  return res.redirect('/menu');
     res.render('links/login/login');
 });
 
