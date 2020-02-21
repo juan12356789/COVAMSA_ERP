@@ -5,4 +5,4 @@ module.exports = {
         password:'Covamsa2020proyectoerp',
         database:'covamsa_desarrollo'
     }
-}; 
+};

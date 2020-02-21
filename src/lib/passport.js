@@ -11,7 +11,7 @@ passport.use('local.signin', new Strategy({
    if(rows.length > 0){
        const user = rows[0]; 
         // const validPassword =   await helpers.matchPassword(password,user.password); validar contraseña convertida 
-        done(null,user)
+        done(null,user);
    }else{
         done(null,false); 
    }
