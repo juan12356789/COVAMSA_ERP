@@ -4,7 +4,6 @@ module.exports = {
             if(req.isAuthenticated()){ // si esta logeado continua
                 return next();
             }// si no de regreso al login
-            req.flash('error','Ingrese todos los campos requeridos ' ); 
             return  res.redirect('/'); 
             
         }

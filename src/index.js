@@ -51,7 +51,8 @@ app.use(morgan('dev')); // se utiliza para ver lo que llega al servidor
 // Global Variables 
 app.use((req,res,next)=>{// se usa para ver que variable son accedidadas desde la aplicación 
    app.locals.success  = req.flash('success');
-   app.locals.error  =req.flash('error'); 
+   app.locals.error  = req.flash('error');
+   app.locals.user  =req.user; 
     next(); // toma la infotmacion del usuario 
 });
 // routes 
