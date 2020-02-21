@@ -5,6 +5,8 @@ module.exports = {
                 return next();
             }// si no de regreso al login
             return  res.redirect('/'); 
+            console.log('Hols');
+            
         }
         // , el usuario  ya esta logeado 
         // isNotLoggedIn(){
