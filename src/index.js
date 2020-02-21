@@ -36,8 +36,12 @@ app.use(session({
     secret: 'mysqlcovamsa',
     resave:false,
     saveUninitialized:false,
+    expires: new Date(Date.now() + (30 * 86400 * 1000)),
     store: new MySQLStore(database)
 }));
+console.log(new Date(Date.now() + (1000 *18000  )));
+
+
 app.set('view engine','.hbs'); //para que funcione las plantillas 
 app.use(express.urlencoded({extended:false}));// sirve para aceptar los datos que me manden los usuarios
 app.use(express.json()); //para aceptar json 
@@ -59,7 +63,6 @@ app.use((req,res,next)=>{// se usa para ver que variable son accedidadas desde l
 app.use(require('./routes/login'));
 app.use(require('./routes/menu/menu'));
 app.use('/ventas',require('./routes/ventas/ventas')); 
-
 
 // Public 
 app.use(express.static(path.join(__dirname,'public')));
