@@ -23,14 +23,19 @@ const storage=multer.diskStorage({
   const  upload=multer({storage:storage}); 
 
   router.get('/',isLoggedIn,async(req,res)=>{
-    const clientes  = await pool.query("select * from  empleados a inner join clientes b using(id_empleados) where a.idacceso = ?",[req.user.idacceso]);    
+    
+    const clientes  = await pool.query("select * from  empleados a inner join clientes b using(id_empleados) where a.idacceso = ?",[req.user[0].idacceso]); 
     res.render('links/ventas/formularioVentas',{clientes});
+
   });
-  
+
   router.post('/',async(req,res)=>{
-    const clientes  = await pool.query("SELECT * FROM clientes  where  nombre like ?",'%'+[req.body.clientes]+'%');
-    res.send(clientes)
+    const clientes  = await pool.query("SELECT * FROM clientes  where  nombre like ?",'%'+[req.body.busqueda]+'%');
+    res.send(clientes); 
+
   });
+
+
 
   router.post("/add",upload.array('gimg', 12), async(req,res)=> {
 

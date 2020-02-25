@@ -1,7 +1,7 @@
 
+
 {{!-- formulario para dar de alta un pedido con los campos que se requieren segun las especificaciones dichas anteriormente --}}
 <form action="/ventas/add" enctype="multipart/form-data" method="post" id="imgct" class="columinput">
-<br><br>
    <div class="container">
       <div class="form-group row  justify-content-center ">
         <label for="oc" class="col-sm-2 col-form-label">Orden de Compra:</label>
@@ -35,13 +35,7 @@
           {{#each cliente }}
           <input type="text"  class="form-control border border-secondary" value="{{nombre}}" name="cliente" >
           {{/each}}
-          {{!-- esta es la chida desde un principio --}}
-          {{!-- <a class="btn btn-light btn-lg btn-block " data-toggle="modal" href="/ventas/busquedaCliente" role="button" aria-expanded="false" aria-controls="collapseExample">
-            Tus Clientes
-          </a> --}}
-
-        {{!-- ventana emergente para Cliente --}}
-        <button type="button" class="btn btn-dark btn-lg btn-block " data-toggle="modal" data-target="#staticBackdrop"  href="/ventas/busquedaCliente" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <button type="button" class="btn btn-dark btn-lg btn-block "  id="prueba" data-toggle="modal" data-target="#staticBackdrop"  href="/ventas/busquedaCliente" role="button" aria-expanded="false" aria-controls="collapseExample">
         Tus Clientes
         </button>
         </div>
@@ -59,11 +53,11 @@
         </button>
       </div>
       <div class="modal-bodyss">
-          {{!-- <div class="col-sm-6"> --}}
-          <center>Busqueda Cliente: <input type="text"  id="serch" class="col-sm-8 "></center>
-          <div id="clientesPorBusqueda"></div>
-          <div id="clientes"><br>
+          <center>Busqueda Cliente: <input type="text"  id="inputBusqueda" class="col-sm-8"></center>
 
+       <div id="clientesPorBusqueda"></div>
+          <div id="clientes"><br> 
+           <div id="ocultar" >
           <table class="table table-bordered-responsive-sm justify-content-center">
            <thead class="thead-light">
            <tr>
@@ -80,6 +74,7 @@
            </tr>
            {{/each}}
          </table>
+         </div>
         </div>
         </div>
       </div>
@@ -124,23 +119,23 @@
         </div>
       </div>
     </div> 
-   </div>
-
  </form>
  <script
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
+
 <script type=" text/javascript">
-    $('#clientesPorBusqueda').hide(); 
-    $('#serch').keyup(function (e) {  
-     if($('#serch').val()){ 
-        let search = $('#serch').val();
-        let data  = {
-          clientes  : search
-        }
-        $.post("/ventas", data,function (data) {
-          console.log(data); 
+    $('#clientesPorBusqueda').hide();
+
+  $("#prueba").click(function (e) {
+      $('.col-sm-8').val('');
+      $("#ocultar").show();
+      $("#clientesPorBusqueda").hide(); 
+      $('#inputBusqueda').keyup(function (e) {  
+     if($('#inputBusqueda').val()){ 
+        $.post("/ventas",{busqueda: $("#inputBusqueda").val()},function (data) {
+          $("#ocultar").hide(); 
             let tabla  = `<table class="table table-bordered-responsive-sm">
                 <thead class="thead-light">
            <tr>
@@ -159,14 +154,14 @@
                 `
             });
             tabla  += "</table>"; 
-            $("#clientes").hide(); 
             $("#clientesPorBusqueda").show();
             document.getElementById('clientesPorBusqueda').innerHTML  = tabla; 
             console.log(tabla); 
               
         });
-     }
-    }); 
+       }
+     }); 
+    });
 
     let clientes = (nombre)=>{
       let mandar  = `
