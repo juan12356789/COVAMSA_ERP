@@ -36,12 +36,13 @@ app.use(session({
     secret: 'mysqlcovamsa',
     resave:false,
     saveUninitialized:false,
-    expires: new Date(Date.now() + (30 * 86400 * 1000)),
+    expires: new Date(Date.now() + (1000 * 60 * 1 )),
     store: new MySQLStore(database)
 }));
-console.log(new Date(Date.now() + (1000 *18000  )));
+console.log(new Date(Date.now() + (1000 * 60 * 1 )));
+console.log(new Date(Date.now() ));
 
-
+ 
 app.set('view engine','.hbs'); //para que funcione las plantillas 
 app.use(express.urlencoded({extended:false}));// sirve para aceptar los datos que me manden los usuarios
 app.use(express.json()); //para aceptar json 
