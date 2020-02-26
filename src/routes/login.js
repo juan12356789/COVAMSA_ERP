@@ -9,6 +9,8 @@ router.get('/',(req,res)=>{
     res.render('links/login/login');
 });
 
+
+
 router.post('/',(req,res,next)=>{
     passport.authenticate('local.signin',{
         successRedirect: '/menu',

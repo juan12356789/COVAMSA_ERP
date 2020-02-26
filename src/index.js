@@ -39,8 +39,8 @@ app.use(session({
     expires: new Date(Date.now() + (1000 * 60 * 1 )),
     store: new MySQLStore(database)
 }));
-console.log(new Date(Date.now() + (1000 * 60 * 1 )));
-console.log(new Date(Date.now() ));
+// console.log(new Date(Date.now() + (1000 * 60 * 1 )));
+// console.log(new Date(Date.now() ));
 
  
 app.set('view engine','.hbs'); //para que funcione las plantillas 
