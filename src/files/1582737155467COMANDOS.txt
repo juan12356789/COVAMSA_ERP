@@ -1,2 +1,0 @@
-npm i babel-cli  babel-core babel-loader babel-preset-react babel-preset-env css-loader html-webpack-plugin  node-sass nodemon sass-loader style-loader webpack webpack-dev-middleware webpack-livereload-plugin mysql
-https://www.youtube.com/watch?v=HPIjjFGYSJ4
