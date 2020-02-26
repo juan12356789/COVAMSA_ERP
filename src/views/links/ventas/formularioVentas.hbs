@@ -10,7 +10,7 @@
         <label for="oc" class="col-sm-2 col-form-label">Orden de Compra:</label>
         <div class="col-sm-6">
           <input type="text" class="form-control valid border border-secondary" name="orden" pattern="[A-Za-z0-9]+" title="Campo Obligatorio"required>
-            <input type="file" id="gimg" name="gimg" class="form-control-file" style="color: black"/></center>
+            <input type="file" id="gimg" name="gimg" class="form-control-file"/></center>
         </div>
       </div>
       <div >
@@ -26,10 +26,9 @@
           {{!-- </div> --}}
         </div>
       </div>
-
       <br>
       <center>
-       <div id="inputCliente"></div> 
+      <div id="inputCliente"></div> 
       </center> 
      
       <div class="form-group row justify-content-center"> 
@@ -81,13 +80,11 @@
         </div>
         </div>
       </div>
-      <div class="modal-footer">        
-      </div>
     </div>
   </div>
 </div>
 
-<div class="container">
+<div class="container" style="background-color:#FFFFFF;">
       <div class="form-group row justify-content-center">
         <label for=""  class="col-sm-2 col-form-label ">Ruta:</label>
         <div class="col-sm-6">
@@ -108,6 +105,24 @@
         </div>
       </div>
       
+    {{!-- FALTA POR DEFINIR QUE CAMPOS SE VAN A NECESITAR
+    Y COMO VA SER SU REQUERIMIENTO --}}
+
+    {{!-- opciones de pago para el cliente --}}
+      <div class="form-group row justify-content-center">
+      <label for="" class="col-sm-2 col-form-label">Tipo de Pago:</label>
+      <div class="col-sm-6">
+      <select class="custom-select">
+      <option selected>Open this select menu</option>
+      <option value="1">Contra Entrega</option>
+      <option value="2">Crédito</option>
+      <option value="3">Transferencia</option>
+      </select>
+      </div>
+      </div>
+    {{!-- fin de opciones de pago --}}
+
+
       <div class="form-group row justify-content-center">
         <label for="" class="col-sm-2 col-form-label" >Observaciones:</label>
         <div class="col-sm-6">
@@ -123,6 +138,8 @@
       </div>
     </div> 
  </form>
+
+{{!-- codigo javascript --}}
  <script
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
