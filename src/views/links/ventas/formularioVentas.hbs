@@ -20,7 +20,7 @@
       </div>
 
       <div class="form-group row justify-content-center">
-        <label for="" class="col-sm-2 col-form-label">No. de Pedido:</label>
+        <label for="" class="col-sm-2 col-form-label">*No. de Pedido:</label>
         <div class="col-sm-6">
           <input type="text"  class="form-control valid border border-secondary" name="numeroCotizacion" pattern="[A-Za-z0-9]+" title="Campo Obligatorio" required>
           {{!-- <div class="container"> --}}
@@ -34,7 +34,7 @@
       </center> 
      
       <div class="form-group row justify-content-center"> 
-        <label for="" class="col-sm-2 col-form-label">Cliente:</label>
+        <label for="" class="col-sm-2 col-form-label">*Cliente:</label>
         <div class="col-sm-6">
           {{#each cliente }}
           <input type="text"  class="form-control border border-secondary" value="{{nombre}}" name="cliente" >
@@ -98,7 +98,7 @@
       </div> 
 
       <div class="form-group row justify-content-center">
-        <label for="" class="col-sm-2 col-form-label">Importe:</label>
+        <label for="" class="col-sm-2 col-form-label">*Importe:</label>
         <div class="col-sm-6">
           <div class="input-group-prepend">
           <span class="input-group-text border border-secondary" >$</span>

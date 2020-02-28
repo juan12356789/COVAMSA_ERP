@@ -11,6 +11,7 @@ router.get('/',(req,res)=>{
 
 
 
+
 router.post('/',(req,res,next)=>{
     passport.authenticate('local.signin',{
         successRedirect: '/menu',
@@ -52,5 +53,6 @@ router.get('/logout',(req,res)=>{
 //             failureFlash:true
 //         })(req,res,next);
 //  });
+
 
 module.exports = router; 
