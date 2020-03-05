@@ -1,43 +1,43 @@
 <style>
    input[type=checkbox] { transform: scale(1.5); } 
+   .jumbotron{
+     position: relative;
+     padding: 1;
+     margin-top: 5px;
+     
+   }
+   .my-custom-scrollbar {
+    position: relative;
+    height: 200px;
+    overflow: auto;
+
+}
 </style>
 
-{{!-- formulario para dar de alta un pedido con los campos que se requieren segun las especificaciones dichas anteriormente --}}
 <div class="container">
-  <div class="jumbotron">
-  <button type="button" class="close"><a href="/menu"><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></a> </button>
- {{!-- <a href="/menu"><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" width="30" height="30" alt="" class="close" aria-label="Close"></a> --}}
-<br>
+<div class="jumbotron">
+<button type="button" class="close"><a href="/menu"><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></a> </button><br>
+
 {{!-- comiennza el formulario --}}
 <form action="/ventas/add" enctype="multipart/form-data" method="post" id="imgct" class="columinput">
    <div class="container">
       <div class="form-group row  justify-content-center ">
-     
         <label for="oc" class="col-sm-2 col-form-label">&squf;Orden de Compra:</label>
         <div class="col-sm-5">
           <input type="text" class="form-control valid border border-secondary" name="orden" id="validationTooltip01" pattern="[A-Za-z0-9]+" title="Campo Obligatorio"required>
-            <input type="file" id="gimg" name="gimg" class="form-control-file"/>
+          <input type="file" id="gimg" name="gimg" class="form-control-file"/>
         </div>
-     
       </div>
-      <div >
-      <br>
-      </div>
-
       <div class="form-group row justify-content-center">
         <label for="" class="col-sm-2 col-form-label">&squf;No. de Pedido:</label>
         <div class="col-sm-5">
           <input type="text"  class="form-control valid border border-secondary" name="numeroCotizacion" pattern="[A-Za-z0-9]+" title="Campo Obligatorio" required>
-          {{!-- <div class="container"> --}}
-            <input type="file" class="form-control-file " name="gimg" id="gimg" style="color: black;" required>
-          {{!-- </div> --}}
+          <input type="file" class="form-control-file " name="gimg" id="gimg" style="color: black;" required>
         </div>
       </div>
-      <br>
-      <center>
-      <div id="ianputCliente"></div> 
-      </center> 
-     
+      <br><center>
+      <div id="inputCliente"></div> 
+      </center>  
       <div class="form-group row justify-content-center"> 
         <label for="" class="col-sm-2 col-form-label">&squf;Cliente:</label>
         <div class="col-sm-5">
@@ -49,8 +49,7 @@
         </button>
         </div>
       </div>
-
-    
+   </div>
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -58,15 +57,15 @@
       <div class="modal-header">
         <h5 class="modal-title" id="staticBackdropLabel">Options</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-bodyss">
-          <center>Busqueda Cliente: <input type="text"  id="inputBusqueda" class="col-sm-8"></center>
-
+        <center>Busqueda Cliente: <input type="text"  id="inputBusqueda" class="col-sm-8"></center>
        <div id="clientesPorBusqueda"></div>
           <div id="clientes"><br> 
-           <div id="ocultar" >  
+           <div id="ocultar" > 
+          <div class="table-wrapper-scroll-y my-custom-scrollbar"> 
           <table class="table table-bordered-responsive-sm justify-content-center">
            <thead class="thead-light">
            <tr>
@@ -82,6 +81,7 @@
                <td> <center> <button type="button"  onclick="clientes('{{nombre}}')" class="btn btn-success" data-dismiss="modal">Seleccionar</button></center></td>
            </tr>
            {{/each}}
+          </table>
          </table>
          </div>
         </div>
@@ -90,10 +90,9 @@
     </div>
   </div>
 </div>
-
 <div class="container">
       <div class="form-group row justify-content-center">
-        <label for=""  class="col-sm-2 col-form-label ">Ruta:</label>
+        <label for=""  class="col-sm-2 col-form-label ">&squf;Ruta:</label>
         <div class="col-sm-5">
         <select class="form-control border border-secondary "  name="ruta" >
           <option value="1">Norte</option>
@@ -101,39 +100,42 @@
         </select>
         </div>
       </div> 
-
       <div class="form-group row justify-content-center">
         <label for="" class="col-sm-2 col-form-label">&squf;Importe:</label>
         <div class="col-sm-5">
           <div class="input-group-prepend">
           <span class="input-group-text border border-secondary" >$</span>
           <input type="text"  class="form-control border border-secondary" name="importe" required pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$" >
-          
-        </div>
+          </div>
         </div>
       </div>
-    <div class="form-group row justify-content-center">
-    <div class="form-check form-check-inline">
-    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-    <label class="form-check-label" for="inlineCheckbox1">Contra Entrega</label>
-    </div>
-
-    <div class="form-check form-check-inline">
-    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-    <label class="form-check-label" for="inlineCheckbox2">Crédito</label>
-    </div>
-
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-      <label class="form-check-label">Transferencia</label>
-    </div>
-    </div>
-      <div class="form-group row justify-content-center">
-        <label for="" class="col-sm-2 col-form-label">Observaciones:</label>
+        <div class="form-group row justify-content-center">
+        <label for="" class="col-sm-2 col-form-label">&squf;Tipo de Pago:</label>
         <div class="col-sm-5">
+          <div class="input-group-prepend">
+             <div class="form-group row justify-content-center">
+               <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                 <label class="form-check-label" for="inlineCheckbox1">Anticipado</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                  <label class="form-check-label" for="inlineCheckbox2">Crédito</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
+                  <label class="form-check-label">Contra Entrega</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<div class="form-group row justify-content-center">
+      <label for="" class="col-sm-2 col-form-label">&squf;Observaciones:</label>
+      <div class="col-sm-5">
         <textarea class="form-control border border-secondary"  name="observaciones" title="En caso de ques sea necesario poner observaciones" rows="2"></textarea>
       </div>
-      </div>
+  </div>
       <br>
       <div class="form-group row justify-content-center">
         <label for="" class="col-sm-2 col-form-label" ></label>
@@ -141,8 +143,8 @@
           <input type="submit" class="btn btn-success btn-lg btn-block" value="Guardar" id="nvig" />
         </div>
       </div>
-    </div> 
-   
+</div> 
+</div> 
  </form>
  <script
   src="https://code.jquery.com/jquery-3.4.1.js"
