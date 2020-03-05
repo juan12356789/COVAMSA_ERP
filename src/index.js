@@ -19,8 +19,8 @@ app.set('port',process.env.port|| 4000);
 app.set('views',path.join(__dirname,'views')); 
 
 
-// app.set('port',process.env.PORT || 4000);
-app.set('views',path.join(__dirname,'views')); // le dice a node donde esta la carpeta views 
+
+app.set('views',path.join(__dirname,'views')); 
 // middlewars 
 
 
@@ -63,10 +63,11 @@ app.use((req,res,next)=>{// se usa para ver que variable son accedidadas desde l
 // routes 
 app.use(require('./routes/login'));
 app.use(require('./routes/menu/menu'));
-app.use('/ventas',require('./routes/ventas/ventas')); 
+app.use('/ventas',require('./routes/ventas/ventas'))
 
 // Public 
 app.use(express.static(path.join(__dirname,'public')));
+
 // Starting server 
 
 // so existe un puerto 
