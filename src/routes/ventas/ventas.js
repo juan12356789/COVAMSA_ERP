@@ -23,7 +23,7 @@ const storage=multer.diskStorage({
   const  upload=multer({storage:storage}); 
 
   router.get('/',isLoggedIn,async(req,res)=>{
-    
+
     const clientes  = await pool.query("select * from  empleados a inner join clientes b using(id_empleados) where a.idacceso = ?",[req.user[0].idacceso]); 
     res.render('links/ventas/formularioVentas',{clientes});
 
@@ -35,7 +35,12 @@ const storage=multer.diskStorage({
 
   });
 
-
+  router.post('/pagos',async(req,res)=>{
+    const pagos  =  await pool.query(`SELECT tipo_pago FROM clientes INNER JOIN   preferencias_cliente  USING(idcliente) inner join preferencias_pagos using(idpreferencia) WHERE nombre = ? `,req.body.cliente); 
+    console.log(pagos);
+    
+    
+  });
 
   router.post("/add",upload.array('gimg', 12), async(req,res)=> {
 

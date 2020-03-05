@@ -36,6 +36,8 @@ $("#prueba").click(function (e) {
   });
 
   let clientes = (nombre)=>{
+    pagos(nombre); 
+    
     let mandar  = `
       <div class="form-group row justify-content-center ">
       <label for="" class="col-sm-2 col-form-label"></label>
@@ -45,7 +47,16 @@ $("#prueba").click(function (e) {
       </div>
       </div>
    `;
-    document.getElementById('inputCliente').innerHTML =  mandar; 
-  }
+  document.getElementById('inputCliente').innerHTML =  mandar; 
+  
+  }; 
+
+  let pagos = (cliente)=>{
+    $.post("/ventas/pagos",{cliente:cliente},function (data) {
+        console.log(data);
+      }
+    );
+
+  };
 
 
