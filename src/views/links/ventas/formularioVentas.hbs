@@ -1,10 +1,17 @@
 <style>
    input[type=checkbox] { transform: scale(1.5); } 
+   .jumbotron{
+     position: relative;
+     padding: 10;
+     margin-top: 10px;
+
+ 
+   }
 </style>
 
 {{!-- formulario para dar de alta un pedido con los campos que se requieren segun las especificaciones dichas anteriormente --}}
 <div class="container">
-  <div class="jumbotron">
+  {{!-- <div class="jumbotron"> --}}
   <button type="button" class="close"><a href="/menu"><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></a> </button>
  {{!-- <a href="/menu"><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" width="30" height="30" alt="" class="close" aria-label="Close"></a> --}}
 <br>
@@ -108,7 +115,6 @@
           <div class="input-group-prepend">
           <span class="input-group-text border border-secondary" >$</span>
           <input type="text"  class="form-control border border-secondary" name="importe" required pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$" >
-          
         </div>
         </div>
       </div>
