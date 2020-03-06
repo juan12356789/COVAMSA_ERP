@@ -17,10 +17,11 @@
 }
 </style>
 
+<div id="prueba" ></div>
+
 <div class="container">
 <div class="jumbotron">
 <button type="button" class="close"><a href="/menu"><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></a> </button><br>
-
 {{!-- comiennza el formulario --}}
 <form action="/ventas/add" enctype="multipart/form-data" method="post" id="imgct" class="columinput">
    <div class="container">
@@ -81,7 +82,7 @@
            <tr>
                <td>{{nombre}}</td>
                <td>{{numero_interno}}</td>
-               <td> <center> <button type="button"  onclick="clientes('{{nombre}}')" class="btn btn-success" data-dismiss="modal">Seleccionar</button></center></td>
+               <td> <center> <button type="button"  onclick="cliente('{{nombre}}')" class="btn btn-success" data-dismiss="modal">Seleccionar</button></center></td>
            </tr>
            {{/each}}
           </table>
