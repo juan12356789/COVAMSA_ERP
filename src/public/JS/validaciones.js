@@ -1,6 +1,7 @@
 $('#clientesPorBusqueda').hide();
-
-$("#prueba").click(function(e) {
+// busca los  clientes 
+$("#clientes").click(function(e) {
+  
     $('.col-sm-8').val('');
     $("#ocultar").show();
     $("#clientesPorBusqueda").hide();
@@ -8,6 +9,7 @@ $("#prueba").click(function(e) {
         if ($('#inputBusqueda').val()) {
             $.post("/ventas", { busqueda: $("#inputBusqueda").val() }, function(data) {
                 $("#ocultar").hide();
+
                 let tabla = `<table class="table table-bordered-responsive-sm">
               <thead class="thead-light">
          <tr>
@@ -16,12 +18,14 @@ $("#prueba").click(function(e) {
            <th scope="col">BUSCAR</th>
          </tr>
        </thead>`;
+                    console.log(data);
+                    
                 data.forEach(data => {
                     tabla += `
                 <tr>
                   <td>${data.nombre}</td>
                   <td>${data.numero_interno}</td>
-                  <td><button type="button" onclick="clientes('${data.nombre}')" class="btn btn-success" data-dismiss="modal">Seleccionar</button></td>
+                <td> <button type="button" onclick="clientes('${data.nombre}')" class="btn btn-success" data-dismiss="modal">Seleccionar</button></td>
                 </tr> 
               `;
                 });
@@ -30,7 +34,12 @@ $("#prueba").click(function(e) {
                 document.getElementById('clientesPorBusqueda').innerHTML = tabla;
               
               });
-
+            }
+          });
+        });
+             
+          
+//manda el cliente a la tabla 
   let clientes = (nombre)=>{
     let mandar  = `
       <div class="form-group row justify-content-center ">
@@ -45,11 +54,11 @@ $("#prueba").click(function(e) {
     pagos(nombre); 
   }; 
 
+  //Trae los tipos de pago 
   let pagos = (cliente)=>{
     $.post("/ventas/pagos",{cliente:cliente},function (data) {
-        console.log(data);
+       console.log(data); 
       }
     );
-
   };
 
