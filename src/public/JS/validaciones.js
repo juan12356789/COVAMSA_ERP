@@ -25,7 +25,7 @@ $("#clientes").click(function(e) {
                 <tr>
                   <td>${data.nombre}</td>
                   <td>${data.numero_interno}</td>
-                <td> <button type="button" onclick="clientes('${data.nombre}')" class="btn btn-success" data-dismiss="modal">Seleccionar</button></td>
+                <td> <button type="button" onclick="cliente('${data.nombre}')" class="btn btn-success" data-dismiss="modal">Seleccionar</button></td>
                 </tr> 
               `;
                 });
@@ -40,7 +40,9 @@ $("#clientes").click(function(e) {
              
           
 //manda el cliente a la tabla 
-  let clientes = (nombre)=>{
+  let cliente = (nombre)=>{
+   
+    
     let mandar  = `
       <div class="form-group row justify-content-center ">
       <label for="" class="col-sm-2 col-form-label"></label>
@@ -50,14 +52,20 @@ $("#clientes").click(function(e) {
       </div>
       </div>
    `;
-    document.getElementById('inputCliente').innerHTML =  mandar;
     pagos(nombre); 
+    document.getElementById('inputCliente').innerHTML =  mandar;
   }; 
 
   //Trae los tipos de pago 
   let pagos = (cliente)=>{
+ 
     $.post("/ventas/pagos",{cliente:cliente},function (data) {
-       console.log(data); 
+       console.log(data);
+       data.forEach(data => {
+         $("#prueba").append( data.tipo_pago );
+       });
+
+       
       }
     );
   };

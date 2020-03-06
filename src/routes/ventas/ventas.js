@@ -38,7 +38,8 @@ const storage=multer.diskStorage({
 
   router.post('/pagos',async(req,res)=>{
     const pagos  =  await pool.query(`SELECT tipo_pago FROM clientes INNER JOIN   preferencias_cliente  USING(idcliente) inner join preferencias_pagos using(idpreferencia) WHERE nombre = ? `,req.body.cliente); 
-  
+    res.send(pagos); 
+    
     
     
   });
