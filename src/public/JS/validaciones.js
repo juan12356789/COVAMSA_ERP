@@ -58,14 +58,11 @@ $("#clientes").click(function(e) {
 
   //Trae los tipos de pago 
   let pagos = (cliente)=>{
- 
     $.post("/ventas/pagos",{cliente:cliente},function (data) {
        console.log(data);
        data.forEach(data => {
          $("#prueba").append( data.tipo_pago );
        });
-
-       
       }
     );
   };
