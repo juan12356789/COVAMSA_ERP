@@ -8,13 +8,16 @@
    }
    .my-custom-scrollbar {
     position: relative;
-    height: 200px;
+    height:200px;
     overflow: auto;
+}
 
+#body{
+  display: none;
 }
 </style>
 
-<div id="prueba" ></div>
+
 
 <div class="container">
 <div class="jumbotron">
@@ -103,6 +106,7 @@
       </div> 
       <div class="form-group row justify-content-center">
         <label for="" class="col-sm-2 col-form-label">&squf;Importe:</label>
+       
         <div class="col-sm-5">
           <div class="input-group-prepend">
           <span class="input-group-text border border-secondary" >$</span>
@@ -111,10 +115,11 @@
         </div>
       </div>
         <div class="form-group row justify-content-center">
-        <label for="" class="col-sm-2 col-form-label">&squf;Tipo de Pago:</label>
+        <label for="" class="col-sm-2 col-form-label" id="inputPgo">&squf;Tipo de Pago:</label>
         <div class="col-sm-5">
+          <div id="prueba" ></div>
           <div class="input-group-prepend">
-             <div class="form-group row justify-content-center">
+             {{!-- <div class="form-group row justify-content-center">
                <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
                  <label class="form-check-label" for="inlineCheckbox1">Anticipado</label>
@@ -127,7 +132,7 @@
                   <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
                   <label class="form-check-label">Contra Entrega</label>
                 </div>
-              </div>
+              </div> --}}
             </div>
           </div>
         </div>
