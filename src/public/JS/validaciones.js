@@ -2,6 +2,7 @@
  $('.col-sm-8').val('');
  $("#ocultar").show();
  $("#clientesPorBusqueda").hide();
+
  $('#inputBusqueda').keyup(function(e) {
      if ($('#inputBusqueda').val()) {
          $.post("/ventas", { busqueda: $("#inputBusqueda").val() }, function(data) {
@@ -16,8 +17,7 @@
             <th scope="col">BUSCAR</th>
           </tr>
         </thead>`;
-             console.log(data);
-
+             
              data.forEach(data => {
                  tabla += `
                  <tr>
@@ -55,15 +55,11 @@
  };
 
  //Trae los tipos de pago 
-
  let pagos = (cliente) => {
 
      $.post("/ventas/pagos", { cliente: cliente }, function(data) {
-         console.log(data);
          data.forEach(data => {
-             //  tabla += "</table>";
              $("#prueba").append(data.tipo_pago);
-
          })
      });
 
