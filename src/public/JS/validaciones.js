@@ -3,7 +3,6 @@ let classText =()=>{
   $(".numero_pedido").addClass("col-sm-2 col-form-label");
   $(".comprobante_pago").addClass("col-sm-2 col-form-label");
   $(".observaciones").addClass("col-sm-2 col-form-label"); 
- 
 };  
 classText(); 
 
@@ -72,19 +71,20 @@ $("#clientes").click(function (e) {
 
  };
 
+
+
  //Trae los tipos de pago 
  let pagos = (cliente) => {
-    
-     $.post("/ventas/pagos", { cliente: cliente }, function(data) {
-      
-        $(".orden_compra").removeClass("col-sm-2 col-form-label text-danger");
-        $(".numero_pedido").removeClass("col-sm-2 col-form-label text-danger");
-        $(".comprobante_pago").removeClass("col-sm-2 col-form-label text-danger");
-        $(".obervaciones").removeClass("col-sm-2 col-form-label text-danger");
-      data.forEach(data => {
+
+     $.post("/ventas/pagos", { cliente: cliente }, function(data,campos) {
+        data[data.length - 1].forEach(data => {
+            $("."+data.tipo_pago).removeClass("col-sm-2 col-form-label text-danger");
+        });
+        classText(); 
+        data.forEach(data => {        
           $("."+data.tipo_pago).addClass("col-sm-2 col-form-label text-danger");
        });
      });
 
  };
- 
+  console.log($("#imgct").submit());
