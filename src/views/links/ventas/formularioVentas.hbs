@@ -16,26 +16,31 @@
   display: none;
 }
 </style>
-
-
-
 <div class="container">
 <div class="jumbotron">
 <button type="button" class="close"><a href="/menu"><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></a> </button><br>
+<link rel="stylesheet" href="css/styles.css">
 {{!-- comiennza el formulario --}}
 <form action="/ventas/add" enctype="multipart/form-data" method="post" id="imgct" class="columinput">
    <div class="container">
       <div class="form-group row  justify-content-center ">
-        <label for="oc" class="col-sm-2 col-form-label">&squf;Orden de Compra:</label>
+        <label for="oc" class="orden_compra">&squf;Orden de Compra:</label>
         <div class="col-sm-5">
           <input type="text" class="form-control valid border border-secondary" name="orden" id="validationTooltip01" pattern="[A-Za-z0-9]+" title="Campo Obligatorio"required>
           <input type="file" id="gimg" name="gimg" class="form-control-file"/>
         </div>
       </div>
       <div class="form-group row justify-content-center">
-        <label for="" class="col-sm-2 col-form-label">&squf;No. de Pedido:</label>
+        <label for="" class="numero_pedido">&squf;No. de Pedido:</label>
         <div class="col-sm-5">
           <input type="text"  class="form-control valid border border-secondary" name="numeroCotizacion" pattern="[A-Za-z0-9]+" title="Campo Obligatorio" required>
+          <input type="file" class="form-control-file " name="gimg" id="gimg" style="color: black;" required>
+        </div>
+      </div>
+       <div class="form-group row justify-content-center">
+        <label for="" class="comprobante_pago">&squf;Comprobante de Pago:</label>
+        <div class="col-sm-5">
+          <input type="text"  class="form-control valid border border-secondary"  id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Campo Obligatorio" required>
           <input type="file" class="form-control-file " name="gimg" id="gimg" style="color: black;" required>
         </div>
       </div>
@@ -137,7 +142,7 @@
           </div>
         </div>
 <div class="form-group row justify-content-center">
-      <label for="" class="col-sm-2 col-form-label">&squf;Observaciones:</label>
+      <label for="" class="observaciones">&squf;Observaciones:</label>
       <div class="col-sm-5">
         <textarea class="form-control border border-secondary"  name="observaciones" title="En caso de ques sea necesario poner observaciones" rows="2"></textarea>
       </div>
