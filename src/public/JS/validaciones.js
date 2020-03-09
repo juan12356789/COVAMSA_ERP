@@ -37,11 +37,8 @@
      }
 
  });
-
  //manda el cliente a la tabla 
-
  let cliente = (nombre) => {
-
 
      let mandar = `
        <div class="form-group row justify-content-center ">
