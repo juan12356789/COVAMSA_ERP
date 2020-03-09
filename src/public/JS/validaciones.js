@@ -52,7 +52,6 @@ $("#clientes").click(function (e) {
   
 });
 
-
  //manda el cliente a la tabla 
 
  let cliente = (nombre) => {
