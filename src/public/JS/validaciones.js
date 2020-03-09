@@ -17,7 +17,7 @@
             <th scope="col">BUSCAR</th>
           </tr>
         </thead>`;
-             
+
              data.forEach(data => {
                  tabla += `
                  <tr>
@@ -53,7 +53,6 @@
      document.getElementById('inputCliente').innerHTML = mandar;
 
  };
-
  //Trae los tipos de pago 
  let pagos = (cliente) => {
 
