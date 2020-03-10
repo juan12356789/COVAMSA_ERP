@@ -7,6 +7,7 @@ let classText = () => {
 
 };
 classText();
+
 $("#clientes").click(function(e) {
 
     $('#clientesPorBusqueda').hide();
@@ -83,15 +84,16 @@ let cliente = (nombre) => {
 };
 
 //Trae los tipos de pago 
+//Trae los tipos de pago 
 
 let pagos = (cliente) => {
 
-    $.post("/ventas/pagos", { cliente: cliente }, function(data) {
+    $.post("/ventas/pagos", { cliente: cliente }, function(data, campos) {
+        data[data.length - 1].forEach(data => {
+            $("." + data.tipo_pago).removeClass("col-sm-2 col-form-label text-danger");
 
-        $(".orden_compra").removeClass("col-sm-2 col-form-label text-danger");
-        $(".numero_pedido").removeClass("col-sm-2 col-form-label text-danger");
-        $(".comprobante_pago").removeClass("col-sm-2 col-form-label text-danger");
-        $(".obervaciones").removeClass("col-sm-2 col-form-label text-danger");
+        });
+        classText();
         data.forEach(data => {
             $("." + data.tipo_pago).addClass("col-sm-2 col-form-label text-danger");
 
