@@ -31,7 +31,6 @@ const storage=multer.diskStorage({
 
   router.post('/',async(req,res)=>{
     const clientes  = await pool.query("SELECT * FROM clientes  where  nombre like ?",'%'+[req.body.busqueda]+'%');
-     console.log(req.user);  
     res.send(clientes); 
 
   });
@@ -40,21 +39,15 @@ const storage=multer.diskStorage({
     const pagos  =  await pool.query(`SELECT tipo_pago FROM clientes INNER JOIN   preferencias_cliente  USING(idcliente) inner join preferencias_pagos using(idpreferencia) WHERE nombre = ? `,req.body.cliente);
     const all_kind_pagos  =  await pool.query(`SELECT tipo_pago FROM clientes INNER JOIN   preferencias_cliente  USING(idcliente) inner join preferencias_pagos using(idpreferencia)`);  
     pagos.push(all_kind_pagos); 
-    console.log(pagos);
-    
     res.send(pagos); 
-    
-    
-    
+  
   });
 
   router.post("/add",upload.array('gimg', 12),async(req,res)=> {
     
     //Ya ssolo falta cambiar los valores cuando haya quedado el  front 
-     const {orden,pedido,cliente,ruta,importe,observaciones} = req.body; 
-     console.log(req.body);
-     
-     const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", cliente);
+     const {orden,pedido,nombre,ruta,importe,observaciones} = req.body; 
+     const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", nombre);
      let fecha = new Date();
       let  insert = {
         id_pedido: null,
@@ -63,18 +56,15 @@ const storage=multer.diskStorage({
         orden_de_compra: orden,
         ruta: 1,
         estatus: 1,
-        ruta_pdf_orden_compra: "files/orden",
-        ruta_pdf_pedido:'files/pedido',
-        ruta_pdf_comprobante_pago:'files/comprobante',
+        ruta_pdf_orden_compra: req.files[0].filename,
+        ruta_pdf_pedido:req.files[1].filename,
+        ruta_pdf_comprobante_pago:req.files[2].filename,
         num_pedido:pedido,
         observacion: observaciones,
         fecha_inicial: fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDay()+' '+fecha.getHours()+':'+fecha.getMinutes()
       };
-      console.log(insert);
       
-      // await pool.query("INSERT INTO pedidos set ? ",[insert]);
-      
-      
+      await pool.query("INSERT INTO pedidos set ? ",[insert]);
       req.flash('success','Pedido Guardado' ); 
       res.redirect('/ventas')  ; 
       

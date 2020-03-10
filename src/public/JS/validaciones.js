@@ -87,4 +87,3 @@ $("#clientes").click(function (e) {
      });
 
  };
-  console.log($("#imgct").submit());
