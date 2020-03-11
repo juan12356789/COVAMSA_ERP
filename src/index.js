@@ -89,24 +89,5 @@ io.on('connection',(socket)=>{
 
 
 module.exports =  io; 
-// Public 
-app.use(express.static(path.join(__dirname,'public')));
 
-// Starting server 
-
-// so existe un puerto 
-const server = app.listen(app.get('port'),()=>{
-console.log('server on port ',app.get('port'));
-}); 
-const io =  SocketIO(server); 
-io.on('connection',(socket)=>{
-    // console.log('new connection',socket.id);
-    socket.on('table:data',(data)=>{
-        console.log(data);
-        io.sockets.emit('chat:message',data) // para mandar a todos 
-    });
-    socket.on('chat:typing',(data)=>{
-       socket.broadcast.emit('chat:typing',data);        
-    })
-}); 
 
