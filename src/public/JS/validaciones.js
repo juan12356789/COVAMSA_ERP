@@ -50,24 +50,16 @@ $("#clientes").click(function(e) {
 
 
             });
-<<<<<<< HEAD
-            tabla += "</table>";
-            $("#clientesPorBusqueda").show();
-            document.getElementById('clientesPorBusqueda').innerHTML = tabla;
-        });
-=======
 
 
         }
 
 
     });
->>>>>>> b1710ee31ba1a031f88cdcdeab6c73ef016dcefb
 
 
 });
 
-<<<<<<< HEAD
  let cliente = (nombre) => {
      let mandar = `
        <div class="form-group row justify-content-center ">
@@ -86,37 +78,6 @@ $("#clientes").click(function(e) {
  //Trae los tipos de pago 
  let pagos = (cliente) => {
      $.post("/ventas/pagos", { cliente: cliente }, function(data,campos) {
-=======
-//manda el cliente a la tabla 
-
-
-let cliente = (nombre) => {
-
-
-
-    let mandar = `
-         <div class="form-group row justify-content-center ">
-         <label for="" class="col-sm-2 col-form-label"></label>
-         <div class="col-sm-5">
-           <input type="text"  class="form-control valid border border-secondary" value="${nombre}" name="nombre">
-         </div>
-         </div>
-         </div>
-      `;
-    pagos(nombre);
-    $("#inputCliente").show();
-    document.getElementById('inputCliente').innerHTML = mandar;
-
-
-};
-
-//Trae los tipos de pago 
-//Trae los tipos de pago 
-
-let pagos = (cliente) => {
-
-    $.post("/ventas/pagos", { cliente: cliente }, function(data, campos) {
->>>>>>> b1710ee31ba1a031f88cdcdeab6c73ef016dcefb
         data[data.length - 1].forEach(data => {
             $("." + data.tipo_pago).removeClass("col-sm-2 col-form-label text-danger");
 
@@ -126,24 +87,8 @@ let pagos = (cliente) => {
             $("." + data.tipo_pago).addClass("col-sm-2 col-form-label text-danger");
 
         });
-<<<<<<< HEAD
-        classText(); 
-        data.forEach(data => {        
-          $("."+data.tipo_pago).addClass("col-sm-2 col-form-label text-danger");
-       });
-     });
- };
-
-  
-
-
- 
-
- 
-=======
 
     });
 
 
 };
->>>>>>> b1710ee31ba1a031f88cdcdeab6c73ef016dcefb
