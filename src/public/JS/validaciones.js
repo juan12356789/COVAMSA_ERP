@@ -80,7 +80,6 @@ $("#clientes").click(function(e) {
      $.post("/ventas/pagos", { cliente: cliente }, function(data,campos) {
         data[data.length - 1].forEach(data => {
             $("." + data.tipo_pago).removeClass("col-sm-2 col-form-label text-danger");
-
         });
         classText();
         data.forEach(data => {
@@ -92,4 +91,3 @@ $("#clientes").click(function(e) {
 
 
 };
-console.log('holaaaa');
