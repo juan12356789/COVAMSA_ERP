@@ -41,8 +41,6 @@ $("#clientes").click(function (e) {
             tabla += "</table>";
             $("#clientesPorBusqueda").show();
             document.getElementById('clientesPorBusqueda').innerHTML = tabla;
-
-
         });
 
     }
@@ -51,11 +49,7 @@ $("#clientes").click(function (e) {
   
 });
 
- //manda el cliente a la tabla 
-
  let cliente = (nombre) => {
-    
-
      let mandar = `
        <div class="form-group row justify-content-center ">
        <label for="" class="col-sm-2 col-form-label"></label>
@@ -70,12 +64,8 @@ $("#clientes").click(function (e) {
      document.getElementById('inputCliente').innerHTML = mandar;
 
  };
-
-
-
  //Trae los tipos de pago 
  let pagos = (cliente) => {
-
      $.post("/ventas/pagos", { cliente: cliente }, function(data,campos) {
         data[data.length - 1].forEach(data => {
             $("."+data.tipo_pago).removeClass("col-sm-2 col-form-label text-danger");
@@ -85,5 +75,11 @@ $("#clientes").click(function (e) {
           $("."+data.tipo_pago).addClass("col-sm-2 col-form-label text-danger");
        });
      });
-
  };
+
+  
+
+
+ 
+
+ 

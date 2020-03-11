@@ -8,6 +8,7 @@ const flash = require('connect-flash');
 const MySQLStore = require('express-mysql-session');
 const bodyParser = require('body-parser');
 const {database} = require('./key');
+const SocketIO = require('socket.io');
 //  cambiar conexion en la  otras areas  
 const app = express();
 require('./lib/passport');
@@ -71,7 +72,22 @@ app.use(express.static(path.join(__dirname,'public')));
 // Starting server 
 
 // so existe un puerto 
-app.listen(app.get('port'),()=>{
+const server = app.listen(app.get('port'),()=>{
 console.log('server on port ',app.get('port'));
 }); 
 
+
+const io =  SocketIO(server); 
+io.on('connection',(socket)=>{
+    console.log('new connection',socket.id);
+    socket.on('chat:message',(data)=>{
+        console.log(data);
+        io.sockets.emit('chat:message',data) // para mandar a todos 
+    });
+    socket.on('chat:typing',(data)=>{
+       socket.broadcast.emit('chat:typing',data);        
+    })
+}); 
+
+
+module.exports =  io; 

@@ -6,6 +6,7 @@ const multer=require("multer");
 const pool = require('../../database');
 const {isLoggedIn}= require('../../lib/auth');
 const {format} = require('fecha');  
+const socket = require('../../index'); 
 
 
 const  rutimage=path.join(__dirname,"../../files");
@@ -23,11 +24,10 @@ const storage=multer.diskStorage({
   const  upload=multer({storage:storage}); 
 
   router.get('/',isLoggedIn,async(req,res)=>{
-
     const clientes  = await pool.query("select * from  empleados a inner join clientes b using(id_empleados) where a.idacceso = ?",[req.user[0].idacceso]); 
     res.render('links/ventas/formularioVentas',{clientes});
-
   });
+
 
   router.post('/',async(req,res)=>{
     const clientes  = await pool.query("SELECT * FROM clientes  where  nombre like ?",'%'+[req.body.busqueda]+'%');
@@ -45,8 +45,12 @@ const storage=multer.diskStorage({
 
   router.post("/add",upload.array('gimg', 12),async(req,res)=> {
     
-    //Ya ssolo falta cambiar los valores cuando haya quedado el  front 
-     const {orden,pedido,nombre,ruta,importe,observaciones} = req.body; 
+     const {orden,numeroPedido,comprobante_pago,nombre,ruta,importe,observaciones} = req.body; 
+     if(!nombre){
+      req.flash('error','INTRODUZCA EL CLIENTE' ); 
+      res.redirect('/ventas')  ; 
+      return; 
+     }
      const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", nombre);
      let fecha = new Date();
       let  insert = {
@@ -54,19 +58,22 @@ const storage=multer.diskStorage({
         id_empleado: cliente_id[0].id_empleados ,
         idcliente: cliente_id[0].idcliente,
         orden_de_compra: orden,
-        ruta: 1,
+        ruta: ruta,
         estatus: 1,
         ruta_pdf_orden_compra: req.files[0].filename,
         ruta_pdf_pedido:req.files[1].filename,
         ruta_pdf_comprobante_pago:req.files[2].filename,
-        num_pedido:pedido,
+        num_pedido:numeroPedido,
         observacion: observaciones,
-        fecha_inicial: fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDay()+' '+fecha.getHours()+':'+fecha.getMinutes()
-      };
-      
+        fecha_inicial: fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDay()+' '+fecha.getHours()+':'+fecha.getMinutes(),
+        comprobante_pago: comprobante_pago,
+        importe:importe 
+      }; 
       await pool.query("INSERT INTO pedidos set ? ",[insert]);
-      req.flash('success','Pedido Guardado' ); 
-      res.redirect('/ventas')  ; 
+      const pedido  = await pool.query("SELECT id_pedido from pedidos WHERE num_pedido= ?",numeroPedido); 
+      req.flash('success',`Su pedido ha sido guardado con el ID ${pedido[0].id_pedido}`); 
+      res.send('lo que sea'); 
+      res.redirect('/ventas') ; 
       
   });
 module.exports = router; 
