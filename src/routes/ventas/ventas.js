@@ -6,7 +6,6 @@ const multer=require("multer");
 const pool = require('../../database');
 const {isLoggedIn}= require('../../lib/auth');
 const {format} = require('fecha');  
-const socket = require('../../index'); 
 
 
 const  rutimage=path.join(__dirname,"../../files");
@@ -44,7 +43,8 @@ const storage=multer.diskStorage({
   });
 
   router.post("/add",upload.array('gimg', 12),async(req,res)=> {
-    
+    res.send(req.body)
+
      const {orden,numeroPedido,comprobante_pago,nombre,ruta,importe,observaciones} = req.body; 
      if(!nombre){
       req.flash('error','INTRODUZCA EL CLIENTE' ); 
@@ -69,11 +69,12 @@ const storage=multer.diskStorage({
         comprobante_pago: comprobante_pago,
         importe:importe 
       }; 
-
       await pool.query("INSERT INTO pedidos set ? ",[insert]);
       const pedido  = await pool.query("SELECT id_pedido from pedidos WHERE num_pedido= ?",numeroPedido); 
+      const pedidoReal = await pool.query("SELECT * FROM pedidos"); 
+     // res.send(pedidoReal); 
       req.flash('success',`Su pedido ha sido guardado con el ID ${pedido[0].id_pedido}`); 
-      res.redirect('/ventas') ; 
+      // res.redirect('/ventas') ; 
       
   });
 module.exports = router; 
