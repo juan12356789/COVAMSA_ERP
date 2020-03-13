@@ -1,3 +1,4 @@
+const  socket = io ();  
 let classText = () => {
     $(".orden_compra").addClass("col-sm-2 col-form-label");
     $(".numero_pedido").addClass("col-sm-2 col-form-label");
@@ -46,18 +47,11 @@ $("#clientes").click(function(e) {
                 tabla += "</table>";
                 $("#clientesPorBusqueda").show();
                 document.getElementById('clientesPorBusqueda').innerHTML = tabla;
-
-
-
             });
-
 
         }
 
-
     });
-
-
 });
 
  let cliente = (nombre) => {
@@ -77,6 +71,7 @@ $("#clientes").click(function(e) {
  };
  //Trae los tipos de pago 
  let pagos = (cliente) => {
+   
      $.post("/ventas/pagos", { cliente: cliente }, function(data,campos) {
         data[data.length - 1].forEach(data => {
             $("." + data.tipo_pago).removeClass("col-sm-2 col-form-label text-danger");
@@ -86,8 +81,40 @@ $("#clientes").click(function(e) {
             $("." + data.tipo_pago).addClass("col-sm-2 col-form-label text-danger");
 
         });
-
     });
-
-
 };
+var x = document.getElementById("imgct");
+//action="/ventas/add"
+$("#nvig").click(function (e) { 
+  e.preventDefault();
+
+  let data = [], nuevo = []; 
+  for (let i = 0; i < x.elements.length - 1; i++) {
+    nuevo.push(x.elements.item(i).value)
+  }
+  if (nuevo.filter(Boolean).length < 10)  return  alert('Ingrese todo los campos requeridos');
+  else{
+    data = nuevo.filter(Boolean);
+     let info = {
+       orden: data[0],
+       fileOrden: data[1],
+       noPedido: data[2],
+       filePedido: data[3],
+       comprobante: data[4],
+       comprobanteFile: data[5],
+       cliente:data[6],
+       ruta: data[7],
+       importe: data[8],
+       observaciones: data[9]
+     };
+     $.ajax({type: "POST",url: "/ventas/add",data:info  ,
+       success: function (response) {
+         
+         socket.emit('chat:message',response); 
+         
+        
+                 
+       }
+     });
+  }
+});

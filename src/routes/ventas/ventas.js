@@ -43,38 +43,35 @@ const storage=multer.diskStorage({
   });
 
   router.post("/add",upload.array('gimg', 12),async(req,res)=> {
-    res.send(req.body)
-
-     const {orden,numeroPedido,comprobante_pago,nombre,ruta,importe,observaciones} = req.body; 
-     if(!nombre){
-      req.flash('error','INTRODUZCA EL CLIENTE' ); 
-      res.redirect('/ventas')  ; 
-      return; 
-     }
-     const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", nombre);
-     let fecha = new Date();
+   
+    const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.cliente);
+   
+    let fecha = new Date();
       let  insert = {
         id_pedido: null,
         id_empleado: cliente_id[0].id_empleados ,
         idcliente: cliente_id[0].idcliente,
-        orden_de_compra: orden,
-        ruta: ruta,
+        orden_de_compra: req.body.orden,
+        ruta: req.body.ruta,
         estatus: 1,
-        ruta_pdf_orden_compra: req.files[0].filename,
-        ruta_pdf_pedido:req.files[1].filename,
-        ruta_pdf_comprobante_pago:req.files[2].filename,
-        num_pedido:numeroPedido,
-        observacion: observaciones,
+        ruta_pdf_orden_compra: req.body.fileOrden,
+        ruta_pdf_pedido:req.body.filePedido,
+        ruta_pdf_comprobante_pago:req.body.comprobanteFile,
+        num_pedido:req.body.noPedido,
+        observacion: req.body.observaciones,
         fecha_inicial: fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDay()+' '+fecha.getHours()+':'+fecha.getMinutes(),
-        comprobante_pago: comprobante_pago,
-        importe:importe 
+        comprobante_pago: req.body.comprobante,
+        importe:req.body.importe 
       }; 
+  
+      
       await pool.query("INSERT INTO pedidos set ? ",[insert]);
-      const pedido  = await pool.query("SELECT id_pedido from pedidos WHERE num_pedido= ?",numeroPedido); 
-      const pedidoReal = await pool.query("SELECT * FROM pedidos"); 
-     // res.send(pedidoReal); 
-      req.flash('success',`Su pedido ha sido guardado con el ID ${pedido[0].id_pedido}`); 
-      // res.redirect('/ventas') ; 
+      const pedido  = await pool.query("SELECT id_pedido from pedidos WHERE num_pedido= ?",insert.num_pedido); 
+      const pedidoReal = await pool.query("SELECT * FROM pedidos");
+      res.send(pedidoReal); 
+       
+      //req.flash('success',`Su pedido ha sido guardado con el ID ${pedido[0].id_pedido}`); 
+      
       
   });
 module.exports = router; 

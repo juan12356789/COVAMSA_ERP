@@ -8,7 +8,6 @@ const flash = require('connect-flash');
 const MySQLStore = require('express-mysql-session');
 const bodyParser = require('body-parser');
 const {database} = require('./key');
-const SocketIO = require('socket.io');
 //  cambiar conexion en la  otras areas  
 const app = express();
 require('./lib/passport');
@@ -64,7 +63,8 @@ app.use((req,res,next)=>{// se usa para ver que variable son accedidadas desde l
 // routes 
 app.use(require('./routes/login'));
 app.use(require('./routes/menu/menu'));
-app.use('/ventas',require('./routes/ventas/ventas'))
+app.use('/ventas',require('./routes/ventas/ventas'));
+app.use('/almacen',require('./routes/almacen/almacen'))
 
 // Public 
 app.use(express.static(path.join(__dirname,'public')));
@@ -75,7 +75,10 @@ app.use(express.static(path.join(__dirname,'public')));
 const server = app.listen(app.get('port'),()=>{
 console.log('server on port ',app.get('port'));
 }); 
+
+const SocketIO = require('socket.io');
 const io =  SocketIO(server); 
+
 io.on('connection',(socket)=>{
     console.log('new connection',socket.id);
     socket.on('chat:message',(data)=>{
@@ -88,6 +91,5 @@ io.on('connection',(socket)=>{
 }); 
 
 
-module.exports =  io; 
 
 
