@@ -93,9 +93,3 @@ $(document).ready(function() {
         }
     });
 });
-
-function savePedido() {
-    swal("¡Pedido guardado Correctamente!", "", "success")
-
-
-}
