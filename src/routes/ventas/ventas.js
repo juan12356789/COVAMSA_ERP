@@ -16,7 +16,7 @@ const storage=multer.diskStorage({
      cb(null,rutimage)
    }, 
    filename:function (res,file,cb) {
-     console.log(file.originalname);
+     file.originalname = ''; 
      cb(null,Date.now()+file.originalname); 
    }
  }); 
@@ -46,7 +46,9 @@ const storage=multer.diskStorage({
   });
 
   router.post("/add",upload.array('gimg', 12),async(req,res)=> {
-
+    console.log(req.body);
+    console.log(req.files);
+    
     
     if (req.body.nombre != undefined){
       const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre );
