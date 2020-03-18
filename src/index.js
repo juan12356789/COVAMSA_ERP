@@ -81,9 +81,9 @@ const io =  SocketIO(server);
 
 io.on('connection',(socket)=>{
     console.log('new connection',socket.id);
-    socket.on('chat:message',(data)=>{
+    socket.on('data:pedidos',(data)=>{
         console.log(data);
-        io.sockets.emit('chat:message',data) // para mandar a todos 
+        io.sockets.emit('data:pedidos',data) // para mandar a todos 
     });
     socket.on('chat:typing',(data)=>{
        socket.broadcast.emit('chat:typing',data);        

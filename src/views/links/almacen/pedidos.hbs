@@ -3,11 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <title>Document</title>
 </head>
 <body>
-    <h1>Hola</h1>
+    <div id="container" >
+    <table class="table"  >
+        <thead class="thead-dark" >
+            <tr>
+                <th scope="col"> Orden De Compra </th>
+                <th scope="col">Ruta</th>
+                <th scope="col" >Numero de Pedido</th>
+                <th scope="col" >Importe</th>
+                <th scope="col" >Estatus</th>
+                <th scope="col" >Observaciones</th>
+                <th scope="col" >Fecha</th>
+                <th scope="col" >Orden de Compra</th>
+            </tr>
+        </thead>
+        <tbody id="pedidos">
+
+        </tbody>
+    </table>
+    </div>
     <script src="/socket.io/socket.io.js" ></script>    
     <script src="JS/pedidos.js" ></script>
+     <script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
 </body>
 </html>

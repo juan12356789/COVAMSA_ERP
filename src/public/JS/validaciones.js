@@ -83,38 +83,10 @@ $("#clientes").click(function(e) {
         });
     });
 };
-var x = document.getElementById("imgct");
-//action="/ventas/add"
-$("#nvig").click(function (e) { 
-  e.preventDefault();
 
-  let data = [], nuevo = []; 
-  for (let i = 0; i < x.elements.length - 1; i++) {
-    nuevo.push(x.elements.item(i).value)
-  }
-  if (nuevo.filter(Boolean).length < 10)  return  alert('Ingrese todo los campos requeridos');
-  else{
-    data = nuevo.filter(Boolean);
-     let info = {
-       orden: data[0],
-       fileOrden: data[1],
-       noPedido: data[2],
-       filePedido: data[3],
-       comprobante: data[4],
-       comprobanteFile: data[5],
-       cliente:data[6],
-       ruta: data[7],
-       importe: data[8],
-       observaciones: data[9]
-     };
-     $.ajax({type: "POST",url: "/ventas/add",data:info  ,
-       success: function (response) {
-         
-         socket.emit('chat:message',response); 
-         
-        
-                 
-       }
-     });
-  }
+$( document ).ready(function() {
+  $.ajax({type: "GET",url: "/ventas/pedidos",success: function (response) {
+    socket.emit('data:pedidos',response); 
+    }
+  });
 });
