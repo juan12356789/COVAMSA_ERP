@@ -13,7 +13,7 @@ router.get('/pedidos',async(req,res)=>{
     const pedidos  = await  pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,fecha_inicial,comprobante_pago,importe
                                         FROM pedidos WHERE
                                         DATE_FORMAT(fecha_inicial,'%y-%m-%d') = curdate()  `);
-    console.log(pedidos);
+      res.send(pedidos); 
     
 });
 // Descarga el PDF 
