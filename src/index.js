@@ -39,8 +39,6 @@ app.use(session({
     expires: new Date(Date.now() + (1000 * 60 * 1 )),
     store: new MySQLStore(database)
 }));
-// console.log(new Date(Date.now() + (1000 * 60 * 1 )));
-// console.log(new Date(Date.now() ));
 
  
 app.set('view engine','.hbs'); //para que funcione las plantillas 
@@ -49,7 +47,7 @@ app.use(express.json()); //para aceptar json
 app.use(passport.initialize());//inicializar pass
 app.use(passport.session());
 
-app.use(morgan('dev')); // se utiliza para ver lo que llega al servidor
+app.use(morgan('dev')); 
 
 
 
@@ -69,9 +67,7 @@ app.use('/almacen',require('./routes/almacen/almacen'))
 // Public 
 app.use(express.static(path.join(__dirname,'public')));
 
-// Starting server 
 
-// so existe un puerto 
 const server = app.listen(app.get('port'),()=>{
 console.log('server on port ',app.get('port'));
 }); 
@@ -80,14 +76,10 @@ const SocketIO = require('socket.io');
 const io =  SocketIO(server); 
 
 io.on('connection',(socket)=>{
-    console.log('new connection',socket.id);
     socket.on('data:pedidos',(data)=>{
-        console.log(data);
-        io.sockets.emit('data:pedidos',data) // para mandar a todos 
+     //   console.log(data);
+        io.sockets.emit('data:pedidos',data) 
     });
-    socket.on('chat:typing',(data)=>{
-       socket.broadcast.emit('chat:typing',data);        
-    })
 }); 
 
 
