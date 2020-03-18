@@ -1,4 +1,4 @@
-const  socket = io ();  
+const socket = io();
 let classText = () => {
     $(".orden_compra").addClass("col-sm-2 col-form-label");
     $(".numero_pedido").addClass("col-sm-2 col-form-label");
@@ -54,8 +54,8 @@ $("#clientes").click(function(e) {
     });
 });
 
- let cliente = (nombre) => {
-     let mandar = `
+let cliente = (nombre) => {
+    let mandar = `
        <div class="form-group row justify-content-center ">
        <label for="" class="col-sm-2 col-form-label"></label>
        <div class="col-sm-5">
@@ -64,15 +64,15 @@ $("#clientes").click(function(e) {
        </div>
        </div>
     `;
-     pagos(nombre);
-     $("#inputCliente").show();
-     document.getElementById('inputCliente').innerHTML = mandar;
+    pagos(nombre);
+    $("#inputCliente").show();
+    document.getElementById('inputCliente').innerHTML = mandar;
 
- };
- //Trae los tipos de pago 
- let pagos = (cliente) => {
-   
-     $.post("/ventas/pagos", { cliente: cliente }, function(data,campos) {
+};
+//Trae los tipos de pago 
+let pagos = (cliente) => {
+
+    $.post("/ventas/pagos", { cliente: cliente }, function(data, campos) {
         data[data.length - 1].forEach(data => {
             $("." + data.tipo_pago).removeClass("col-sm-2 col-form-label text-danger");
         });
@@ -84,9 +84,18 @@ $("#clientes").click(function(e) {
     });
 };
 
-$( document ).ready(function() {
-  $.ajax({type: "GET",url: "/ventas/pedidos",success: function (response) {
-    socket.emit('data:pedidos',response); 
-    }
-  });
+$(document).ready(function() {
+    $.ajax({
+        type: "GET",
+        url: "/ventas/pedidos",
+        success: function(response) {
+            socket.emit('data:pedidos', response);
+        }
+    });
 });
+
+function savePedido() {
+    swal("¡Pedido guardado Correctamente!", "", "success")
+
+
+}
