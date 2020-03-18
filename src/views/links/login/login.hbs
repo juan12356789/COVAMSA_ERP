@@ -4,6 +4,9 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
 <link rel="stylesheet" href="estilo.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.29.0/sweetalert2.all.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.29.0/sweetalert2.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
 
 <style>
     input[type=text] {
@@ -42,7 +45,8 @@
                 </div>
 
                 <div class="form-group row justify-content-center">
-                    <input type="submit" onclick="mensaje1()" name="btn" value="Comenzar" class="btn btn-success">
+                    {{!-- <input type="submit" onclick="mensaje1()" name="btn" value="Comenzar" class="btn btn-success"> --}}
+                    <button type="submit" class="btn btn-success" onclick="showAlert()">Comenzar</button>
                 </div>
             </form>
         </div>
@@ -59,3 +63,8 @@
 pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*" --}}
 
 {{!-- .{6,} elemento password con 6 o mas caracteres --}}
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+<script src="JS/validacionLog.js" ></script>
