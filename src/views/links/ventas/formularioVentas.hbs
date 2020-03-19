@@ -20,22 +20,22 @@
         
         <label for="oc" class="orden_compra">&squf;Orden de Compra:</label>
         <div class="col-sm-5">
-          <input type="text" class="form-control valid border border-secondary" name="orden" id="orden" pattern="[A-Za-z0-9]+" title="Campo Obligatorio">
-          <input type="file" class="form-control-file " name="gimg" id="gimg" style="color: black;" >
+          <input type="text" class="form-control valid border border-secondary" required name="orden" id="orden" pattern="[A-Za-z0-9]+" title="Campo Obligatorio">
+          <input type="file" class="form-control-file " required  name="gimg" id="gimg" style="color: black;" >
         </div>
       </div>
       <div class="form-group row justify-content-center">
         <label for="" class="numero_pedido">&squf;No. de Pedido:</label>
         <div class="col-sm-5">
-          <input type="text"  class="form-control valid border border-secondary" name="numeroPedido" pattern="[A-Za-z0-9]+" title="Campo Obligatorio" >
-          <input type="file" class="form-control-file " name="gimg" id="no_pedido" style="color: black;" >
+          <input type="text"  class="form-control valid border border-secondary" name="numeroPedido" required pattern="[A-Za-z0-9]+" title="Campo Obligatorio" >
+          <input type="file" class="form-control-file " required  name="gimg" id="no_pedido" style="color: black;" >
         </div>
       </div>
        <div class="form-group row justify-content-center">
         <label for="" class="comprobante_pago">&squf;Comprobante de Pago:</label>
         <div class="col-sm-5">
-          <input type="text"  class="form-control valid border border-secondary"  id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Campo Obligatorio" >
-          <input type="file" class="form-control-file " name="gimg" id="comprobante" style="color: black;" >
+          <input type="text"  class="form-control valid border border-secondary" required id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Campo Obligatorio" >
+          <input type="file" class="form-control-file " required name="gimg" id="comprobante" style="color: black;" >
         </div>
       </div>
       <br><center>
@@ -116,7 +116,7 @@
 <div class="form-group row justify-content-center">
       <label for="" class="observaciones">&squf;Observaciones:</label>
       <div class="col-sm-5">
-        <textarea class="form-control border border-secondary"  name="observaciones" title="En caso de ques sea necesario poner observaciones" rows="2"></textarea>
+        <textarea class="form-control border border-secondary"  name="observaciones" required title="En caso de ques sea necesario poner observaciones" rows="2"></textarea>
       </div>
   </div>
       <br>
