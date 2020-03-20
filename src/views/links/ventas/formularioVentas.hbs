@@ -47,7 +47,7 @@
           {{#each cliente }}
           <input type="text"  class="form-control border border-secondary" value="{{nombre}}" name="cliente" >
           {{/each}}
-        <button type="button" class="btn btn-dark btn-lg btn-block "  id="clientes" data-toggle="modal" data-target="#staticBackdrop"  href="/ventas/busquedaCliente" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <button type="button" class="btn btn-dark btn-lg btn-block "  id="tusClientes" data-toggle="modal" data-target="#staticBackdrop"  href="/ventas/busquedaCliente" role="button" aria-expanded="false" aria-controls="collapseExample">
         Tus Clientes
         </button>
         </div>
@@ -65,9 +65,10 @@
       </div>
       <div class="modal-bodyss">
         <center>Busqueda Cliente: <input type="text"  id="inputBusqueda" class="col-sm-8"></center>
+        <!--
        <div id="clientesPorBusqueda"></div>
           <div id="clientes"><br> 
-           <div id="ocultar" > 
+           <div id="ocultar" >  --> 
           <div class="table-wrapper-scroll-y my-custom-scrollbar"> 
           <table class="table table-bordered-responsive-sm justify-content-center">
            <thead class="thead-light">
@@ -77,13 +78,18 @@
              <th scope="col">BUSCAR</th>
            </tr>
          </thead >
-           {{#each clientes}}
+          <tbody id="clientes" >
+
+
+          </tbody>
+
+           <!-- {{#each clientes}}
            <tr>
                <td>{{nombre}}</td>
                <td>{{numero_interno}}</td>
                <td> <center> <button type="button"  onclick="cliente('{{nombre}}')" class="btn btn-success" data-dismiss="modal">Seleccionar</button></center></td>
            </tr>
-           {{/each}}
+           {{/each}} -->
           </table>
          </table>
          </div>
