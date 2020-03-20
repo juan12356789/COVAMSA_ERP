@@ -1,24 +1,29 @@
-const  socket = io ();  
+const socket = io();
 
-let pedidos = (data)=>{
-    if (data == undefined ) {
-        $.ajax({type: "GET",url: "/almacen/pedidos",success: function (response) {
-                 sendData(response); 
-                 if(response == []) console.log('No hay pedidos por el momento');
+let pedidos = (data) => {
+    if (data == undefined) {
+        $.ajax({
+            type: "GET",
+            url: "/almacen/pedidos",
+            success: function(response) {
+                sendData(response);
+                if (response == []) console.log('No hay pedidos por el momento');
             }
         });
-    }else{
+    } else {
         sendData(data)
     }
 };
-pedidos(); 
-socket.on('data:pedidos',function(data){
-    pedidos(data); 
+pedidos();
+socket.on('data:pedidos', function(data) {
+    pedidos(data);
 });
 
-let sendData =(data )=>{
+let sendData = (data) => {
     console.log(data);
-    let table = '',ruta = ["NORTE","SUR"],estatus  = ['CAPTURADO'];
+    let table = '',
+        ruta = ["NORTE", "SUR"],
+        estatus = ['CAPTURADO'];
     data.forEach(data => {
         table+= `<tr>
                   <td> <a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
@@ -31,7 +36,5 @@ let sendData =(data )=>{
                   <td>${data.fecha_inicial}</td>
                 </tr>`;    
     });
-    document.getElementById('pedidos').innerHTML = table; 
+    document.getElementById('pedidos').innerHTML = table;
 }
-
-
