@@ -24,14 +24,18 @@ const storage=multer.diskStorage({
   const  upload=multer({storage:storage})
 
   router.get('/',isLoggedIn,async(req,res)=>{
-    const clientes  = await pool.query("select * from  empleados a inner join clientes b using(id_empleados) where a.idacceso = ?",[req.user[0].idacceso]); 
 
-    res.render('links/ventas/formularioVentas',{clientes});
+    res.render('links/ventas/formularioVentas');
   });
 
 
   router.post('/',async(req,res)=>{
-    const clientes  = await pool.query("SELECT * FROM clientes  where  nombre like ?",'%'+[req.body.busqueda]+'%');
+    console.log(req.body);
+    let clientes;
+   
+     clientes  = await pool.query("SELECT * FROM clientes  where  nombre like ?",'%'+[req.body.words]+'%');
+    
+    
   
     res.send(clientes); 
 
@@ -46,8 +50,7 @@ const storage=multer.diskStorage({
   });
 
   router.post("/add",upload.array('gimg', 12),async(req,res)=> {
-    console.log(req.body);
-    console.log(req.files);
+    console.log(Object.keys(req.body).length);
     
     
     if (req.body.nombre != undefined){
@@ -81,10 +84,11 @@ const storage=multer.diskStorage({
         
   });
 
+// cambiar la fecha 
+
   router.get('/pedidos', async (req,res)=>{
       const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,fecha_inicial,comprobante_pago,importe
-                                        FROM pedidos 
-                                        WHERE DATE_FORMAT(fecha_inicial,'%y-%m-%d') = curdate()`);
+                                        FROM pedidos`);
       res.send(pedidos);
   });
 module.exports = router; 

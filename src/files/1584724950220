@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 18-03-2020 a las 19:11:49
+-- Tiempo de generación: 18-03-2020 a las 20:05:43
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.4.1
 
@@ -215,9 +215,9 @@ CREATE TABLE `pedidos` (
   `orden_de_compra` varchar(20) NOT NULL,
   `ruta` int(1) NOT NULL,
   `estatus` int(1) NOT NULL,
-  `ruta_pdf_orden_compra` varchar(45) NOT NULL,
-  `ruta_pdf_pedido` varchar(45) DEFAULT NULL,
-  `ruta_pdf_comprobante_pago` varchar(45) DEFAULT NULL,
+  `ruta_pdf_orden_compra` varchar(100) NOT NULL,
+  `ruta_pdf_pedido` varchar(100) DEFAULT NULL,
+  `ruta_pdf_comprobante_pago` varchar(150) DEFAULT NULL,
   `num_pedido` varchar(15) DEFAULT NULL,
   `observacion` varchar(100) DEFAULT NULL,
   `fecha_inicial` datetime DEFAULT NULL,
@@ -246,7 +246,10 @@ INSERT INTO `pedidos` (`id_pedido`, `id_empleado`, `idcliente`, `orden_de_compra
 (278, 1, 2, 'OLA45', 1, 1, '1584551855035HW10.docx', '1584551855040ofertas laborales', '1584551855044Untitled Document 1', 'ED96', 'si ', '2020-03-18 11:17:00', 'XCV369', 236.23),
 (279, 1, 2, 'CML456', 2, 1, '1584552205226cliente.py', '1584552205230servidor.py', '1584552205236README.md', 'XC16', 'hola com estas ', '2020-03-18 11:23:00', 'ER456', 12.45),
 (280, 1, 1, 'AS456', 1, 1, '1584553301088README.md', '1584553301090servidor.py', '1584553301093Sockets_con_Python.pdf', 'QWE52', '146.45', '2020-03-18 11:41:00', 'WE586', 45.45),
-(281, 1, 2, 'adq', 1, 1, '1584553909340servidor.py', '1584553909344servidor.py', '1584553909346servidor.py', '123Aa', 'ya va', '2020-03-18 11:51:00', '456er', 45.45);
+(281, 1, 2, 'adq', 1, 1, '1584553909340servidor.py', '1584553909344servidor.py', '1584553909346servidor.py', '123Aa', 'ya va', '2020-03-18 11:51:00', '456er', 45.45),
+(282, 1, 1, 'adq45', 1, 1, '1584557663517WhatsApp Image 2020-03-17 at 16.52.19.jpeg', '1584557663522covamsa_desarrollo (1).sql', '1584557663529WhatsApp Image 2020-03-17 at 16.52.19.jpeg', '65as', ' vdz', '2020-03-18 12:54:00', 'as87', 45.45),
+(283, 1, 2, 'adq45', 1, 1, '1584557805156', '1584557805161', '1584557805167', '65as', '34t', '2020-03-18 12:56:00', 'AERT123', 45.45),
+(284, 1, 1, 'adq45', 1, 1, '1584557925552', '1584557925557', '1584557925560', '65as', 'sedfw', '2020-03-18 12:58:00', 'as87', 12.45);
 
 -- --------------------------------------------------------
 
@@ -335,7 +338,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('ZP_S-sZfVIjkWNHdxNlh5UPdOE-zM-R3', 1584641494, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"flash\":{},\"passport\":{\"user\":4}}'),
+('ZP_S-sZfVIjkWNHdxNlh5UPdOE-zM-R3', 1584644729, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"flash\":{},\"passport\":{\"user\":2}}'),
 ('anoxWjDwc1RGh8yxUqO12oTNQDN1-X8r', 1584557937, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"flash\":{},\"passport\":{\"user\":2}}'),
 ('fGxK8yKQwnndX5C3JHw9hXtH0wTfLbON', 1584581193, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"flash\":{},\"passport\":{\"user\":2}}');
 
@@ -520,7 +523,7 @@ ALTER TABLE `modulos`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=282;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=285;
 
 --
 -- AUTO_INCREMENT de la tabla `permissions`
