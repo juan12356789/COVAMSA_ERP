@@ -51,11 +51,7 @@ const storage=multer.diskStorage({
 
   router.post("/add",upload.array('gimg', 12),async(req,res)=> {
     console.log(Object.keys(req.body).length);
-    console.log(req.files);
-    console.log(req.body);
-    
-    
-    
+  
     if (req.body.nombre != undefined){
       const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre );
   
@@ -76,14 +72,10 @@ const storage=multer.diskStorage({
           comprobante_pago: req.body.comprobante_pago,
           importe:req.body.importe 
         }; 
-  
         await pool.query("INSERT INTO pedidos set ? ",[insert]);
-        req.flash("success","Su pedido ha sido guardado con éxito"); 
-        
-        res.redirect('/ventas');
+        res.send(true)
     }else{
-    req.flash('error',"Ingrese todos los campos requeridos");
-    res.redirect('/ventas');
+      res.send(true);
     }
         
   });

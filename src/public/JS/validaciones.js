@@ -1,5 +1,7 @@
 const socket = io();
 
+$("#spinner").hide();
+
 $("#tusClientes").click(function (e) { 
     $('.col-sm-8').val('');
     $("#inputBusqueda").keydown(function (e) {  
@@ -75,6 +77,8 @@ $(document).ready(function() {
     });
 });
 
+
+
 $(function(){
     $("#imgct").on("submit", function(e){
         e.preventDefault();
@@ -88,12 +92,22 @@ $(function(){
             type: "POST",
             dataType: "html",
             data: formData,
+            beforeSend: function() {
+               $("#spinner").show(); // Le quito la clase que oculta mi animación 
+            },
+            success: function (response) {
+                if(response) {
+                    $("#spinner").hide();
+                    alert('su pedido ha sido subido con exito')
+                }
+                else alert('El pedido no ha sigo  guardado favor de revisar los campos '); 
+            },
             cache: false,
             contentType: false,
      processData: false
         })
             .done(function(res){
-                $("#mensaje").html("Respuesta: " + res);
+                
             });
     }); 
 });

@@ -47,6 +47,14 @@
           {{#each cliente }}
           <input type="text"  class="form-control border border-secondary" value="{{nombre}}" name="cliente" >
           {{/each}}
+         <div id="spinner" > 
+          <div class="d-flex justify-content-center"  >
+            <div class="spinner-border m-12" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          </div>
+          <br>
         <button type="button" class="btn btn-dark btn-lg btn-block "  id="tusClientes" data-toggle="modal" data-target="#staticBackdrop"  href="/ventas/busquedaCliente" role="button" aria-expanded="false" aria-controls="collapseExample">
         Tus Clientes
         </button>
