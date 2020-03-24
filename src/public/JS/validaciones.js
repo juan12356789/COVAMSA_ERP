@@ -34,12 +34,6 @@ let classText = () => {
     $(".comprobante_pago").addClass("col-sm-2 col-form-label");
     $(".observaciones").addClass("col-sm-2 col-form-label");
 };
-let remuveClass = ()=>{
-    $(".orden_compra").removeClass("col-sm-2 col-form-label text-danger");
-    $(".numero_pedido").removeClass("col-sm-2 col-form-label text-danger");
-    $(".comprobante_pago").removeClass("col-sm-2 col-form-label text-danger");
-    $(".observaciones").removeClass("col-sm-2 col-form-label text-danger");
-}
 classText();
 
 let cliente = (nombre) => {
@@ -52,25 +46,12 @@ let cliente = (nombre) => {
        </div>
        </div>
     `;
-    pagos(nombre);
     $("#inputCliente").show();
     document.getElementById('inputCliente').innerHTML = mandar;
 
 };
 //Trae los tipos de pago 
-let pagos = (cliente) => {
 
-    $.post("/ventas/pagos", { cliente: cliente }, function(data, campos) {
-        data[data.length - 1].forEach(data => {
-            $("." + data.tipo_pago).removeClass("col-sm-2 col-form-label text-danger");
-        });
-        classText();
-        data.forEach(data => {
-            $("." + data.tipo_pago).addClass("col-sm-2 col-form-label text-danger");
-
-        });
-    });
-};
 $(document).ready(function() {
     $.ajax({
         type: "GET",
@@ -80,8 +61,6 @@ $(document).ready(function() {
         }
     });
 });
-
-
 
 $(function(){
     $("#imgct").on("submit", function(e){
