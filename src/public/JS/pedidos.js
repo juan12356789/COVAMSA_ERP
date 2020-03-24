@@ -11,7 +11,7 @@ let pedidos = (data) => {
             }
         });
     } else {
-        sendData(data)
+       sendData(data);
     }
 };
 pedidos();
@@ -22,7 +22,7 @@ socket.on('data:pedidos', function(data) {
 let sendData = (data) => {
     console.log(data);
     let table = '',
-        ruta = ["NORTE", "SUR"],
+        ruta = ["NORTE", "SUR"];
         estatus = ['CAPTURADO'];
     data.forEach(data => {
         table+= `<tr>

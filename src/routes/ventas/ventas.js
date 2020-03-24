@@ -51,6 +51,9 @@ const storage=multer.diskStorage({
 
   router.post("/add",upload.array('gimg', 12),async(req,res)=> {
     console.log(Object.keys(req.body).length);
+    console.log(req.files);
+    console.log(req.body);
+    
     
     
     if (req.body.nombre != undefined){
@@ -75,7 +78,8 @@ const storage=multer.diskStorage({
         }; 
   
         await pool.query("INSERT INTO pedidos set ? ",[insert]);
-        req.flash("success","Su pedido ha sido guardado con éxito")
+        req.flash("success","Su pedido ha sido guardado con éxito"); 
+        
         res.redirect('/ventas');
     }else{
     req.flash('error',"Ingrese todos los campos requeridos");

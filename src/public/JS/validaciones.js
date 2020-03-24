@@ -74,3 +74,28 @@ $(document).ready(function() {
         }
     });
 });
+
+$(function(){
+    $("#imgct").on("submit", function(e){
+        e.preventDefault();
+        var f = $(this);
+        var formData = new FormData(document.getElementById("imgct"));
+        formData.append("dato", "valor");
+        
+        //formData.append(f.attr("name"), $(this)[0].files[0]);
+       $.ajax({
+            url: "/ventas/add",
+            type: "POST",
+            dataType: "html",
+            data: formData,
+            cache: false,
+            contentType: false,
+     processData: false
+        })
+            .done(function(res){
+                $("#mensaje").html("Respuesta: " + res);
+            });
+    }); 
+});
+
+
