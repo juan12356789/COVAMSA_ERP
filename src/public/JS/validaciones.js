@@ -1,7 +1,6 @@
 const socket = io();
 
 $("#spinner").hide();
-
 $("#tusClientes").click(function (e) { 
     $('.col-sm-8').val('');
     $("#inputBusqueda").keydown(function (e) {  
@@ -9,6 +8,7 @@ $("#tusClientes").click(function (e) {
     });    
     clientes();
 });
+
 
 let clientes = (data)=>{
     $.post("/ventas", { words:data},function (data) {
@@ -33,9 +33,13 @@ let classText = () => {
     $(".numero_pedido").addClass("col-sm-2 col-form-label");
     $(".comprobante_pago").addClass("col-sm-2 col-form-label");
     $(".observaciones").addClass("col-sm-2 col-form-label");
-
-
 };
+let remuveClass = ()=>{
+    $(".orden_compra").removeClass("col-sm-2 col-form-label text-danger");
+    $(".numero_pedido").removeClass("col-sm-2 col-form-label text-danger");
+    $(".comprobante_pago").removeClass("col-sm-2 col-form-label text-danger");
+    $(".observaciones").removeClass("col-sm-2 col-form-label text-danger");
+}
 classText();
 
 let cliente = (nombre) => {
@@ -85,8 +89,6 @@ $(function(){
         var f = $(this);
         var formData = new FormData(document.getElementById("imgct"));
         formData.append("dato", "valor");
-        
-        //formData.append(f.attr("name"), $(this)[0].files[0]);
        $.ajax({
             url: "/ventas/add",
             type: "POST",
@@ -99,6 +101,8 @@ $(function(){
                 if(response) {
                     $("#spinner").hide();
                     $('#imgct').trigger("reset");
+                    remuveClass(); 
+                    classText();
                     alert('su pedido ha sido subido con exito')
                 }
                 else alert('El pedido no ha sigo  guardado favor de revisar los campos '); 
