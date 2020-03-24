@@ -98,6 +98,7 @@ $(function(){
             success: function (response) {
                 if(response) {
                     $("#spinner").hide();
+                    $('#imgct').trigger("reset");
                     alert('su pedido ha sido subido con exito')
                 }
                 else alert('El pedido no ha sigo  guardado favor de revisar los campos '); 
