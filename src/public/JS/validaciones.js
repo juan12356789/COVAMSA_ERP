@@ -28,20 +28,14 @@ let clientes = (data)=>{
     );
 };
 
-let classText = () => {
-    $(".orden_compra").addClass("col-sm-2 col-form-label");
-    $(".numero_pedido").addClass("col-sm-2 col-form-label");
-    $(".comprobante_pago").addClass("col-sm-2 col-form-label");
-    $(".observaciones").addClass("col-sm-2 col-form-label");
-};
-classText();
+
 
 let cliente = (nombre) => {
     let mandar = `
        <div class="form-group row justify-content-center ">
        <label for="" class="col-sm-2 col-form-label"></label>
        <div class="col-sm-5">
-         <input type="text"  class="form-control valid border border-secondary" value="${nombre}" name="nombre" readonly >
+         <input type="text"  class="form-control valid border border-secondary" value="${nombre}" name="nombre" require readonly >
        </div>
        </div>
        </div>
@@ -50,17 +44,10 @@ let cliente = (nombre) => {
     document.getElementById('inputCliente').innerHTML = mandar;
 
 };
-//Trae los tipos de pago 
 
-$(document).ready(function() {
-    $.ajax({
-        type: "GET",
-        url: "/ventas/pedidos",
-        success: function(response) {
-            socket.emit('data:pedidos', response);
-        }
-    });
-});
+let pedidos = (data)=>{
+    socket.emit('data:pedidos', data);
+};
 
 $(function(){
     $("#imgct").on("submit", function(e){
@@ -77,22 +64,26 @@ $(function(){
                $("#spinner").show(); // Le quito la clase que oculta mi animación 
             },
             success: function (response) {
-                if(response) {
+                console.log(response);
+                
+                if(response == 'false'  ) {
+                    $("#spinner").hide();
+                    $("#inputCliente").hide();
+                    alert('El pedido no ha sigo  guardado favor de revisar los campos '); 
+                } else {
                     $("#spinner").hide();
                     $('#imgct').trigger("reset");
-                    remuveClass(); 
-                    classText();
-                    alert('su pedido ha sido subido con exito')
+                    cliente(' '); 
+                    $("#inputCliente").hide();
+                    pedidos(response); 
+                  
                 }
-                else alert('El pedido no ha sigo  guardado favor de revisar los campos '); 
             },
             cache: false,
             contentType: false,
-     processData: false
+           processData: false
         })
-            .done(function(res){
-                
-            });
+            
     }); 
 });
 

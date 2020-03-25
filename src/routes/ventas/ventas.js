@@ -6,9 +6,6 @@ const multer=require("multer");
 const pool = require('../../database');
 const {isLoggedIn}= require('../../lib/auth');
 
-
-
-//quitar multer si es necesario 
 const  rutimage=path.join(__dirname,"../../files");
 
 const storage=multer.diskStorage({
@@ -51,12 +48,15 @@ const storage=multer.diskStorage({
 
   router.post("/add",upload.array('gimg', 12),async(req,res)=> {
     console.log(Object.keys(req.body).length);
-  
-    if (req.body.nombre != undefined){
+        console.log(req.body);
+        
+    if (req.body.nombre != undefined  &&  req.body.nombre != ' ' ){
+      console.log('hola');
+      
       const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre );
   
-      let f= new Date();
-        let  insert = {
+        let f= new Date();
+        const   insert = {
           id_pedido: null,  
           id_empleado: cliente_id[0].id_empleados ,
           idcliente: cliente_id[0].idcliente,
@@ -73,9 +73,11 @@ const storage=multer.diskStorage({
           importe:req.body.importe 
         }; 
         await pool.query("INSERT INTO pedidos set ? ",[insert]);
-        res.send(true)
+        const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,fecha_inicial,comprobante_pago,importe
+                                        FROM pedidos`);
+        res.send(pedidos); 
     }else{
-      res.send(true);
+      res.send(false);
     }
         
   });
@@ -83,8 +85,7 @@ const storage=multer.diskStorage({
 // cambiar la fecha 
 
   router.get('/pedidos', async (req,res)=>{
-      const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,fecha_inicial,comprobante_pago,importe
-                                        FROM pedidos`);
+      
       res.send(pedidos);
   });
 module.exports = router; 
