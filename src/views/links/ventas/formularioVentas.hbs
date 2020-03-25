@@ -13,7 +13,7 @@
 <div class="container">
 <div class="jumbotron">
 <button type="button" class="close"><a href="/menu"><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></a> </button><br>
-
+<div class="container">
 <form    enctype="multipart/form-data" method="post" id="imgct" class="columinput">
    <div class="container">  
       <div class="form-group row  justify-content-center ">
@@ -24,12 +24,14 @@
           <input type="file" class="form-control-file " required  name="gimg" id="gimg" style="color: black;" >
         </div>
       </div>
+      
       <div class="form-group row justify-content-center">
         <label for="" class="numero_pedido">&squf;No. de Pedido:</label>
         <div class="col-sm-5">
           <input type="text"  class="form-control valid border border-secondary" name="numeroPedido" required pattern="[A-Za-z0-9]+" title="Campo Obligatorio" >
           <input type="file" class="form-control-file " required  name="gimg" id="no_pedido" style="color: black;" >
         </div>
+        
       </div>
        <div class="form-group row justify-content-center">
         <label for="" class="comprobante_pago">&squf;Comprobante de Pago:</label>
@@ -77,18 +79,20 @@
          </thead >
           <tbody id="clientes" >
 
-
           </tbody>
           </table>
          </table>
          </div>
         </div>
-        </div>
-      </div>
+        
+        {{!-- observacion esta, esta partiendo el formulario --}}
+    {{!-- </div>  --}}
     </div>
   </div>
 </div>
+</div>
 <div class="container">
+  <div class="jumbotron">
       <div class="form-group row justify-content-center">
         <label for=""  class="col-sm-2 col-form-label ">&squf;Ruta:</label>
         <div class="col-sm-5">
@@ -100,7 +104,7 @@
       </div> 
       <div class="form-group row justify-content-center">
         <label for="" class="col-sm-2 col-form-label">&squf;Importe:</label>
-       
+      
         <div class="col-sm-5">
           <div class="input-group-prepend">
           <span class="input-group-text border border-secondary" >$</span>
@@ -108,6 +112,7 @@
           </div>
         </div>
       </div>
+
 <div class="form-group row justify-content-center">
       <label for="" class="observaciones">&squf;Observaciones:</label>
       <div class="col-sm-5">

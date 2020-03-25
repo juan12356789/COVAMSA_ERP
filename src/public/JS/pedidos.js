@@ -23,7 +23,7 @@ let sendData = (data) => {
     console.log(data);
     let table = '',
         ruta = ["NORTE", "SUR"];
-        estatus = ['CAPTURADO'];
+        estatus = ['NUEVO'];
     data.forEach(data => {
         table+= `<tr>
                   <td> <a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>

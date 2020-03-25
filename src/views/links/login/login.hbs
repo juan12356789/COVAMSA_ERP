@@ -7,14 +7,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.29.0/sweetalert2.all.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.29.0/sweetalert2.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
 <style>
     input[type=text] {
     width: 40ch;
+    
     }
     input:invalid {
     border: 2px solid red;
     }
+    
 </style>
 
 <!------ inicio de login echo con bootstrap y css ---------->
@@ -29,25 +32,33 @@
         </div>
     
         <div class="card-body">
-            <form action="" method="post">
+            <form action="" method="post"S>
+            
+            {{!-- correo electronico --}}
                 <div class="input-group form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                     </div>
-                    <input type="text" name="email" class="form-control" pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}" placeholder="Username"  title="Utiliza una cuenta asosiada con el Usuario"> 
+                    <input type="text" name="email" class="form-control"  placeholder="Username"  pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}"  title="Utiliza una cuenta asosiada con el Usuario"> 
+                    {{!-- <input type="text" name="email" class="form-control"  placeholder="Username" title="Utiliza una cuenta asosiada con el Usuario">  --}}
+
                 </div>
 
+            {{!-- contraseña --}}
                 <div class="input-group form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-key"></i></span>
                     </div>
-                    <input type="password" name="password" class="form-control"   placeholder="Password" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*" title="Debe tener al menos una mayúscula, una minúscula y un dígito">
+                    <input type="password"  name="password" class="form-control"   placeholder="Password" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*" title="Debe tener al menos una mayúscula, una minúscula y un dígito">
                 </div>
 
+            {{!-- ingresar- Comenzar --}}
                 <div class="form-group row justify-content-center">
-                    {{!-- <input type="submit" onclick="mensaje1()" name="btn" value="Comenzar" class="btn btn-success"> --}}
-                    <button type="submit" class="btn btn-success" onclick="showAlert()">Comenzar</button>
+                    <input type="submit" onclick="mensaje1()" name="btn" value="Comenzar" class="btn btn-success" style="">
+                    {{!-- <button type="submit" class="btn btn-success" onclick="go()">Comenzar</button> --}}
                 </div>
+
+            {{!-- fin del form --}}
             </form>
         </div>
     </div>
@@ -56,15 +67,23 @@
 </body>
 </html>
 
-{{!-- validation con pattern --}}
-{{!-- pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}" --}}
 
-{{!-- validacion de password valores alfanumericos
-pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*" --}}
-
-{{!-- .{6,} elemento password con 6 o mas caracteres --}}
 <script
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
 <script src="JS/validacionLog.js" ></script>
+
+
+
+<script>
+	function validar_contrasena(form) {
+		if(form.campo_contrasena_2.value == form.campo_contrasena_1.value) { 
+			alert("CORRECTO"); 
+		}else{
+			alert("La contrasena no coincide \n Intentalo de nuevo.");
+			form.campo_contrasena_2.value = ""; form.campo_contrasena_2.focus(); 
+			return true;
+		}
+	}
+</script>
