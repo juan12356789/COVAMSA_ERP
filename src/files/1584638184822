@@ -1,9 +1,0 @@
-SQL CLAUSES: 
-limit: return sertain  number of rows 
-       "SELECT * FROM pedidos LIMIT 3; 
-
-Order by: sort the infromation  depending you want: 
-	 "SELECT * FROM pedidos ORDER BY orden_compra, sttus" 
-	  "DESC, ASC"
-distinct: you use a distinct when you don't want a repetitive numbersi of colums
-	  "SELECT DISTINCT Country FROM Customers;"
