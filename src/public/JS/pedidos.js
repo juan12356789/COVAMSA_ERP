@@ -11,7 +11,7 @@ let pedidos = (data) => {
             }
         });
     } else {
-       sendData(data);
+        sendData(data);
     }
 };
 pedidos();
@@ -20,20 +20,22 @@ socket.on('data:pedidos', function(data) {
     pedidos(JSON.parse(data));
 });
 
+
+
 let sendData = (data) => {
-    
+
     let table = '';
-        ruta = ["NORTE", "SUR"];
-        
-// <<<<<<< HEAD
-        estatus = ['NUEVO'];
-// =======
-        estatus = ['CAPTURADO'];
-        console.log(data);
-        
-// >>>>>>> e1a29f5084fd438115f622d8b17999011c482dc6
+    ruta = ["NORTE", "SUR"];
+
+    // <<<<<<< HEAD
+    estatus = ['NUEVO'];
+    // =======
+    estatus = ['CAPTURADO'];
+    console.log(data);
+
+    // >>>>>>> e1a29f5084fd438115f622d8b17999011c482dc6
     data.forEach(data => {
-        table+= `<tr>
+        table += `<tr>
                  
                   <td> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSNGhpmNOG1joyk_s0v1KH229zGd6CpZ0axtXRT6c6pqW4FlB2b&usqp=CAU" height="15">
                   <a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
@@ -49,9 +51,18 @@ let sendData = (data) => {
                   <td style="background-color:#DF3A01">${estatus[data.estatus - 1]}</td>
                   <td>${data.observacion}</td>
                   <td>${data.fecha_inicial}</td>
-                </tr>`; 
+                </tr>`;
     });
     document.getElementById('pedidos').innerHTML = table;
 }
 
-let table
+function cambiar_color_over(celda) {
+    celda.style.backgroundColor = "#66ff33"
+}
+
+$(function() {
+    $('#table td:last-child:contains(1)').closest('td').css('background-color', 'red');
+    $('#table td:last-child:contains(2)').closest('td').css('background-color', 'blue');
+
+    // Así sucesivamente hasta llegar al 10
+});

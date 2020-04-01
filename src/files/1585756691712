@@ -1,0 +1,14 @@
+
+
+while True:
+    try:
+        edad = int(input("Edad: "))
+        break
+    except ValueError:
+        print("¡Debes ingresar un número!")
+
+if edad >= 18:
+    print("Eres mayor de edad.")
+else:
+    print("Aún eres pequeño.")
+
