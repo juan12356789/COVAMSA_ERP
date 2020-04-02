@@ -11,11 +11,7 @@ let pedidos = (data) => {
             }
         });
     } else {
-<<<<<<< HEAD
-        sendData(response);
-=======
         sendData(data);
->>>>>>> adb1326d29f0c5df3f6ce814e69289bf6662b1a3
     }
 };
 
@@ -28,23 +24,9 @@ socket.on('data:pedidos', function(data) {
 
 
 let sendData = (data) => {
-<<<<<<< HEAD
     let table = '';
         ruta = ["NORTE", "SUR"];
         estatus = ['NUEVO'];
-=======
-
-    let table = '';
-    ruta = ["NORTE", "SUR"];
-
-    // <<<<<<< HEAD
-    estatus = ['NUEVO'];
-    // =======
-    estatus = ['CAPTURADO'];
-    console.log(data);
-
-    // >>>>>>> e1a29f5084fd438115f622d8b17999011c482dc6
->>>>>>> adb1326d29f0c5df3f6ce814e69289bf6662b1a3
     data.forEach(data => {
         table += `<tr>
                  
@@ -62,25 +44,7 @@ let sendData = (data) => {
                   <td style="background-color:#DF3A01">${estatus[data.estatus - 1]}</td>
                   <td>${data.observacion}</td>
                   <td>${data.fecha_inicial}</td>
-<<<<<<< HEAD
                 </tr>`; 
     });
     document.getElementById('pedidos').innerHTML = table; 
 }
-=======
-                </tr>`;
-    });
-    document.getElementById('pedidos').innerHTML = table;
-}
-
-function cambiar_color_over(celda) {
-    celda.style.backgroundColor = "#66ff33"
-}
-
-$(function() {
-    $('#table td:last-child:contains(1)').closest('td').css('background-color', 'red');
-    $('#table td:last-child:contains(2)').closest('td').css('background-color', 'blue');
-
-    // Así sucesivamente hasta llegar al 10
-});
->>>>>>> adb1326d29f0c5df3f6ce814e69289bf6662b1a3

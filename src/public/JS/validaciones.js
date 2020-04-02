@@ -45,24 +45,7 @@ let cliente = (nombre) => {
 
 };
 
-let sendData = (data) => {
-    let table = '';
-        ruta = ["NORTE", "SUR"];
-        estatus = ['NUEVO'];
-    data.forEach(data => {
-        table+= `<tr>
-                  <td> <a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
-                  <td> <a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
-                  <td> <a  href="/almacen/pdf/${data.ruta_pdf_comprobante_pago}">${data.comprobante_pago}</a></td>
-                  <td>${ruta[data.ruta - 1]}</td>
-                  <td>${data.importe}</td> 
-                  <td>${estatus[data.estatus - 1]}</td> 
-                  <td>${data.observacion}</td>
-                  <td>${data.fecha_inicial}</td>
-                </tr>`; 
-    });
-    document.getElementById('orders').innerHTML = table; 
-};
+
 
 $(document).ready(function() {
     
@@ -71,28 +54,36 @@ $(document).ready(function() {
 
 
 let pedidos_vendedores = ()=>{
-    $('#orders').dataTable({
-        "ajax":{
-            "method":"POST",
-            "url":"/ventas/pedidos_vendedor"
-        },
-        "colums":[
-            {"data":"orden_de_compra"},
-            {"data":"ruta"},
-            {"data":"estatus"},
-            {"data":"ruta_pdf_orden_compra"},
-            {"data":"ruta_pdf_pedido"},
-            {"data":"ruta_pdf_comprobante_pago "},
-            {"data":"num_pedido"},
-            {"data":"observacion"},
-            {"data":"fecha_inicial"},
-            {"data":"comprobante_pago"},
-            {"data":"importe "}
-        ]
 
+    $.ajax({type: "POST",url: "/ventas/pedidos_vendedor", success: function (response) {
+            let ruta  = ['NORTE','SUR'];
+            let estatus  = ['NUEVO'];
+            response.filter( n  => n.ruta =  ruta[ n.ruta  -  1]  );
+            response.filter( n  => n.estatus =  estatus[ n.estatus  -  1]  );
+
+            console.log(response);
+            
+        $("#orders").DataTable( {
+            "order": [[ 7, "desc" ]],
+            data: response,
+            columns: [
+                { data: 'orden_de_compra' },
+                { data: 'num_pedido'},
+                { data: 'comprobante_pago'},
+                { data: 'ruta'},
+                { data: 'importe'},
+                { data: 'estatus' },
+                { data: 'observacion' },
+                { data: 'fecha_inicial'}
+            ]
+    
+        });
+
+        }
     });
-  
-}
+
+        
+};
 
 
 
@@ -127,6 +118,7 @@ $(function(){
                     cliente(' '); 
                     $("#inputCliente").hide();
                     pedidos(response); 
+                    pedidos_vendedores(); 
                   
                 }
             },
