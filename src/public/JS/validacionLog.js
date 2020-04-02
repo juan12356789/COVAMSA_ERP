@@ -1,4 +1,4 @@
-function showAlert() {
-    swal("¡Bienveido!", "", "success")
+// function showAlert() {
+//     swal("¡Bienveido!", "", "success")
 
-}
+// }
