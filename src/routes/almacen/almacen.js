@@ -16,6 +16,10 @@ router.get('/pedidos',async(req,res)=>{
       res.send(pedidos); 
     
 });
+
+
+
+
 // Descarga el PDF 
 router.get('/pdf/:id',(req,res)=>{
 

@@ -84,6 +84,23 @@ const storage=multer.diskStorage({
 
 // cambiar la fecha 
 
+router.post('/pedidos_vendedor',async (req , res)=>{
+   
+  const ordenes_vendedores  = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,fecha_inicial,comprobante_pago,importe 
+                                                FROM pedidos  INNER JOIN empleados  on id_empleado = id_empleados
+                                                WHERE idacceso = ?`, req.user[0].idacceso);
+  let arreglo;
+  ordenes_vendedores.forEach(ordenes_vendedores => {
+    arreglo["data"] = ordenes_vendedores
+  });
+  console.log(arreglo);
+  
+  let info  =  `{"data:"` + JSON.stringify(ordenes_vendedores)+"}"; 
+  
+  
+
+});
+
   router.get('/pedidos', async (req,res)=>{
       
       res.send(pedidos);

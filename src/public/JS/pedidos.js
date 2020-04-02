@@ -6,14 +6,15 @@ let pedidos = (data) => {
             type: "GET",
             url: "/almacen/pedidos",
             success: function(response) {
-                sendData(response);
+                 sendData(response);
                 if (response.length == 0) console.log('No hay pedidos por el momento');
             }
         });
     } else {
-       sendData(data);
+        sendData(response);
     }
 };
+
 pedidos();
 socket.on('data:pedidos', function(data) {
 
@@ -21,16 +22,9 @@ socket.on('data:pedidos', function(data) {
 });
 
 let sendData = (data) => {
-    
     let table = '';
         ruta = ["NORTE", "SUR"];
-<<<<<<< HEAD
         estatus = ['NUEVO'];
-=======
-        estatus = ['CAPTURADO'];
-        console.log(data);
-        
->>>>>>> e1a29f5084fd438115f622d8b17999011c482dc6
     data.forEach(data => {
         table+= `<tr>
                   <td> <a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
@@ -42,8 +36,6 @@ let sendData = (data) => {
                   <td>${data.observacion}</td>
                   <td>${data.fecha_inicial}</td>
                 </tr>`; 
-        
-    
     });
-    document.getElementById('pedidos').innerHTML = table;
+    document.getElementById('pedidos').innerHTML = table; 
 }
