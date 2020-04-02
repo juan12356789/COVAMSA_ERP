@@ -49,7 +49,7 @@
        <div class="form-group row justify-content-center">
         <label for="" class="col-sm-2 col-form-label">&squf;Comprobante de Pago:</label>
         <div class="col-sm-5">
-          <input type="text"  class="form-control valid border border-secondary" required id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Campo Obligatorio" >
+          <input type="text"  class="form-control valid border border-secondary" minlength="2" required id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Campo Obligatorio" >
           <input type="file" class="form-control-file " required name="gimg" id="comprobante" style="color: black;" >
         </div>
       </div>
@@ -125,8 +125,8 @@
       
         <div class="col-sm-5">
           <div class="input-group-prepend">
-          <span class="input-group-text border border-secondary" >$</span>
-          <input type="text"  class="form-control border border-secondary" name="importe" required pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$" >
+          <span class="input-group-text border border-secondary">$</span>
+          <input type="text"  class="form-control border border-secondary" name="importe" required pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$" title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales" >
           </div>
         </div>
       </div>
@@ -134,14 +134,14 @@
 <div class="form-group row justify-content-center">
       <label for="" class="col-sm-2 col-form-label">&squf;Observaciones:</label>
       <div class="col-sm-5">
-        <textarea class="form-control border border-secondary"  name="observaciones" required title="En caso de ques sea necesario poner observaciones" rows="2"></textarea>
+      <textarea class="form-control border border-secondary" name="observaciones" required title="En caso de ques sea necesario poner observaciones" rows="2"></textarea>
       </div>
   </div>
       <br>
       <div class="form-group row justify-content-center">
         <label for="" class="col-sm-2 col-form-label" ></label>
         <div class="col-sm-4">
-          <input type="submit" class="btn btn-success btn-lg btn-block" value="Guardar" id="nvig" /> 
+          <input type="submit" class="btn btn-success btn-lg btn-block" value="Enviar" id="nvig" /> 
         </div>
       </div>
 </div> 
