@@ -8,7 +8,7 @@ const database ={
    user:'covamsa_covamssa',
     password:'Covamsa2020proyectoerp',
     database:'covamsa_desarrollo',
-    port: 3307
+    // port: 3307
 }
 
 //ver si se pueden subir cambios al servidor xd
