@@ -60,8 +60,7 @@ let pedidos_vendedores = ()=>{
             let estatus  = ['NUEVO'];
             response.filter( n  => n.ruta =  ruta[ n.ruta  -  1]  );
             response.filter( n  => n.estatus =  estatus[ n.estatus  -  1]  );
-
-            console.log(response);
+     
             
         $("#orders").DataTable( {
             "order": [[ 7, "desc" ]],
