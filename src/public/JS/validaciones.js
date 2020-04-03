@@ -46,7 +46,10 @@ let cliente = (nombre) => {
 
 
 
+
+
 $(document).ready(function() {
+<<<<<<< HEAD
 
     pedidos_vendedores();
 });
@@ -83,10 +86,58 @@ let pedidos_vendedores = () => {
 
             });
 
+=======
+     pedidos_vendedores();
+     dataTable =  $("#orders").DataTable({
+        "order": [[ 7, "desc" ]],
+        columns: [
+            {
+                sortable: false,
+                "render": function ( data, type, full, meta ) {
+                    return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}" >${full.orden_de_compra}</a>`;
+                }
+            }, {
+                sortable: false,
+                "render": function ( data, type, full, meta ) {
+                    return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
+                }
+            },{
+                sortable: false,
+                "render": function ( data, type, full, meta ) {
+                    return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago}</a>`;
+                }
+            },
+                 { data: 'ruta'},
+                 { data: 'importe'},
+                 { data: 'estatus' },
+                 { data: 'observacion' },
+                 { data: 'fecha_inicial'}
+
+                ]
+     }); 
+   
+} );
+
+
+let pedidos_vendedores = ( info )=>{
+    
+    $.ajax({type: "POST",url: "/ventas/pedidos_vendedor", success: function (response) {
+            let ruta  = ['NORTE','SUR'];
+            let estatus  = ['NUEVO'];
+            response.filter( n  => n.ruta =  ruta[ n.ruta  -  1]  );
+            response.filter( n  => n.estatus =  estatus[ n.estatus  -  1]  );
+            console.log(response);
+           dataTable.rows().remove();
+           dataTable.rows.add(response).draw();
+>>>>>>> 43d13f7f9de47653d1c58b962240a35b92e072a6
         }
     });
 
 
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 43d13f7f9de47653d1c58b962240a35b92e072a6
 };
 
 
