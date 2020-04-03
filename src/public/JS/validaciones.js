@@ -54,14 +54,28 @@ $(document).ready(function() {
      dataTable =  $("#orders").DataTable({
         "order": [[ 7, "desc" ]],
         columns: [
-                 { data: 'orden_de_compra' },
-                 { data: 'num_pedido'},
-                 { data: 'comprobante_pago'},
+            {
+                sortable: false,
+                "render": function ( data, type, full, meta ) {
+                    return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}" >${full.orden_de_compra}</a>`;
+                }
+            }, {
+                sortable: false,
+                "render": function ( data, type, full, meta ) {
+                    return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
+                }
+            },{
+                sortable: false,
+                "render": function ( data, type, full, meta ) {
+                    return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago}</a>`;
+                }
+            },
                  { data: 'ruta'},
                  { data: 'importe'},
                  { data: 'estatus' },
                  { data: 'observacion' },
                  { data: 'fecha_inicial'}
+
                 ]
      }); 
    
