@@ -47,39 +47,40 @@ let cliente = (nombre) => {
 
 
 
+
+
 $(document).ready(function() {
-    
-    pedidos_vendedores(); 
+     pedidos_vendedores();
+     dataTable =  $("#orders").DataTable({
+        "order": [[ 7, "desc" ]],
+        columns: [
+                 { data: 'orden_de_compra' },
+                 { data: 'num_pedido'},
+                 { data: 'comprobante_pago'},
+                 { data: 'ruta'},
+                 { data: 'importe'},
+                 { data: 'estatus' },
+                 { data: 'observacion' },
+                 { data: 'fecha_inicial'}
+                ]
+     }); 
+   
 } );
 
 
-let pedidos_vendedores = ()=>{
-
+let pedidos_vendedores = ( info )=>{
+    
     $.ajax({type: "POST",url: "/ventas/pedidos_vendedor", success: function (response) {
             let ruta  = ['NORTE','SUR'];
             let estatus  = ['NUEVO'];
             response.filter( n  => n.ruta =  ruta[ n.ruta  -  1]  );
             response.filter( n  => n.estatus =  estatus[ n.estatus  -  1]  );
-     
-            
-        $("#orders").DataTable( {
-            "order": [[ 7, "desc" ]],
-            data: response,
-            columns: [
-                { data: 'orden_de_compra' },
-                { data: 'num_pedido'},
-                { data: 'comprobante_pago'},
-                { data: 'ruta'},
-                { data: 'importe'},
-                { data: 'estatus' },
-                { data: 'observacion' },
-                { data: 'fecha_inicial'}
-            ]
-    
-        });
-
+            console.log(response);
+           dataTable.rows().remove();
+           dataTable.rows.add(response).draw();
         }
     });
+
 
         
 };
