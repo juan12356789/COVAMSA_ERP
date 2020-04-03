@@ -6,7 +6,7 @@ let pedidos = (data) => {
             type: "GET",
             url: "/almacen/pedidos",
             success: function(response) {
-                 sendData(response);
+                sendData(response);
                 if (response.length == 0) console.log('No hay pedidos por el momento');
             }
         });
@@ -25,8 +25,8 @@ socket.on('data:pedidos', function(data) {
 
 let sendData = (data) => {
     let table = '';
-        ruta = ["NORTE", "SUR"];
-        estatus = ['NUEVO'];
+    ruta = ["NORTE", "SUR"];
+    estatus = ['NUEVO'];
     data.forEach(data => {
         table += `<tr>
                  
@@ -44,7 +44,8 @@ let sendData = (data) => {
                   <td style="background-color:#DF3A01">${estatus[data.estatus - 1]}</td>
                   <td>${data.observacion}</td>
                   <td>${data.fecha_inicial}</td>
-                </tr>`; 
+               
+                </tr>`;
     });
-    document.getElementById('pedidos').innerHTML = table; 
+    document.getElementById('pedidos').innerHTML = table;
 }
