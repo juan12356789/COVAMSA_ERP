@@ -26,7 +26,7 @@ socket.on('data:pedidos', function(data) {
 let sendData = (data) => {
     let table = '';
     ruta = ["NORTE", "SUR"];
-    estatus = ['NUEVO'];
+    estatus = ['NUEVO','PROCESO','PARCIAL','COMPLETO','RUTA'];
     data.forEach(data => {
         table += `<tr>
                  
