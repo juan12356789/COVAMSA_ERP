@@ -6,6 +6,10 @@
     overflow: auto;
 }
 
+input[type=checkbox] {
+  transform: scale(1.5);
+}
+
 #body{
   display: none;
 }
@@ -143,25 +147,34 @@
       </div>
       </div>
       </div>
-
+<br>
 <div class="form-group row justify-content-center">
         <label for="" class="col-sm-2 col-form-label">&squf;Tipo de Pago:</label>
         <div class="col-sm-5">
           <div class="input-group-prepend">
-            <div class="form-group">
+            {{!-- <div class="form-group"> --}}
     <label for="exampleFormControlSelect1">Crédito</label>
     <select class="form-control" id="exampleFormControlSelect1">
       <option>Pago Anticipado</option>
       <option>Pago Contra Entrega</option>
       
     </select>
-  </div>
-         <br>
+    
+  {{!-- </div> --}}
+  
+         {{!-- <br> --}}
+         
       </div>
-      </div>
+      <div class="form-check">
+  <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+  <label class="form-check-label" for="defaultCheck1">
+    Contado
+  </label>
+</div>
+      </div> 
       </div>
 
-
+<br>
 <div class="form-group row justify-content-center">
       <label for="" class="col-sm-2 col-form-label">&squf;Observaciones:</label>
       <div class="col-sm-5">
