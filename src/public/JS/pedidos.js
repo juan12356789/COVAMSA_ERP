@@ -1,24 +1,38 @@
+
 const socket = io();
 
 let pedidos = (data) => {
-    if (data == undefined) {
+
+    if (data == undefined  || typeof(data) == "string") {
+
         $.ajax({
             type: "GET",
             url: "/almacen/pedidos",
             success: function(response) {
-                sendData(response);
-                if (response.length == 0) console.log('No hay pedidos por el momento');
+
+                 if( typeof(data)  ==  "string" && data.length < 20 ) alert(`El pedido con el código ${data} ha sido cancelado`);
+
+                 sendData( response );
+                 
+                 if (response.length == 0) console.log('No hay pedidos por el momento');
+
             }
         });
+
     } else {
-        sendData(data);
+
+        sendData(JSON.parse(data));
+
     }
+
 };
 
 pedidos();
-socket.on('data:pedidos', function(data) {
 
-    pedidos(JSON.parse(data));
+socket.on('data:pedidos', function(data) {
+ 
+    pedidos(data);
+
 });
 
 
@@ -26,7 +40,7 @@ socket.on('data:pedidos', function(data) {
 let sendData = (data) => {
     let table = '';
     ruta = ["NORTE", "SUR"];
-    estatus = ['NUEVO','PROCESO','PARCIAL','COMPLETO','RUTA'];
+    estatus = ['NUEVO','PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO'];
     data.forEach(data => {
         table += `<tr>
                  

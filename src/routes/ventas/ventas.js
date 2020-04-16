@@ -84,14 +84,19 @@ const storage=multer.diskStorage({
 
 router.post('/pedidos_vendedor',async (req , res)=>{
    
-  const ordenes_vendedores  = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%Y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
+  const ordenes_vendedores  = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%Y-%M-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
                                                 FROM pedidos  INNER JOIN empleados  on id_empleado = id_empleados
                                                 WHERE idacceso = ? 
                                                 ORDER BY fecha_inicial ASC`, req.user[0].idacceso);
-  JSON.stringify(ordenes_vendedores)
   res.send(ordenes_vendedores);
 });
 
-// checar 
+router.post('/cancel', async (req , res)=>{
+
+  await pool.query(`update pedidos set estatus = 6 , motivo_de_cancelacion = '${req.body.reason}' where  num_pedido  = ?`, req.body.data); 
+
+  res.send('Guardado'); 
+
+}); 
 
 module.exports = router; 

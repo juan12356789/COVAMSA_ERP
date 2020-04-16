@@ -49,49 +49,79 @@ let cliente = (nombre) => {
 $(document).ready(function() {
 
     pedidos_vendedores();
+
+         dataTable =  $("#orders").DataTable({
+                "order": [[ 7, "desc" ]],
+                columns: [
+                    {
+                        sortable: false,
+                        "render": function ( data, type, full, meta ) {
+                            return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}" >${full.orden_de_compra}</a>`;
+                        }
+                    }, {
+                        sortable: false,
+                        "render": function ( data, type, full, meta ) {
+                            return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
+                        }
+                    },{
+                        sortable: false,
+                        "render": function ( data, type, full, meta ) {
+                            return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago}</a>`;
+                        }
+                    },
+                         { data: 'ruta'},
+                         { data: 'importe'},
+                         { data: 'estatus' },
+                         { data: 'observacion' },
+                         { data: 'fecha_inicial'},{
+                           sortable:false,
+                           "render": function(data, type, full ,meta){
+                               let  disabled = ''
+                               if(full.estatus == "CANCELADO")  disabled = 'disabled';
+                               return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close" ${disabled}   ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button><br>`;
+                           }  
+                         }
+        
+                        ]
+        
+                    }); 
 });
 
 
-let pedidos_vendedores = () => {
 
+let pedidos_vendedores = () => {
     $.ajax({
         type: "POST",
         url: "/ventas/pedidos_vendedor",
         success: function(response) {
             let ruta = ['NORTE', 'SUR'];
-            let estatus = ['NUEVO'];
+            let estatus = ['NUEVO','PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO'];
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
             response.filter(n => n.estatus = estatus[n.estatus - 1]);
-
-
-            $("#orders").DataTable({
-                "order": [
-                    [7, "desc"]
-                ],
-                data: response,
-                columns: [
-                    { data: 'orden_de_compra' },
-                    { data: 'num_pedido' },
-                    { data: 'comprobante_pago' },
-                    { data: 'ruta' },
-                    { data: 'importe' },
-                    { data: 'estatus' },
-                    { data: 'observacion' },
-                    { data: 'fecha_inicial' },
-
-                ]
-
-            });
-
+            dataTable.rows().remove();  
+            dataTable.rows.add(response).draw();
         }
     });
-
-
+    
 };
 
+let cancelOrder = ( order ) =>{
+    
+   let confirmCancel  =  prompt(`Alerta. Esta apunto de cancelar el pedido con el numero ${order}, Si desea proceder, introdusca in 'motivo para la cancelacion'`);
+   if(confirmCancel == '' ||  confirmCancel == null )  return; 
+   $.post("/ventas/cancel", {data : order ,  reason : confirmCancel }, function (data) {
+
+           pedidos_vendedores(); 
+           pedidos(order); 
+           alert('Cancelado');
+       }
+   );
+    
+}; 
 
 
-let pedidos = (data) => {
+let pedidos = ( data ) => {
+  
     socket.emit('data:pedidos', data);
 };
 
@@ -110,7 +140,6 @@ $(function() {
                 $("#spinner").show(); // Le quito la clase que oculta mi animación 
             },
             success: function(response) {
-                console.log(response);
 
                 if (response == 'false') {
                     $("#spinner").hide();
