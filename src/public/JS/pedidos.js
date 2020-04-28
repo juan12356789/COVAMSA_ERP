@@ -40,7 +40,8 @@ socket.on('data:pedidos', function(data) {
 let sendData = (data) => {
     let table = '';
     ruta = ["NORTE", "SUR"];
-    estatus = ['NUEVO','PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO'];
+    estatus = ['NUEVO','PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','URGENTE'];
+    colores = ["#C6AED8","#A1DEDB ","#DECAA1 ","#C1DEA1 ","#DBE09A","#E0A09A","#817E7E" ]; 
     data.forEach(data => {
         table += `<tr>
                  
@@ -52,10 +53,10 @@ let sendData = (data) => {
 
                   <td> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSNGhpmNOG1joyk_s0v1KH229zGd6CpZ0axtXRT6c6pqW4FlB2b&usqp=CAU" height="15">
                   <a  href="/almacen/pdf/${data.ruta_pdf_comprobante_pago}">${data.comprobante_pago}</a></td>
-
-                  <td>${ruta[data.ruta - 1]}</td>
+                
+                  <td  style="background-color:${data.ruta ==  1 ? "#DFBC92" : "#92C1DF"} " >${ruta[data.ruta - 1]}</td>
                   <td>${data.importe}</td> 
-                  <td style="background-color:#DF3A01">${estatus[data.estatus - 1]}</td>
+                  <td style="background-color:${colores[data.estatus - 1]}">${estatus[data.estatus - 1]}</td>
                   <td>${data.observacion}</td>
                   <td>${data.fecha_inicial}</td>
                

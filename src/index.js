@@ -61,8 +61,9 @@ app.use((req,res,next)=>{// se usa para ver que variable son accedidadas desde l
 // routes 
 app.use(require('./routes/login'));
 app.use(require('./routes/menu/menu'));
-app.use('/ventas',require('./routes/ventas/ventas'));
-app.use('/almacen',require('./routes/almacen/almacen'))
+app.use('/ventas' , require('./routes/ventas/ventas'));
+app.use('/almacen', require('./routes/almacen/almacen'));
+app.use('/admin'  , require('./routes/admin/admin')); 
 
 // Public 
 app.use(express.static(path.join(__dirname,'public')));

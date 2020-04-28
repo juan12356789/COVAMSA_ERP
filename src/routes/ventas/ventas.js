@@ -4,6 +4,7 @@ const router =  express.Router();
 const path=require("path"); 
 const multer=require("multer"); 
 const pool = require('../../database');
+const  nodemailer = require('nodemailer');
 const {isLoggedIn}= require('../../lib/auth');
 
 const  rutimage=path.join(__dirname,"../../files");
@@ -18,14 +19,15 @@ const storage=multer.diskStorage({
    }
  }); 
 
-  const  upload=multer({storage:storage})
+  const  upload = multer({storage:storage})
 
   router.get('/',isLoggedIn,async(req,res)=>{
 
     res.render('links/ventas/formularioVentas');
   });
 
-
+  
+  
   router.post('/',async(req,res)=>{
     
     let clientes;
@@ -45,13 +47,17 @@ const storage=multer.diskStorage({
   
   });
 
-  router.post("/add",upload.array('gimg', 12),async(req,res)=> {
+    
+    
+  
 
+  router.post("/add" ,  upload.array('gimg', 12),async( req , res )=> {
+    
     if (req.body.nombre != undefined  &&  req.body.nombre != ' ' ){
-      console.log(req.files);
-      
-      
-      const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre );
+       console.log(req.body);
+       
+
+        const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre );
   
         let f= new Date();
         const   insert = {
@@ -68,23 +74,26 @@ const storage=multer.diskStorage({
           observacion: req.body.observaciones,
           fecha_inicial: f.getFullYear() + "-" + (f.getMonth() +1) + "-" +f.getDate()+' '+f.getHours()+':'+f.getMinutes(),
           comprobante_pago: req.body.comprobante_pago,
-          importe:req.body.importe 
+          importe:req.body.importe ,
+          prioridad: req.body.prioridad
         }; 
         await pool.query("INSERT INTO pedidos set ? ",[insert]);
+
         const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
                                         FROM pedidos`);
         res.send(pedidos); 
+
     }else{
+
       res.send(false);
+
     }
         
   });
 
-// cambiar la fecha 
-
 router.post('/pedidos_vendedor',async (req , res)=>{
    
-  const ordenes_vendedores  = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%Y-%M-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
+  const ordenes_vendedores  = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%Y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
                                                 FROM pedidos  INNER JOIN empleados  on id_empleado = id_empleados
                                                 WHERE idacceso = ? 
                                                 ORDER BY fecha_inicial ASC`, req.user[0].idacceso);
