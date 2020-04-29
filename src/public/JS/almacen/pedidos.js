@@ -40,7 +40,7 @@ socket.on('data:pedidos', function(data) {
 let sendData = (data) => {
     let table = '';
     ruta = ["NORTE", "SUR"];
-    estatus = ['NUEVO','PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','URGENTE'];
+    estatus = ['NUEVO','EN PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','URGENTE'];
     colores = ["#C6AED8","#A1DEDB ","#DECAA1 ","#C1DEA1 ","#DBE09A","#E0A09A","#817E7E" ]; 
     data.forEach(data => {
         table += `<tr>

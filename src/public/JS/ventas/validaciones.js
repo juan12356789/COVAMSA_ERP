@@ -102,7 +102,7 @@ let pedidos_vendedores = () => {
         url: "/ventas/pedidos_vendedor",
         success: function(response) {
             let ruta = ['NORTE', 'SUR'];
-            let estatus = ['NUEVO','PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','URGENTE'];
+            let estatus = ['NUEVO','EN PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','URGENTE'];
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
             response.filter(n => n.estatus = estatus[n.estatus - 1]);
             dataTable.rows().remove();  

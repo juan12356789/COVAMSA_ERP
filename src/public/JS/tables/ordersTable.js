@@ -91,7 +91,7 @@ let pedidos_urgentes_normales = ( tipo_de_pedido ) => {
         data: {tipo_de_pedido},
         success: function(response) {
             let ruta = ['NORTE', 'SUR'];
-            let estatus = ['NUEVO','PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','URGENTE'];
+            let estatus = ['NUEVO','EN PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','URGENTE'];
             
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
             response.filter(n => n.estatus = estatus[n.estatus - 1]);
