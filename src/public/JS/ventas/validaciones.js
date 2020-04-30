@@ -117,7 +117,7 @@ let cancelOrder = ( order ) =>{
     reson_to_cancel( order ); 
     let inputReason = document.getElementById('motivo_cancelacion'); 
     $("#aceptar").click(function (e) {
-        if( inputReason.value == ''  )  return  alert('Ingrese la razón de cancelación ')  ; 
+        if( inputReason.value == ''  || inputReason.value.length < 30 )  return  alert('Ingrese la razón de cancelación  con un mínimo de 30 caracteres')  ; 
            $.post("/ventas/cancel", {data : order ,  reason : inputReason.value }, function (data) {
         
                    pedidos_vendedores(); 
