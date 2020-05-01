@@ -25,7 +25,8 @@ let orderTable = () => {
             { data: 'importe' },
             { data: 'estatus' },
             { data: 'observacion' },
-            { data: 'fecha_inicial' }, {
+            { data: 'fecha_inicial' },
+            {
                 sortable: false,
                 "render": function(data, type, full, meta) {
                     let disabled = ''

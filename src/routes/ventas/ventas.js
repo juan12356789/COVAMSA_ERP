@@ -99,6 +99,7 @@ router.post('/pedidos_vendedor', async(req, res) => {
     res.send(ordenes_vendedores);
 });
 
+
 router.post('/cancel', async(req, res) => {
 
     await pool.query(`update pedidos set estatus = 6 , motivo_de_cancelacion = '${req.body.reason}' where  num_pedido  = ?`, req.body.data);

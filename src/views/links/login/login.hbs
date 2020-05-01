@@ -39,7 +39,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                     </div>
-                    <input type="text" name="email" class="form-control"  placeholder="Username"  pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}"  title="El correo electrónico que ingreses debe coincidir con una cuenta"> 
+                    <input type="text" name="email" class="form-control" onkeyup="validar()" placeholder="Username"  pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}"  title="El correo electrónico que ingreses debe coincidir con una cuenta"> 
                     {{!-- <input type="text" name="email" class="form-control"  placeholder="Username" title="Utiliza una cuenta asosiada con el Usuario">  --}}
 
                 </div>
@@ -49,12 +49,12 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-key"></i></span>
                     </div>
-                    <input type="password"  name="password" class="form-control"   placeholder="Password" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*" title="Debe tener al menos una mayúscula, una minúscula y un dígito">
+                    <input type="password" onkeyup="validar()" name="password" class="form-control" class="inputFormu"  placeholder="Password" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*" title="Debe tener al menos una mayúscula, una minúscula y un dígito">
                 </div>
 
             {{!-- ingresar- Comenzar --}}
                 <div class="form-group row justify-content-center">
-                    <input type="submit" onclick="mensaje1()" name="btn" value="Comenzar" class="btn btn-success" style="">
+                    <input type="submit"  name="btn" value="Comenzar" class="btn btn-success" class="inputFormu" id="boton" disabled>
                     {{!-- <button type="submit" class="btn btn-success" onclick="go()">Comenzar</button> --}}
                 </div>
 
@@ -73,6 +73,6 @@
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
 <script src="JS/validacionLog.js" ></script>
-
+<script src="JS/buttonLogin.js"></script>
 
 

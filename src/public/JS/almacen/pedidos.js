@@ -51,7 +51,7 @@ let sendData = (data) => {
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_comprobante_pago}">${data.comprobante_pago}</a></td>
                 
                   <td  style="background-color:${data.ruta ==  1 ? "#DFBC92" : "#92C1DF"} " >${ruta[data.ruta - 1]}</td>
-                  <td>${data.importe}</td> 
+                  <td id="number">${data.importe}</td> 
                   <td style="background-color:${colores[data.estatus - 1]}">${estatus[data.estatus - 1]}</td>
                   <td>${data.observacion}</td>
                   <td>${data.fecha_inicial}</td>
