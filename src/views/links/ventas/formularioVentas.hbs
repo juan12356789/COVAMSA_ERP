@@ -12,6 +12,31 @@
   #body {
     display: none;
   }
+
+  textarea {
+  box-sizing: border-box;
+  height: 200px;
+  margin: 5px 0 15px 0;
+  padding: 5px 2px;
+  width: 100%;  
+}
+.borderojo {
+    outline: none;
+    border: 1px solid #f00;
+}
+.bordegris { border: 1px solid #d4d4d; }
+
+input:placeholder-shown {
+  border-color: silver;
+}
+
+input:placeholder-shown {
+  border-color: silver;
+}
+
+header {
+  position: fixed;
+}
 </style>
 
 <div class= "container">
@@ -44,7 +69,7 @@
                   <div class="col-sm-5">
 
                     <input type="text" class="form-control valid border border-secondary" required name="orden"
-                      id="orden" pattern="[A-Za-z0-9]+" title="Campo Obligatorio">
+                      id="orden" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números.">
                     <input type="file" class="form-control-file " required name="gimg" id="gimg" style="color: black;">
                   </div>
                 </div>
@@ -53,7 +78,7 @@
                   <label for="" class="col-sm-2 col-form-label">&squf;No. de Pedido:</label>
                   <div class="col-sm-5">
                     <input type="text" class="form-control valid border border-secondary" name="numeroPedido" required
-                      pattern="[A-Za-z0-9]+" title="Campo Obligatorio">
+                      pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números.">
                     <input type="file" class="form-control-file " required name="gimg" id="no_pedido"
                       style="color: black;">
                   </div>
@@ -62,7 +87,7 @@
                   <label for="" class="col-sm-2 col-form-label">&squf;Comprobante de Pago:</label>
                   <div class="col-sm-5">
                     <input type="text" class="form-control valid border border-secondary" minlength="2" required
-                      id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Campo Obligatorio">
+                      id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números.">
                     <input type="file" class="form-control-file " required name="gimg" id="comprobante"
                       style="color: black;">
                     <br>
@@ -121,7 +146,7 @@
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">Options</h5>
+                      <h5 class="modal-title" id="staticBackdropLabel">Clientes:</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -130,9 +155,10 @@
                       <center>Busqueda Cliente: <input type="text" id="inputBusqueda" class="col-sm-8"></center>
 
                       <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                      
                         <table class="table table-bordered-responsive-sm justify-content-center">
                           <thead class="thead-light">
-                            <tr>
+                         <tr>
                               <th scope="col">NOMBRE</th>
                               <th scope="col">ID</th>
                               <th scope="col">BUSCAR</th>
@@ -141,7 +167,6 @@
                           <tbody id="clientes">
                           </tbody>
                         </table>
-
                       </div>
                     </div>
                   </div>
@@ -166,14 +191,15 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text border border-secondary">$</span>
                     <input type="text" class="form-control border border-secondary" name="importe" required
-                      pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$"
+                      {{!-- pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$" --}}
+                      onkeypress="return filterFloat(event,this);"
                       title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales">
                     <br>
                   </div>
                 </div>
               </div>
               <br>
-              <div class="form-group row justify-content-center">
+              {{!-- <div class="form-group row justify-content-center">
                 <label for="" class="col-sm-2 col-form-label">&squf;Tipo de Pago:</label>
                 <div class="col-sm-5">
                   <div class="input-group-prepend">
@@ -192,14 +218,14 @@
                     </label>
                   </div>
                 </div>
-              </div>
+              </div> --}}
 
               <br>
               <div class="form-group row justify-content-center">
                 <label for="" class="col-sm-2 col-form-label">&squf;Observaciones:</label>
                 <div class="col-sm-5">
                   <textarea class="form-control border border-secondary" name="observaciones" required
-                    title="En caso de ques sea necesario poner observaciones" rows="2"></textarea>
+                    title="En caso de ques sea necesario poner observaciones" placeholder="Escribe aqui tus observaciones (como maximo 250 caracteres)"maxlength="250" rows="2"></textarea>
                 </div>
               </div>
               <br>
@@ -263,3 +289,7 @@
 {{!-- <script src="JS/ordersTable.js"></script>   poner ña tabla como urgente  --}} 
 <script src="JS/ventas/validaciones.js"></script>
 <script src="dataTables/datatables.min.js"></script>
+<script src="JS/ventas/observacionesC.js"></script>
+<script src="JS/ventas/importe2D.js"></script>
+
+{{!-- rleo --}}
