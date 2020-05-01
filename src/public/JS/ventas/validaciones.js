@@ -57,12 +57,17 @@ $(document).ready(function() {
     document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`; 
    
     dataTable =  $("#orders").DataTable({
-        "order": [[ 7, "desc" ]],
+        "order": [[ 7, "desc" ]], 
+        "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
+             if(aData.estatus == 6)    $('td', nRow).css('background-color', '#E5A29B');  
+            
+            } ,
+
         columns: [
             {
                 sortable: false,
                 "render": function ( data, type, full, meta ) {
-                    return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}" >${full.orden_de_compra}</a>`;
+                    return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}"  style="a {color:#130705;} " >${full.orden_de_compra}</a>`;
                 }
             }, {
                 sortable: false,
@@ -77,14 +82,13 @@ $(document).ready(function() {
             },
                  { data: 'ruta'},
                  { data: 'importe'},
-                 { data: 'estatus' },
+                 { data: 'nombre_estatus' },
                  { data: 'observacion' },
                  { data: 'fecha_inicial'},{
                    sortable:false,
                    "render": function(data, type, full ,meta){
-                       let  disabled = ''
-                       if(full.estatus == "CANCELADO")  disabled = 'disabled';
-                       return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close" ${disabled}   ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button><br>`;
+                    if(full.estatus <= 3 )return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close"    ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button><br>`;
+                    return ' '; 
                    }  
                  }
 
@@ -104,7 +108,7 @@ let pedidos_vendedores = () => {
             let ruta = ['NORTE', 'SUR'];
             let estatus = ['NUEVO','EN PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','URGENTE'];
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
-            response.filter(n => n.estatus = estatus[n.estatus - 1]);
+            response.filter(n => n.nombre_estatus = estatus[n.estatus - 1]);
             dataTable.rows().remove();  
             dataTable.rows.add(response).draw();
         }
@@ -131,12 +135,16 @@ let cancelOrder = ( order ) =>{
 }; 
 
 // socket -----------
-let pedidos = ( data ) => {
+const  pedidos = ( data ) => {
   
    socket.emit('data:pedidos', data);
 
 };
 
+socket.on('data:pedidos', function(data) {
+    pedidos_vendedores(); 
+
+});
 
 // componente guardar  
 var correoPrioridad  = document.getElementById('prioridad'); 
@@ -152,7 +160,6 @@ $("#prioridad").click(function (e) {
 
  $(function () {  
     $("#imgct").submit(function (e) { 
-        console.log('hola');
         $('#Ventana_Modal').modal('hide'); 
         e.preventDefault();
         var formData = new FormData(document.getElementById("imgct"));
@@ -169,13 +176,13 @@ $("#prioridad").click(function (e) {
                     $("#spinner").hide();
                     alert('El pedido no ha sigo  guardado favor de revisar los campos ');
                 } else {
+                    pedidos(response);
+                    pedidos_vendedores();
                     alert('El pedido ha sigo guardado con éxito '); 
                     $("#spinner").hide();
                     $('#imgct').trigger("reset");
                     cliente(' ');
                     $("#inputCliente").hide();
-                    pedidos(response);
-                    pedidos_vendedores();
                 }
             },
             cache: false,
