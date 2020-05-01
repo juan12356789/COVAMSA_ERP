@@ -73,7 +73,7 @@ let piorityTable = () => {
                     let disabled = ''
                     if (full.estatus == "CANCELADO") disabled = 'disabled';
                     return `<button type="button" class="btn btn-primary" onclick="cancelOrder('${full.num_pedido}')" class="close"  ${disabled}   >Normal</button>
-                            <button type="button" class="btn btn-secondary" onclick="cancelOrder('${full.num_pedido}')" class="close" ${disabled}   >urgente</button><br>`;
+                            <button type="button" class="btn btn-secondary" onclick="cancelOrder('${full.num_pedido}')" class="close" ${disabled}   >Urgente</button><br>`;
                 }
             }
 
@@ -119,7 +119,7 @@ let cancelOrder = (order) => {
     reson_to_cancel(order);
     let inputReason = document.getElementById('motivo_cancelacion');
     $("#aceptar").click(function(e) {
-        if (inputReason.value == '') return alert('Ingrese la razón de cancelación ');
+        if (inputReason.value == '') return alert('INGRESE LA RAZÓN DE CANCELACIÓN');
         $.post("/ventas/cancel", { data: order, reason: inputReason.value }, function(data) {
 
             pedidos_urgentes_normales(1);

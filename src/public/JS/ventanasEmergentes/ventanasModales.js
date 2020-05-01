@@ -1,8 +1,8 @@
- let order_priority = ()=>{
-    
-    $('#Ventana_Modal').modal('show'); 
+ let order_priority = () => {
 
-    let elementsHTML  = `
+     $('#Ventana_Modal').modal('show');
+
+     let elementsHTML = `
 
         <div class="modal-header">
             <h5 class="modal-title">Pedidos Urgentes</h5>
@@ -24,17 +24,17 @@
 
         </div>
         
-    `; 
+    `;
 
-   document.getElementById('elements_of_modal').innerHTML  =   elementsHTML; 
-        
-}; 
+     document.getElementById('elements_of_modal').innerHTML = elementsHTML;
 
-let reson_to_cancel = (order) =>{
-    
-    $('#Ventana_Modal_order').modal('show'); 
+ };
 
-    let elementsHTML  = `
+ let reson_to_cancel = (order) => {
+
+     $('#Ventana_Modal_order').modal('show');
+
+     let elementsHTML = `
 
         <div class="modal-header">
             <h5 class="modal-title">Cancelación Del Pedido</h5>
@@ -44,7 +44,7 @@ let reson_to_cancel = (order) =>{
         </div>
         <div class="modal-body">
             <p>
-              Alerta. Esta apunto de cancelar el pedido con el numero ${order}, Si desea proceder, introdusca in 'motivo para la cancelacion'
+              Alerta. Esta a punto de cancelar el pedido con el numero ${order}, Si desea proceder, introduzca un 'motivo para la cancelacion'
             </p>
             <label>Motivo de cancelación: </label>
             <input type="text"  class="form-control"  name="motivo_cancelacion"   maxlength="15" id="motivo_cancelacion">
@@ -54,8 +54,8 @@ let reson_to_cancel = (order) =>{
           <button value="1" type="button" class="btn btn-secondary"  id=""cancelar"  data-dismiss="modal">Cancelar</button>
         </div>
         
-    `; 
+    `;
 
-   document.getElementById('cancel_order').innerHTML  =   elementsHTML; 
+     document.getElementById('cancel_order').innerHTML = elementsHTML;
 
-};
+ };

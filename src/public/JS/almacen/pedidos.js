@@ -9,11 +9,11 @@ let pedidos = (data) => {
             url: "/almacen/pedidos",
             success: function(response) {
 
-                if (typeof(data) == "string" && data.length < 20) alert(`El pedido con el código ${data} ha sido cancelado`);
+                if (typeof(data) == "string" && data.length < 20) alert(`EL PEDIDO CON EL CÓDIGO ${data} HA SIDO CANCELAD`);
 
                 sendData(response);
 
-                if (response.length == 0) console.log('No hay pedidos por el momento');
+                if (response.length == 0) console.log('NO HAY PEDIDOS POR EL MOMENTO');
 
             }
         });

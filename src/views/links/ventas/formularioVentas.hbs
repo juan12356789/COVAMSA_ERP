@@ -125,8 +125,8 @@ header {
                     {{/each}}
                     <div id="spinner">
                       <div class="d-flex justify-content-center">
-                        <div class="spinner-border m-12" role="status">
-                          <span class="sr-only">Loading...</span>
+                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                          <span class="sr-only">Cargando...</span>
                         </div>
                       </div>
                     </div>
@@ -192,6 +192,7 @@ header {
                     <span class="input-group-text border border-secondary">$</span>
                     <input type="text" class="form-control border border-secondary" name="importe" required
                       {{!-- pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$" --}}
+                       MaxLength="13"
                       onkeypress="return filterFloat(event,this);"
                       title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales">
                     <br>
