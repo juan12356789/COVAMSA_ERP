@@ -34,7 +34,9 @@ input:placeholder-shown {
   border-color: silver;
 }
 
-
+header {
+  position: fixed;
+}
 </style>
 
 <div class= "container">
@@ -144,7 +146,7 @@ input:placeholder-shown {
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">Options</h5>
+                      <h5 class="modal-title" id="staticBackdropLabel">Clientes:</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -153,9 +155,10 @@ input:placeholder-shown {
                       <center>Busqueda Cliente: <input type="text" id="inputBusqueda" class="col-sm-8"></center>
 
                       <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                      
                         <table class="table table-bordered-responsive-sm justify-content-center">
                           <thead class="thead-light">
-                            <tr>
+                         <tr>
                               <th scope="col">NOMBRE</th>
                               <th scope="col">ID</th>
                               <th scope="col">BUSCAR</th>
@@ -164,7 +167,6 @@ input:placeholder-shown {
                           <tbody id="clientes">
                           </tbody>
                         </table>
-
                       </div>
                     </div>
                   </div>
