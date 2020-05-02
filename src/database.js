@@ -4,10 +4,10 @@ const database = {
     host: 'localhost',
     user: 'root',
     password: 'juan',
-    user: 'covamsa_covamsa',
-    password: 'Covamsa2020proyectoerp',
+    // user: 'covamsa_covamsa',
+    // password: 'Covamsa2020proyectoerp',
     database: 'covamsa_desarrollo',
-    port: 3306
+    port: 3307
 }
 
 //ver si se pueden subir cambios al servidor xd

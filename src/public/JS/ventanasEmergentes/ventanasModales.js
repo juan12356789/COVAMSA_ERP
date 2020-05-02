@@ -47,7 +47,7 @@ let reson_to_cancel = (order) => {
               Alerta. Esta a punto de cancelar el pedido con el numero ${order}, Si desea proceder, introduzca un 'motivo para la cancelacion'
             </p>
             <label>Motivo de cancelación: </label>
-            <input type="text"  class="form-control"  onkeypress="return ValidaLongitud(this, 170);"/ name="motivo_cancelacion"  id="motivo_cancelacion">
+            <input type="text"  class="form-control"  name="motivo_cancelacion"    maxlength="85" id="motivo_cancelacion">
         </div>
         <div class="modal-footer">
           <button value="0"  class="btn btn-primary"  id="aceptar"  >Aceptar</button>

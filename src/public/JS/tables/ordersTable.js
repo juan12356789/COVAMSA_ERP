@@ -1,4 +1,5 @@
 const socket = io();
+
 let orderTable = () => {
 
     dataTable = $("#orders").DataTable({
@@ -23,15 +24,14 @@ let orderTable = () => {
             },
             { data: 'ruta' },
             { data: 'importe' },
-            { data: 'estatus' },
+            { data: 'nombre_estatus' },
             { data: 'observacion' },
             { data: 'fecha_inicial' },
             {
                 sortable: false,
                 "render": function(data, type, full, meta) {
-                    let disabled = ''
-                    if (full.estatus == "CANCELADO") disabled = 'disabled';
-                    return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close" ${disabled}   ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button><br>`;
+                    if(full.estatus <= 3 )return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close"    ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button><br>`;
+                    return ' '; 
                 }
             }
 
@@ -66,7 +66,7 @@ let piorityTable = () => {
             },
             { data: 'ruta' },
             { data: 'importe' },
-            { data: 'estatus' },
+            { data: 'nombre_estatus' },
             { data: 'observacion' },
             { data: 'fecha_inicial' }, {
                 sortable: false,
@@ -97,7 +97,7 @@ let pedidos_urgentes_normales = (tipo_de_pedido) => {
             let estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'URGENTE'];
 
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
-            response.filter(n => n.estatus = estatus[n.estatus - 1]);
+            response.filter(n => n.nombre_estatus = estatus[n.estatus - 1]);
 
             if (tipo_de_pedido == 1) {
 
@@ -131,6 +131,13 @@ let cancelOrder = (order) => {
     });
 
 };
+
+socket.on('data:pedidos', function(data) {
+    
+    pedidos_urgentes_normales(1);
+    pedidos_urgentes_normales(2); 
+
+});
 
 let pedidos = (data) => {
 
