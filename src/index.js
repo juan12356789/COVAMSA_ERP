@@ -77,7 +77,11 @@ const SocketIO = require('socket.io');
 const io =  SocketIO(server); 
 
 io.on('connection',(socket)=>{
+    // console.log(socket);
+    
     socket.on('data:pedidos',(data)=>{
+        console.log(data);
+        
         io.sockets.emit('data:pedidos',data) 
     });
 }); 
