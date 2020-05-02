@@ -67,9 +67,9 @@ input:placeholder-shown {
                   <div class="col-sm-5">
 
                     <input type="text" class="form-control valid border border-secondary" required name="orden"
-                      size="59" maxlength="30" minlength="2"
+                      {{!-- maxlength="30" minlength="2" --}}
                       id="orden" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números.">
-                    <input type="file" class="form-control-file "  required name="gimg" id="gimg" style="color: black;">
+                    <input type="file" class="form-control-file " required name="gimg" id="gimg" style="color: black;">
                   </div>
                 </div>
 
@@ -77,7 +77,7 @@ input:placeholder-shown {
                   <label for="" class="col-sm-2 col-form-label">&squf;No. de Pedido:</label>
                   <div class="col-sm-5">
                     <input type="text" class="form-control valid border border-secondary" name="numeroPedido" required
-                      size="59" maxlength="30" minlength="2"
+                       {{!-- maxlength="30" minlength="2" --}}
                       pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números.">
                     <input type="file" class="form-control-file " required name="gimg" id="no_pedido"
                       style="color: black;">
@@ -87,7 +87,7 @@ input:placeholder-shown {
                   <label for="" class="col-sm-2 col-form-label">&squf;Comprobante de Pago:</label>
                   <div class="col-sm-5">
                     <input type="text" class="form-control valid border border-secondary" minlength="2" required
-                    size="59" maxlength="30" minlength="2"
+                     {{!-- maxlength="30" minlength="2" --}}
                       id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números.">
                     <input type="file" class="form-control-file " required name="gimg" id="comprobante"
                       style="color: black;">
@@ -191,9 +191,10 @@ input:placeholder-shown {
                 <div class="col-sm-5">
                   <div class="input-group-prepend">
                     <span class="input-group-text border border-secondary">$</span>
-                    <input type="text" " class="form-control border border-secondary" name="importe" required
+                    <input type="text"  class="form-control border border-secondary" name="importe" required
                       {{!-- pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$" --}}
-                      size="57" MaxLength="13"
+                      {{!-- size="57"  --}}
+                      {{!-- MaxLength="13" --}}
                       onkeypress="return filterFloat(event,this);"
                       title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales">
                     <br>

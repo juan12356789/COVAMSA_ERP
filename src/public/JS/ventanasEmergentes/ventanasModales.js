@@ -1,8 +1,8 @@
- let order_priority = () => {
+let order_priority = () => {
 
-     $('#Ventana_Modal').modal('show');
+    $('#Ventana_Modal').modal('show');
 
-     let elementsHTML = `
+    let elementsHTML = `
 
         <div class="modal-header">
             <h5 class="modal-title">Pedidos Urgentes</h5>
@@ -26,15 +26,15 @@
         
     `;
 
-     document.getElementById('elements_of_modal').innerHTML = elementsHTML;
+    document.getElementById('elements_of_modal').innerHTML = elementsHTML;
 
- };
+};
 
- let reson_to_cancel = (order) => {
+let reson_to_cancel = (order) => {
 
-     $('#Ventana_Modal_order').modal('show');
+    $('#Ventana_Modal_order').modal('show');
 
-     let elementsHTML = `
+    let elementsHTML = `
 
         <div class="modal-header">
             <h5 class="modal-title">Cancelación Del Pedido</h5>
@@ -47,7 +47,7 @@
               Alerta. Esta a punto de cancelar el pedido con el numero ${order}, Si desea proceder, introduzca un 'motivo para la cancelacion'
             </p>
             <label>Motivo de cancelación: </label>
-            <input type="text"  class="form-control"  name="motivo_cancelacion"   maxlength="15" id="motivo_cancelacion">
+            <input type="text"  class="form-control"  onkeypress="return ValidaLongitud(this, 170);"/ name="motivo_cancelacion"  id="motivo_cancelacion">
         </div>
         <div class="modal-footer">
           <button value="0"  class="btn btn-primary"  id="aceptar"  >Aceptar</button>
@@ -56,6 +56,17 @@
         
     `;
 
-     document.getElementById('cancel_order').innerHTML = elementsHTML;
+    document.getElementById('cancel_order').innerHTML = elementsHTML;
 
- };
+};
+
+function ValidaLongitud(campo, longitudMaxima) {
+    try {
+        if (campo.value.length > (longitudMaxima - 1))
+            return false;
+        else
+            return true;
+    } catch (e) {
+        return false;
+    }
+}
