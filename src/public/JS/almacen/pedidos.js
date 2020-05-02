@@ -29,11 +29,11 @@ let pedidos = (data) => {
 pedidos();
 
 socket.on('data:pedidos', function(data) {
-
-    pedidos(data);
+    console.log(data);
+    
+    pedidos(data); 
 
 });
-
 
 
 let sendData = (data) => {

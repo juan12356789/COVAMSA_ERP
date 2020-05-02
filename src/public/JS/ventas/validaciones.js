@@ -3,26 +3,38 @@ const socket = io();
 $("#spinner").hide();
 
 
-$("#tusClientes").click(function(e) {
+// $("#tusClientes").click(function(e) {
+let clickClientes  = ()=>{
 
-    $('.col-sm-8').val('');
+    $('.col-sm-8').val("");
+    let words = ''; 
+  
 
-    $("#inputBusqueda").keydown(function(e) {
-
-        clientes($("#inputBusqueda").val());
-
-    });
-
+  
     clientes();
+
+};
+let inputClinete  = document.getElementById('inputBusqueda');
+$("#inputBusqueda").on('keypress', function () {
+      clientes($("#inputBusqueda").val())
+        
 });
+// $("#inputBusqueda").keydown(function (e) { 
+//     console.log(inputClinete.value);
+    
+//     if($("#inputBusqueda").val() == "") cliente("");
+//     clientes($("#inputBusqueda").val()); 
+// });
+// });
 // ventana Modal 
 
 
-let clientes = (data) => {
-
-    $.post("/ventas", { words: data }, function(data) {
+let clientes = (words) => {
+    console.log(words);
+    
+    $.post("/ventas", { words: words }, function(data) {
         let table = '';
-        if (data.length == 0) clientes();
+        // if (data.length == 0) clientes();
         data.forEach(data => {
             table += `
             <tr>
@@ -59,7 +71,7 @@ $(document).ready(function() {
     dataTable =  $("#orders").DataTable({
         "order": [[ 7, "desc" ]], 
         "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
-             if(aData.estatus == 6)    $('td', nRow).css('background-color', '#E5A29B');  
+             if(aData.estatus == 6)    $('td', nRow).css('color', 'red');  
             
             } ,
 
@@ -136,6 +148,7 @@ let cancelOrder = ( order ) =>{
 
 // socket -----------
 const  pedidos = ( data ) => {
+  console.log(data);
   
    socket.emit('data:pedidos', data);
 

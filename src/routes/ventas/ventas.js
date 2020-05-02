@@ -28,11 +28,13 @@ router.get('/', isLoggedIn, async(req, res) => {
 
 
 router.post('/', async(req, res) => {
-
-    let clientes;
-
-    clientes = await pool.query("SELECT * FROM clientes  where  nombre like ?", '%' + [req.body.words] + '%');
-
+    console.log(req.body.words);
+    let clientes ; 
+   if(req.body.words != undefined && req.body.words != ''){
+         clientes = await pool.query("SELECT * FROM clientes  where  nombre like ?", '%' + [req.body.words] + '%');
+   }else{
+        clientes = await pool.query("SELECT * FROM clientes"  );
+   }
 
     res.send(clientes);
 
