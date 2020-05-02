@@ -6,6 +6,6 @@ module.exports = {
         // user: 'covamsa_covamsa',
         // password: 'Covamsa2020proyectoerp',
         database: 'covamsa_desarrollo',
-        port: 3307
+        port: 3306
     }
 };
