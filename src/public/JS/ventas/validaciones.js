@@ -8,12 +8,10 @@ let clickClientes  = ()=>{
 
     $('.col-sm-8').val("");
     let words = ''; 
-  
-
-  
     clientes();
 
 };
+
 let inputClinete  = document.getElementById('inputBusqueda');
 $("#inputBusqueda").on('keypress', function () {
       clientes($("#inputBusqueda").val())
@@ -69,12 +67,10 @@ $(document).ready(function() {
     document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`; 
    
     dataTable =  $("#orders").DataTable({
-        "order": [[ 7, "desc" ]], 
+        "order": [[ 8, "desc" ]], 
         "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
              if(aData.estatus == 6)    $('td', nRow).css('color', 'red');  
-            
             } ,
-
         columns: [
             {
                 sortable: false,
@@ -95,6 +91,7 @@ $(document).ready(function() {
                  { data: 'ruta'},
                  { data: 'importe'},
                  { data: 'nombre_estatus' },
+                 { data: 'prioridad' },
                  { data: 'observacion' },
                  { data: 'fecha_inicial'},{
                    sortable:false,
@@ -119,8 +116,10 @@ let pedidos_vendedores = () => {
         success: function(response) {
             let ruta = ['NORTE', 'SUR'];
             let estatus = ['NUEVO','EN PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','URGENTE'];
+            let prioridad_info  = ["NORMAL","NOMRAL","URGENTE"];
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
             response.filter(n => n.nombre_estatus = estatus[n.estatus - 1]);
+            response.filter(n =>  n.prioridad = prioridad_info[ n.prioridad ] );
             dataTable.rows().remove();  
             dataTable.rows.add(response).draw();
         }
@@ -148,7 +147,6 @@ let cancelOrder = ( order ) =>{
 
 // socket -----------
 const  pedidos = ( data ) => {
-  console.log(data);
   
    socket.emit('data:pedidos', data);
 
