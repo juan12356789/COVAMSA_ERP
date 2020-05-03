@@ -30,8 +30,8 @@ pedidos();
 
 socket.on('data:pedidos', function(data) {
     console.log(data);
-    
-    pedidos(data); 
+
+    pedidos(data);
 
 });
 

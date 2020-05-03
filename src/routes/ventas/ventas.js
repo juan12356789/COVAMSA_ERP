@@ -29,12 +29,12 @@ router.get('/', isLoggedIn, async(req, res) => {
 
 router.post('/', async(req, res) => {
     console.log(req.body.words);
-    let clientes ; 
-   if(req.body.words != undefined && req.body.words != ''){
-         clientes = await pool.query("SELECT * FROM clientes  where  nombre like ?", '%' + [req.body.words] + '%');
-   }else{
-        clientes = await pool.query("SELECT * FROM clientes"  );
-   }
+    let clientes;
+    if (req.body.words != undefined && req.body.words != '') {
+        clientes = await pool.query("SELECT * FROM clientes  where  nombre like ?", '%' + [req.body.words] + '%');
+    } else {
+        clientes = await pool.query("SELECT * FROM clientes");
+    }
 
     res.send(clientes);
 
@@ -48,7 +48,11 @@ router.post('/pagos', async(req, res) => {
 
 });
 
+// router.post('/importe', async(req, res) => {
+//     const monto = await pool.query(`SELECT format(importe,2,'DE_USD') FROM PEDIDOS`, req.body.importe);
+//     res.send(monto);
 
+// });
 
 
 
@@ -91,6 +95,8 @@ router.post("/add", upload.array('gimg', 12), async(req, res) => {
     }
 
 });
+
+
 
 router.post('/pedidos_vendedor', async(req, res) => {
 
