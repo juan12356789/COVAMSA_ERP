@@ -93,8 +93,15 @@ input:placeholder-shown {
                       id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números. Maximo 30 caracteres">
                     <input type="file" class="form-control-file " required name="gimg" id="comprobante"
                       style="color: black;">
-                    <br>
 
+                    <br> Tipo de Pago:
+                     <select class="form-control" name='id_categoria' id='id_categoria' onchange="carg(this);">
+                      <option value="1" selected>--Opciones--</option>
+                      <option value="2" >Transferencia</option>
+                      <option value="3" >Normal</option>
+                    </select>
+                    
+                    <br> Tipo de Prioridad: 
                     <select class="custom-select" id="prioridad" name="prioridad">
                       <option value="0">Normal</option>
                       <option value="1">Urgente</option>
@@ -196,16 +203,13 @@ input:placeholder-shown {
                     <input type="text"  class="form-control border border-secondary" name="importe" required
                       {{!-- pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$" --}}
                       {{!-- size="57"  --}}
-                      MaxLength="13"
+                      maxLength="12" minlength="1"
                       onkeypress="return filterFloat(event,this);"
                       title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales">
                     <br>
                   </div>
                   <br>
-                    <select class="form-control" name='id_categoria' id='id_categoria' onchange="carg(this);">
-                      <option value="1" selected>Normal</option>
-                      <option value="2" selected>Transferencia</option>
-                    </select>
+                    
                 </div>
               </div>
            
@@ -311,7 +315,7 @@ input:placeholder-shown {
 function carg(elemento) {
   d = elemento.value;
   
-  if(d == "1" || d == "2"){
+  if(d == "2" || d == "3"){
     input.disabled = false;
   }else{
     input.disabled = false;
