@@ -179,18 +179,29 @@ $("#prioridad").click(function (e) {
 
         $.ajax({ url: "/ventas/add", type: "POST", dataType: "html", data: formData,
             beforeSend: function() {
+                $('input[type="text"]').attr('disabled','disabled');
+                $('input[type="file"]').attr('disabled','disabled');
+                $('button[type="submit"]').attr('disabled','disabled');
+                $('button[type="button"]').attr('disabled','disabled');
+                $('select').attr('disabled','disabled');
                 $("#spinner").show(); // Le quito la clase que oculta mi animación 
+
             },
             success: function(response) {
 
                 if (response == 'false') {
-                    $("#spinner").hide();
                     alert('El pedido no ha sigo  guardado favor de revisar los campos ');
+                    $("#spinner").hide();
                 } else {
                     pedidos(response);
                     pedidos_vendedores();
-                    alert('El pedido ha sigo guardado con éxito '); 
+                    // alert('El pedido ha sigo guardado con éxito '); 
                     $("#spinner").hide();
+                    $('input[type="text"]').removeAttr('disabled');
+                    $('input[type="file"]').removeAttr('disabled');
+                    $('button[type="submit"]').removeAttr('disabled');
+                    $('button[type="button"]').removeAttr('disabled');
+                    $('select').removeAttr('disabled');
                     $('#imgct').trigger("reset");
                     cliente(' ');
                     $("#inputCliente").hide();
