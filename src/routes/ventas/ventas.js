@@ -100,7 +100,7 @@ router.post("/add", upload.array('gimg', 12), async(req, res) => {
 
 router.post('/pedidos_vendedor', async(req, res) => {
 
-    const ordenes_vendedores = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,importe 
+    const ordenes_vendedores = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe 
                                                 FROM pedidos  INNER JOIN empleados  on id_empleado = id_empleados
                                                 WHERE idacceso = ?  
                                                 ORDER BY fecha_inicial ASC`, req.user[0].idacceso);

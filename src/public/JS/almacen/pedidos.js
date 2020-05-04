@@ -63,6 +63,7 @@ let sendData = (data) => {
     document.getElementById('pedidos').innerHTML = table;
 }
 
+/*  preguntarle a rosa para que es esto 
 document.getElementById("userinput").onblur = function() {
 
     //number-format the user input
@@ -74,4 +75,4 @@ document.getElementById("userinput").onblur = function() {
     //set the numeric value to a number input
     document.getElementById("number").value = this.value.replace(/,/g, "")
 
-}
+}*/

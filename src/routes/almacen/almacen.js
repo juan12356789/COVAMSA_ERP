@@ -12,7 +12,7 @@ router.get('/', async(req, res) => {
 
 router.get('/pedidos', async(req, res) => {
 
-    const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,importe,prioridad
+    const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad
                                         FROM pedidos 
                                         WHERE   DATE_FORMAT(fecha_inicial,'%Y-%m-%d ')  = DATE_FORMAT(NOW(),'%Y-%m-%d ')  OR estatus  != 5 `);
 
