@@ -100,9 +100,9 @@ router.post("/add", upload.array('gimg', 12), async(req, res) => {
 
 router.post('/pedidos_vendedor', async(req, res) => {
 
-    const ordenes_vendedores = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%Y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
+    const ordenes_vendedores = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,importe 
                                                 FROM pedidos  INNER JOIN empleados  on id_empleado = id_empleados
-                                                WHERE idacceso = ? 
+                                                WHERE idacceso = ?  
                                                 ORDER BY fecha_inicial ASC`, req.user[0].idacceso);
     res.send(ordenes_vendedores);
 });

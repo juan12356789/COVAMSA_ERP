@@ -40,6 +40,7 @@ let sendData = (data) => {
     let table = '';
     ruta = ["NORTE", "SUR"];
     estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'URGENTE'];
+    prioridad_info = ["NORMAL", "NORMAL", "URGENTE"];
     colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E"];
     data.forEach(data => {
         table += `<tr>
@@ -53,6 +54,7 @@ let sendData = (data) => {
                   <td  style="background-color:${data.ruta ==  1 ? "#DFBC92" : "#92C1DF"} " >${ruta[data.ruta - 1]}</td>
                   <td id="userinput" >${data.importe}</td> 
                   <td style="background-color:${colores[data.estatus - 1]}">${estatus[data.estatus - 1]}</td>
+                  <td >${prioridad_info[data.prioridad]}</td>
                   <td>${data.observacion}</td>
                   <td>${data.fecha_inicial}</td>
                
