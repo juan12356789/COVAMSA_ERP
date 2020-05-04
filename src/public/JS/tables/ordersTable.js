@@ -5,7 +5,10 @@ let orderTable = () => {
     dataTable = $("#orders").DataTable({
         "order": [
             [8, "desc"]
-        ],
+        ], 
+        "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
+             if(aData.estatus == 6)    $('td', nRow).css('color', 'red');  
+            } ,
         columns: [{
             sortable: false,
             "render": function (data, type, full, meta) {
@@ -100,7 +103,6 @@ let pedidos_urgentes_normales = (tipo_de_pedido, numero_pedido, tipo_prioridad) 
                 pedidos();
                 return;
             }
-            console.log(response);
             
             let ruta = ['NORTE', 'SUR'];
             let estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'URGENTE'];
