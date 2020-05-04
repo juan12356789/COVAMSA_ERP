@@ -89,17 +89,18 @@ input:placeholder-shown {
                   <div class="col-sm-5">
                     <input type="text" class="form-control valid border border-secondary" minlength="2"  id="input" required
                      maxlength="30" minlength="2"
-                     disabled
                       id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números. Maximo 30 caracteres">
                     <input type="file" class="form-control-file " required name="gimg" id="comprobante"
                       style="color: black;">
 
+                    {{!--
+                    INCOMPLETO  
                     <br> Tipo de Pago:
                      <select class="form-control" name='id_categoria' id='id_categoria' onchange="carg(this);">
                       <option value="1" selected>--Opciones--</option>
                       <option value="2" >Transferencia</option>
                       <option value="3" >Normal</option>
-                    </select>
+                    </select> --}}
                     
                     <br> Tipo de Prioridad: 
                     <select class="custom-select" id="prioridad" name="prioridad">
