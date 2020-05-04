@@ -12,7 +12,7 @@ function validar() {
     } else {
         document.getElementById("boton").disabled = true;
         //Salta un alert cada vez que escribes y hay un campo vacio
-        // alert("Hay campos vacios")
+        alert("Hay campos vacios")
     }
 }
 

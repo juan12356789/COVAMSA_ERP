@@ -48,11 +48,11 @@ router.post('/pagos', async(req, res) => {
 
 });
 
-// router.post('/importe', async(req, res) => {
-//     const monto = await pool.query(`SELECT format(importe,2,'DE_USD') FROM PEDIDOS`, req.body.importe);
-//     res.send(monto);
+router.post('/importe', async(req, res) => {
+    const monto = await pool.query(`SELECT format(importe,2,'DE_USD') FROM PEDIDOS`, req.body.importe);
+    res.send(monto);
 
-// });
+});
 
 
 
