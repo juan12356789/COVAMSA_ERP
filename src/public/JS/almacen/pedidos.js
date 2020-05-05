@@ -53,7 +53,7 @@ let sendData = (data) => {
                 
                   <td  style="background-color:${data.ruta ==  1 ? "#DFBC92" : "#92C1DF"} " >${ruta[data.ruta - 1]}</td>
                   <td id="userinput" >${data.importe}</td> 
-                  <td style="background-color:${colores[data.estatus - 1]}">${estatus[data.estatus - 1]}</td>
+                  <td style="background-color:${colores[data.estatus - 1]}" ondblclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.num_pedido}')">${estatus[data.estatus - 1]}</td>
                   <td >${prioridad_info[data.prioridad]}</td>
                   <td>${data.observacion}</td>
                   <td>${data.fecha_inicial}</td>
@@ -62,6 +62,19 @@ let sendData = (data) => {
     });
     document.getElementById('pedidos').innerHTML = table;
 }
+
+
+const   chanche_estatus_almacen  = ( order,status_antiguo ) => {
+    $('#change_status').modal('hide');
+    let estado_nuevo = document.getElementById('estado_nuevo').value;
+         $.ajax({type: "POST",url: "/almacen/cambio_estado",data: {estado_nuevo, order },success: function (response) {
+             pedidos(); 
+            console.log(response);
+
+        }
+    });
+
+};
 
 /*  preguntarle a rosa para que es esto 
 document.getElementById("userinput").onblur = function() {

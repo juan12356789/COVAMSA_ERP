@@ -1,4 +1,5 @@
 const socket = io();
+const  dot_obervaciones = document.querySelector("#observaciones");
 
 $("#spinner").hide();
 
@@ -92,7 +93,13 @@ $(document).ready(function() {
                  { data: 'importe'},
                  { data: 'nombre_estatus' },
                  { data: 'prioridad' },
-                 { data: 'observacion' },
+                 {
+                    sortable:false,
+                    "render": function(data, type, full ,meta){
+                     return `  <p class="observaciones"  >${full.observacion}</p>`;
+                    }  
+                  },
+                //  { data: 'observacion' },
                  { data: 'fecha_inicial'},{
                    sortable:false,
                    "render": function(data, type, full ,meta){
@@ -104,9 +111,9 @@ $(document).ready(function() {
                 ]
 
             }); 
+            shave(dot_obervaciones , 30); 
             pedidos_vendedores();
 });
-
 
 
 let pedidos_vendedores = () => {
