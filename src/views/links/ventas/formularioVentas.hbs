@@ -12,6 +12,29 @@
   #body {
     display: none;
   }
+
+  textarea {
+  box-sizing: border-box;
+  height: 200px;
+  margin: 5px 0 15px 0;
+  padding: 5px 2px;
+  width: 100%;  
+}
+.borderojo {
+    outline: none;
+    border: 1px solid #f00;
+}
+.bordegris { border: 1px solid #d4d4d; }
+
+input:placeholder-shown {
+  border-color: silver;
+}
+
+input:placeholder-shown {
+  border-color: silver;
+}
+
+
 </style>
 
 <div class= "container">
@@ -25,7 +48,7 @@
         </button>
         <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseTwo"
           aria-expanded="false" aria-controls="collapseTwo">
-          Pedidos
+          Mis Pedidos
         </button>
         <button type="button" class="close"><a href="/menu"><img
               src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></a> </button><br>
@@ -44,7 +67,8 @@
                   <div class="col-sm-5">
 
                     <input type="text" class="form-control valid border border-secondary" required name="orden"
-                      id="orden" pattern="[A-Za-z0-9]+" title="Campo Obligatorio">
+                      maxlength="30" minlength="2"
+                      id="orden" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Maximo 30 caracteres">
                     <input type="file" class="form-control-file " required name="gimg" id="gimg" style="color: black;">
                   </div>
                 </div>
@@ -53,7 +77,9 @@
                   <label for="" class="col-sm-2 col-form-label">&squf;No. de Pedido:</label>
                   <div class="col-sm-5">
                     <input type="text" class="form-control valid border border-secondary" name="numeroPedido" required
-                      pattern="[A-Za-z0-9]+" title="Campo Obligatorio">
+                       maxlength="30" minlength="2"
+                      {{!-- pattern="[A-Za-z0-9]+"  --}}
+                      title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Maximo 30 caracteres">
                     <input type="file" class="form-control-file " required name="gimg" id="no_pedido"
                       style="color: black;">
                   </div>
@@ -61,12 +87,21 @@
                 <div class="form-group row justify-content-center">
                   <label for="" class="col-sm-2 col-form-label">&squf;Comprobante de Pago:</label>
                   <div class="col-sm-5">
-                    <input type="text" class="form-control valid border border-secondary" minlength="2" required
-                      id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Campo Obligatorio">
+                    <input type="text" class="form-control valid border border-secondary" minlength="2"  id="input" required
+                     maxlength="30" minlength="2"
+                      id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números. Maximo 30 caracteres">
                     <input type="file" class="form-control-file " required name="gimg" id="comprobante"
                       style="color: black;">
-                    <br>
 
+                    {{!--
+                    INCOMPLETO  
+                    <br> Tipo de Pago:
+                     <select class="form-control" name='id_categoria' id='id_categoria' onchange="carg(this);">
+                      <option value="1" selected>--Opciones--</option>
+                      <option value="2" >Transferencia</option>
+                      <option value="3" >Normal</option>
+                    </select> --}}
+                    <br> Tipo de Prioridad: 
                     <select class="custom-select" id="prioridad" name="prioridad">
                       <option value="0">Normal</option>
                       <option value="1">Urgente</option>
@@ -100,20 +135,21 @@
                     {{/each}}
                     <div id="spinner">
                       <div class="d-flex justify-content-center">
-                        <div class="spinner-border m-12" role="status">
-                          <span class="sr-only">Loading...</span>
+                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                          <span class="sr-only">Cargando...</span>
                         </div>
                       </div>
                     </div>
                     <br>
                     <button type="button" class="btn btn-dark btn-lg btn-block " id="tusClientes" data-toggle="modal"
                       data-target="#staticBackdrop" href="/ventas/busquedaCliente" role="button" aria-expanded="false"
-                      aria-controls="collapseExample">
-                      Tus Clientes
+                      aria-controls="collapseExample" onclick="clickClientes()"  >
+                       Clientes
                     </button>
                   </div>
                 </div>
               </div>
+              
 
               <!-- Modal -->
               <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog"
@@ -121,7 +157,7 @@
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">Options</h5>
+                      <h5 class="modal-title" id="staticBackdropLabel">Clientes:</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -130,9 +166,10 @@
                       <center>Busqueda Cliente: <input type="text" id="inputBusqueda" class="col-sm-8"></center>
 
                       <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                      
                         <table class="table table-bordered-responsive-sm justify-content-center">
                           <thead class="thead-light">
-                            <tr>
+                         <tr>
                               <th scope="col">NOMBRE</th>
                               <th scope="col">ID</th>
                               <th scope="col">BUSCAR</th>
@@ -141,7 +178,6 @@
                           <tbody id="clientes">
                           </tbody>
                         </table>
-
                       </div>
                     </div>
                   </div>
@@ -165,15 +201,21 @@
                 <div class="col-sm-5">
                   <div class="input-group-prepend">
                     <span class="input-group-text border border-secondary">$</span>
-                    <input type="text" class="form-control border border-secondary" name="importe" required
-                      pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$"
+                    <input type="text"  class="form-control border border-secondary" name="importe" required
+                      {{!-- pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$" --}}
+                      {{!-- size="57"  --}}
+                      maxLength="12" minlength="1"
+                      onkeypress="return filterFloat(event,this);"
                       title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales">
                     <br>
                   </div>
+                  <br>
+                    
                 </div>
               </div>
-              <br>
-              <div class="form-group row justify-content-center">
+           
+
+              {{!-- <div class="form-group row justify-content-center">
                 <label for="" class="col-sm-2 col-form-label">&squf;Tipo de Pago:</label>
                 <div class="col-sm-5">
                   <div class="input-group-prepend">
@@ -192,21 +234,23 @@
                     </label>
                   </div>
                 </div>
-              </div>
+              </div> --}}
+              
+              
+           
 
               <br>
               <div class="form-group row justify-content-center">
                 <label for="" class="col-sm-2 col-form-label">&squf;Observaciones:</label>
                 <div class="col-sm-5">
                   <textarea class="form-control border border-secondary" name="observaciones" required
-                    title="En caso de ques sea necesario poner observaciones" rows="2"></textarea>
+                    title="En caso de ques sea necesario poner observaciones" placeholder="Escribe aqui tus observaciones (como maximo 250 caracteres)"maxlength="250" rows="2"></textarea>
                 </div>
               </div>
               <br>
               <div class="form-group row justify-content-center">
                 <label for="" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    {{!-- Send buttonmmm --}}
                     <div id="button_send"></div>
 
                 </div>
@@ -242,6 +286,7 @@
                 <th>Ruta</th>
                 <th>Importe</th>
                 <th>Estatus</th>
+                <th>Prioridad</th>
                 <th>Observaciones</th>
                 <th>Fecha</th>
                 <th>Cancelar</th>
@@ -257,10 +302,27 @@
 </div>
 <script src="librerias/jquery.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script src="librerias/bootstrap.js"></script>
+<script src="librerias/shave.js"></script>
 <script src="librerias/popper.js"></script>
-{{!-- componentes --}}
-<script src="JS/ventanasEmergentes/ventanasModales.js"></script>
-{{!-- <script src="JS/ordersTable.js"></script>   poner ña tabla como urgente  --}} 
+<script src="librerias/bootstrap.js"></script>
+<script src="JS/ventanasEmergentes/ventanasModales.js"></script> 
 <script src="JS/ventas/validaciones.js"></script>
 <script src="dataTables/datatables.min.js"></script>
+{{!-- <script src="JS/ventas/observacionesC.js"></script> --}}
+<script src="JS/ventas/importe2D.js"></script>
+
+
+
+<script>
+  var input = document.getElementById('input');
+
+function carg(elemento) {
+  d = elemento.value;
+  
+  if(d == "2" || d == "3"){
+    input.disabled = false;
+  }else{
+    input.disabled = false;
+  }
+}
+</script>
