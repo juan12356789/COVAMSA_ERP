@@ -39,7 +39,39 @@ html{font-size:14px;} p.segunda{font-size:1rem;} @media screen and (orientation:
 tr,table{
   border:#C5CBCF ;
 }
-
+/*@media screen and (max-width: 600px) {
+       table {
+           width:100%;
+           
+       }
+       thead {
+           display: none;
+       }
+       tr:nth-of-type(2n) {
+           background-color: inherit;
+       }
+       tr td:first-child {
+           background: #f0f0f0;
+           font-weight:bold;
+           font-size:1.3em;
+       }
+       tbody td {
+           display: block;
+           {{!-- text-align:center; --}}
+       }
+       tbody td:before {
+          
+           display: block;
+           text-align:center;
+       }
+}
+@media screen and (max-width: 320px) {
+     table {
+       display: block;
+       overflow-x:visible;
+     }
+}*/
+	
 
 </style>
 
@@ -281,8 +313,10 @@ tr,table{
                          </div>
                       </div>
                     </div>
-          <table id="orders" border="1"  width="100%">
+          {{!-- <table id="orders" border="1"  width="100%" class="width200"> --}}
           {{!-- <table id="orders" class="table table-sm" width="100%"></table> --}}
+          <div class="table-responsive">
+            <table class="table" id="orders" border="1">
             <thead>
               <tr>
                 <th scope="col">Orden De Compra</th>
@@ -299,7 +333,7 @@ tr,table{
             </thead>
 
           </table>
-
+          </div>
         </div>
       </div>
     </div>
