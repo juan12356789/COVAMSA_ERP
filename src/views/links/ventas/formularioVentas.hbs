@@ -9,10 +9,7 @@
     transform: scale(1.5);
   }
 
-  #body {
-    display: none;
-  }
-
+  
   textarea {
   box-sizing: border-box;
   height: 200px;
@@ -72,7 +69,40 @@ tr,table{
      }
 }*/
 	
+	@media only screen and (max-width: 760px), (min-width: 768px) and (max-width: 1024px)  
+	{
+	
+		table.width200, .width200 thead, .width200 tbody, .width200 th, .width200 td, .width200 tr { display: block; }
+		
+		.width200 thead tr { position: absolute;top: -9999px;left: -9999px; }
+		
+		.width200 tr { border: 0px solid #ccc; }
+		
+		.width200 td { border: none;border-bottom: 1px solid #ccc; position: relative;padding-left: 50%;text-align:left }
+		
+		.width200 td:before {  position: absolute; top: 6px; left: 6px;  padding-right: 10px; white-space: nowrap;}
+		
+		.width200 td:nth-of-type(1):before { content: "Orden de Compra"; }
+		.width200 td:nth-of-type(2):before { content: "Numero de Pedido"; }
+		.width200 td:nth-of-type(3):before { content: "Comprobante"; }
+		.width200 td:nth-of-type(4):before { content: "Ruta"; }
+		.width200 td:nth-of-type(5):before { content: "Importe"; }
+    .width200 td:nth-of-type(6):before { content: "Estatus"; }
+    .width200 td:nth-of-type(7):before { content: "Observacion"; }
+    .width200 td:nth-of-type(8):before { content: "Fecha"; }
 
+	
+	}
+	
+	/* Smartphones (portrait and landscape) ----------- */
+	@media only screen and (min-width : 320px) and (max-width : 480px) 
+	{
+		body { width: 320px; }
+		.descarto {display:none;}
+	}
+	
+	/* iPads (portrait and landscape) ----------- */
+	
 </style>
 
 <div class= "container">
@@ -89,57 +119,131 @@ tr,table{
           Mis Pedidos
         </button>
         <button type="button" class="close"><a href="/menu"><img
-              src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></a> </button><br>
-        <br>
-
+          src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></a> </button><br>
       </div>
 
       <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
         <div class="card-body">
-
           <form enctype="multipart/form-data" method="post" id="imgct" class="columinput">
-          
             <div class="jumbotron">
               <div class="container">
-                <div class="form-group row  justify-content-center ">
+                <div class="row">
                   <label for="oc" class="col-sm-2 col-form-label"><p class="primera">Orden de Compra:</p></label>
-                  <div class="col-sm-5">
-
+                  <div class="col-md-4">
                     <input type="text" class="form-control valid border border-secondary" required name="orden"
                       maxlength="30" minlength="2"
                       id="orden" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Maximo 30 caracteres">
                     <input type="file" class="form-control-file " required name="gimg" id="gimg" style="color: black;">
                   </div>
+                  <label for="" class="col-sm-2 col-form-label"><p class="primera">Cliente:</p></label>
+                   {{!-- <div class="row "> --}}
+                     <div class="col-md-4">
+                       <div class="row">
+                   <div class="col" id="inputCliente">
+                     </div>
+                   </div>
+                   
+                {{!-- </center> --}}
+                
+                  {{!-- <label for="" class="col-sm-2 col-form-label"><p class="primera">Cliente:</p></label> --}}
+                  {{!-- <div class="col-sm-4"> --}}
+                    {{#each cliente }}
+                    <input type="text" class="form-control border border-secondary" value="{{nombre}}" name="cliente">
+                    {{/each}}
+                    <div id="spinner">
+                      <div class="d-flex">
+                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                          <span class="sr-only">Cargando...</span>
+                        </div>
+                      </div>
+                    </div>
+                    <br>
+                    <button type="button" class="btn btn-dark btn-lg btn-block " id="tusClientes" data-toggle="modal"
+                      data-target="#staticBackdrop" href="/ventas/busquedaCliente" role="button" aria-expanded="false"
+                      aria-controls="collapseExample" onclick="clickClientes()"  >
+                       Clientes
+                    </button>
+                  {{!-- </div> --}}
                 </div>
+              </div>
+  <br
+              <!-- Modal -->
+              <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="staticBackdropLabel">Clientes:</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-bodyss">
+                      <center>Busqueda Cliente: <input type="text" id="inputBusqueda" class="col-sm-5"></center>
 
-                <div class="form-group row justify-content-center">
+                      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                      
+                        <table class="table table-bordered-responsive-sm justify-content-center">
+                          <thead class="thead-light">
+                         <tr>
+                              <th scope="col">NOMBRE</th>
+                              <th scope="col">ID</th>
+                              <th scope="col">BUSCAR</th>
+                            </tr>
+                          </thead>
+                          <tbody id="clientes">
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                </div>
+               
+                <div class=" row ">
                   <label for="" class="col-sm-2 col-form-label"><p class="primera">No. de Pedido:</p></label>
-                  <div class="col-sm-5">
+                  <div class="col-sm-4">
                     <input type="text" class="form-control valid border border-secondary" name="numeroPedido" required
                        maxlength="30" minlength="2"
                       {{!-- pattern="[A-Za-z0-9]+"  --}}
                       title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Maximo 30 caracteres">
                     <input type="file" class="form-control-file " required name="gimg" id="no_pedido"
                       style="color: black;">
+                     
+                  </div>
+                  <label for="" class="col-sm-2 col-form-label "><p class="primera">&nbsp;Rutas Disponibles:</p></label> 
+                  <div class="col-sm-4">
+                  <select class="custom-select" name="ruta">
+                      <option value="1">Norte</option>
+                      <option value="2">Sur</option>
+                    </select>
                   </div>
                 </div>
-                <div class="form-group row justify-content-center">
+                <br>
+                <div class="row">
                   <label for="" class="col-sm-2 col-form-label"><p class="primera">Comprobante-Pago:</p></label>
-                  <div class="col-sm-5">
+                  <div class="col-md-4">
                     <input type="text" class="form-control valid border border-secondary" minlength="2"  id="input" required
                      maxlength="30" minlength="2"
                      disabled
                       id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números. Maximo 30 caracteres">
                     <input type="file" class="form-control-file " required name="gimg" id="comprobante"
                       style="color: black;">
-
-                    <br> Tipo de Pago:
-                     <select class="form-control" name='id_categoria' id='id_categoria' onchange="carg(this);">
-                      <option value="1" selected>--Opciones--</option>
-                      <option value="2" >Transferencia</option>
-                      <option value="3" >Normal</option>
-                    </select>
-                    
+                  </div>
+                  <label for="" class="col-sm-2 col-form-label"><p class="primera">Importe:</p></label>
+                  <div class="col-sm-4">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text border border-secondary">$</span>
+                    <input type="text"  class="form-control border border-secondary" name="importe" required
+                      {{!-- pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$" --}}
+                      {{!-- size="57"  --}}
+                      maxLength="12" minlength="1"
+                      onkeypress="return filterFloat(event,this);"
+                      title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales">
+                  </div>
+                  </div>
+                 
                     <br> Tipo de Prioridad: 
                     <select class="custom-select" id="prioridad" name="prioridad">
                       <option value="0">Normal</option>
@@ -157,18 +261,44 @@ tr,table{
                       </div>
                     </div>
                     
+                       <br> Tipo de Pago:
+                     <select class="form-control" name='id_categoria' id='id_categoria' onchange="carg(this);">
+                      <option value="1" selected>--Opciones--</option>
+                      <option value="2" >Transferencia</option>
+                      <option value="3" >Normal</option>
+                    </select>
 
 
-                  </div>
+              {{!-- <div class="form-group row justify-content-center"> --}}
+                <label for="" class="col-sm-2 col-form-label">Observacion:</label>
+                {{!-- <div class="col-sm-5"> --}}
+                  <textarea class="form-control border border-secondary" name="observaciones" required
+                    title="En caso de ques sea necesario poner observaciones" placeholder="Escribe aqui tus observaciones (como maximo 250 caracteres)"maxlength="250" rows="2"></textarea>
+                </div>
+             
+          <br>
+              <div class="form-group row justify-content-center">
+                <label for="" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-4">
+                    <div id="button_send"></div>
+
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+                  {{!-- </div>
                 </div>
                 <br>
-                <center>
+                <center> --}}
 
-                  <div id="inputCliente"></div>
+                {{!-- <div id="inputCliente"></div>
                 </center>
-                <div class="form-group row justify-content-center">
+                <div class="row ">
                   <label for="" class="col-sm-2 col-form-label"><p class="primera">Cliente:</p></label>
-                  <div class="col-sm-5">
+                  <div class="col-sm-4">
                     {{#each cliente }}
                     <input type="text" class="form-control border border-secondary" value="{{nombre}}" name="cliente">
                     {{/each}}
@@ -220,10 +350,10 @@ tr,table{
                     </div>
                   </div>
                 </div>
-              </div>
-            <div class="container">
+              </div> --}}
+            {{!-- <div class="container">
               <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                <div class="form-group row justify-content-center">
+                <div class=" row ">
                   <label for="" class="col-sm-2 col-form-label "><p class="primera">&nbsp;Ruta:</p></label>
                   <div class="col-sm-5">
                     <select class="custom-select" name="ruta">
@@ -232,23 +362,23 @@ tr,table{
                     </select>
                   </div>
                 </div>
-              </div>
+              </div> --}}
 
-              <div class="form-group row justify-content-center">
+              {{!-- <div class="form-group row justify-content-center">
                 <label for="" class="col-sm-2 col-form-label"><p class="primera">Importe:</p></label>
                 <div class="col-sm-5">
                   <div class="input-group-prepend">
                     <span class="input-group-text border border-secondary">$</span>
                     <input type="text"  class="form-control border border-secondary" name="importe" required
-                      {{!-- pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$" --}}
-                      {{!-- size="57"  --}}
+                      pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$" --}}
+                      {{!-- size="57" 
                       maxLength="12" minlength="1"
                       onkeypress="return filterFloat(event,this);"
                       title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales">
                   </div>
                     
                 </div>
-              </div>
+              </div> --}}
            
 
               {{!-- <div class="form-group row justify-content-center">
@@ -275,7 +405,7 @@ tr,table{
               
            
 
-              <br>
+              {{!-- <br>
               <div class="form-group row justify-content-center">
                 <label for="" class="col-sm-2 col-form-label">Observacion:</label>
                 <div class="col-sm-5">
@@ -295,7 +425,7 @@ tr,table{
           </form>
         </div>
       </div>
-    </div>
+    </div> --}}
     <div class="card">
       <div class="card-header" id="headingTwo">
         <h5 class="mb-0">
@@ -313,10 +443,8 @@ tr,table{
                          </div>
                       </div>
                     </div>
-          {{!-- <table id="orders" border="1"  width="100%" class="width200"> --}}
+          <table id="orders" border="1"  width="100%" class="width200">
           {{!-- <table id="orders" class="table table-sm" width="100%"></table> --}}
-          <div class="table-responsive">
-            <table class="table" id="orders" border="1">
             <thead>
               <tr>
                 <th scope="col">Orden De Compra</th>
@@ -333,7 +461,7 @@ tr,table{
             </thead>
 
           </table>
-          </div>
+
         </div>
       </div>
     </div>
