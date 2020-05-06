@@ -2,9 +2,7 @@ module.exports = {
     database: {
         host: 'localhost',
         user: 'root',
-        password: '	',
-        // user: 'covamsa_covamsa',
-        // password: 'Covamsa2020proyectoerp',
+        password: '',
         database: 'covamsa_desarrollo'
     }
 };

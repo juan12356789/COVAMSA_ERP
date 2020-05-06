@@ -3,9 +3,7 @@ const { promisify } = require('util'); // se utiliza para usar promesas
 const database = {
         host: 'localhost',
         user: 'root',
-        password: '	',
-        // user: 'covamsa_covamsa',
-        // password: 'Covamsa2020proyectoerp',
+        password: '',
         database: 'covamsa_desarrollo'
 }
 
