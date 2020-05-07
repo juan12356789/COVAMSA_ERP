@@ -119,7 +119,7 @@ tr,table{
           Mis Pedidos
         </button>
         <button type="button" class="close"><a href="/menu"><img
-          src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></a> </button><br>
+          src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></a> </button>
       </div>
 
       <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
@@ -135,14 +135,14 @@ tr,table{
                       id="orden" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Maximo 30 caracteres">
                     <input type="file" class="form-control-file " required name="gimg" id="gimg" style="color: black;">
                   </div>
-                  <label for="" class="col-sm-2 col-form-label"><p class="primera">Cliente:</p></label>
+                  <label for="" class="col-sm-2 col-form-label"><p class="primera"> Cliente:</p></label>
                    {{!-- <div class="row "> --}}
                      <div class="col-md-4">
                        <div class="row">
                    <div class="col" id="inputCliente">
                      </div>
                    </div>
-                   
+                 
                 {{!-- </center> --}}
                 
                   {{!-- <label for="" class="col-sm-2 col-form-label"><p class="primera">Cliente:</p></label> --}}
@@ -157,7 +157,7 @@ tr,table{
                         </div>
                       </div>
                     </div>
-                    <br>
+             
                     <button type="button" class="btn btn-dark btn-lg btn-block " id="tusClientes" data-toggle="modal"
                       data-target="#staticBackdrop" href="/ventas/busquedaCliente" role="button" aria-expanded="false"
                       aria-controls="collapseExample" onclick="clickClientes()"  >
@@ -166,8 +166,9 @@ tr,table{
                   {{!-- </div> --}}
                 </div>
               </div>
-  <br
+  
               <!-- Modal -->
+              <div class="row"></div>
               <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog"
                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -200,9 +201,9 @@ tr,table{
                 </div>
               </div>
                 </div>
-               
+               <br>
                 <div class=" row ">
-                  <label for="" class="col-sm-2 col-form-label"><p class="primera">No. de Pedido:</p></label>
+                  <label for="" class="col-sm-2 col-form-label"><p class="primera">&nbsp;No.de Pedido:</p></label>
                   <div class="col-sm-4">
                     <input type="text" class="form-control valid border border-secondary" name="numeroPedido" required
                        maxlength="30" minlength="2"
@@ -210,9 +211,9 @@ tr,table{
                       title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Maximo 30 caracteres">
                     <input type="file" class="form-control-file " required name="gimg" id="no_pedido"
                       style="color: black;">
-                     
+                  <br>   
                   </div>
-                  <label for="" class="col-sm-2 col-form-label "><p class="primera">&nbsp;Rutas Disponibles:</p></label> 
+                  <label for="" class="col-sm-2 col-form-label "><p class="primera">Rutas:</p></label> 
                   <div class="col-sm-4">
                   <select class="custom-select" name="ruta">
                       <option value="1">Norte</option>
@@ -220,7 +221,7 @@ tr,table{
                     </select>
                   </div>
                 </div>
-                <br>
+                
                 <div class="row">
                   <label for="" class="col-sm-2 col-form-label"><p class="primera">Comprobante-Pago:</p></label>
                   <div class="col-md-4">
@@ -231,7 +232,7 @@ tr,table{
                     <input type="file" class="form-control-file " required name="gimg" id="comprobante"
                       style="color: black;">
                   </div>
-                  <label for="" class="col-sm-2 col-form-label"><p class="primera">Importe:</p></label>
+                  <label for="" class="col-sm-2 col-form-label"><p class="primera"> Importe:</p></label>
                   <div class="col-sm-4">
                   <div class="input-group-prepend">
                     <span class="input-group-text border border-secondary">$</span>
@@ -244,7 +245,7 @@ tr,table{
                   </div>
                   </div>
                  
-                    <br> Tipo de Prioridad: 
+                     <p class="primera">Tipo de Prioridad: </p>
                     <select class="custom-select" id="prioridad" name="prioridad">
                       <option value="0">Normal</option>
                       <option value="1">Urgente</option>
@@ -261,7 +262,7 @@ tr,table{
                       </div>
                     </div>
                     
-                       <br> Tipo de Pago:
+                      <p class="primera"> Tipo de Pago:</p>
                      <select class="form-control" name='id_categoria' id='id_categoria' onchange="carg(this);">
                       <option value="1" selected>--Opciones--</option>
                       <option value="2" >Transferencia</option>
@@ -276,7 +277,7 @@ tr,table{
                     title="En caso de ques sea necesario poner observaciones" placeholder="Escribe aqui tus observaciones (como maximo 250 caracteres)"maxlength="250" rows="2"></textarea>
                 </div>
              
-          <br>
+        
               <div class="form-group row justify-content-center">
                 <label for="" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
