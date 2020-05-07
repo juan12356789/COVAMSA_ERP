@@ -3,8 +3,8 @@ const router = express.Router();
 const path = require("path");
 const multer = require("multer");
 const pool = require('../../database');
-const nodemailer = require('nodemailer');
 const { isLoggedIn } = require('../../lib/auth');
+const nodemailer =  require('nodemailer');
 
 const rutimage = path.join(__dirname, "../../files");
 
@@ -20,17 +20,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-router.get('/', isLoggedIn, async(req, res) => {
 
+router.get('/', isLoggedIn, async(req, res) => {
     res.render('links/ventas/formularioVentas');
 });
 
-
-
 router.post('/', async(req, res) => {
-    console.log(req.body.words);
+    console.log(req.body);
+
     let clientes;
-    if (req.body.words != undefined && req.body.words != '') {
+    if (req.body.validaciones == 1) {
         clientes = await pool.query("SELECT * FROM clientes  where  nombre like ?", '%' + [req.body.words] + '%');
     } else {
         clientes = await pool.query("SELECT * FROM clientes");
@@ -53,15 +52,12 @@ router.post('/importe', async(req, res) => {
     res.send(monto);
 
 });
-
-
-
-router.post("/add", upload.array('gimg', 12), async(req, res) => {
+   
+router.post("/add", upload.array('gimg', 12),async(req, res) => {
 
     if (req.body.nombre != undefined && req.body.nombre != ' ') {
-        console.log(req.body);
-
-
+     
+        
         const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre);
 
         let f = new Date();
@@ -118,4 +114,3 @@ router.post('/cancel', async(req, res) => {
 
 module.exports = router;
 
-//avance rleo

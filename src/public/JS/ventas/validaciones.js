@@ -13,27 +13,21 @@ let clickClientes  = ()=>{
 
 };
 
-let inputClinete  = document.getElementById('inputBusqueda');
-$("#inputBusqueda").on('keypress', function () {
-      clientes($("#inputBusqueda").val())
+$("#inputBusqueda").click(function (e) { 
+    e.preventDefault();
+    $("#inputBusqueda").on('keydown', function () {
         
+          clientes($("#inputBusqueda").val())   
+    });
 });
-// $("#inputBusqueda").keydown(function (e) { 
-//     console.log(inputClinete.value);
-    
-//     if($("#inputBusqueda").val() == "") cliente("");
-//     clientes($("#inputBusqueda").val()); 
-// });
-// });
-// ventana Modal 
 
-
-let clientes = (words) => {
-    console.log(words);
-    
-    $.post("/ventas", { words: words }, function(data) {
+let clientes = (words = '') => {
+    let validacio = 1 ; 
+    if(words.length == 0 || words.length== 1)  validacio = 2; 
+    $.post("/ventas", { words: words, validaciones: validacio }, function(data) {
+        console.log(data);
+        if(data.length == 0   ) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de dato...<p>";
         let table = '';
-        // if (data.length == 0) clientes();
         data.forEach(data => {
             table += `
             <tr>
@@ -96,7 +90,8 @@ $(document).ready(function() {
                  {
                     sortable:false,
                     "render": function(data, type, full ,meta){
-                     return `  <p class="observaciones"  >${full.observacion}</p>`;
+                        
+                     return `  <p class="line-clamp" >${full.observacion}</p>`;
                     }  
                   },
                 //  { data: 'observacion' },
@@ -111,7 +106,8 @@ $(document).ready(function() {
                 ]
 
             }); 
-            shave(dot_obervaciones , 30); 
+            const para  = document.querySelector('p');
+            shave(para,1);
             pedidos_vendedores();
 });
 

@@ -13,8 +13,10 @@ router.get('/', async(req, res) => {
 router.get('/pedidos', async(req, res) => {
 
     const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad
-                                        FROM pedidos 
-                                        WHERE   DATE_FORMAT(fecha_inicial,'%Y-%m-%d ')  = DATE_FORMAT(NOW(),'%Y-%m-%d ')  or estatus  != 5 `);
+                                      FROM pedidos 
+                                      WHERE   DATE_FORMAT(fecha_inicial,'%Y-%m-%d ')  = DATE_FORMAT(NOW(),'%Y-%m-%d ')  or estatus  < 5 
+                                      group by prioridad,fecha_inicial
+                                      order by prioridad desc,fecha_inicial desc`);
 
     res.send(pedidos);
 });
