@@ -50,13 +50,13 @@ let clientes = (words) => {
 
 let cliente = (nombre) => {
     let mandar = `
-       <div class="row">
+       <div class=" row  ">
       
        <div class="col-sm-12">
          <input type="text"  class="form-control valid border border-secondary" value="${nombre}" name="nombre" require readonly >
        </div>
        </div>
-      
+       
     `;
     $("#inputCliente").show();
     document.getElementById('inputCliente').innerHTML = mandar;

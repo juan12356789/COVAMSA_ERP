@@ -9,9 +9,7 @@ let pedidos = (data) => {
             url: "/almacen/pedidos",
             success: function(response) {
 
-                if (typeof(data) == "string" && data.length < 20)
-                    alert(`EL PEDIDO CON EL CÓDIGO ${data} HA SIDO CANCELADO`);
-
+                if (typeof(data) == "string" && data.length < 20) alert(`EL PEDIDO CON EL CÓDIGO ${data} HA SIDO CANCELADO`);
 
                 sendData(response);
 

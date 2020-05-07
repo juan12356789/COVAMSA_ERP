@@ -91,6 +91,7 @@ let cancel_almacen = (order) => {
     document.getElementById('cancel_pedido').innerHTML = elementsHTML;
 
 };
+
 // function ValidaLongitud(campo, longitudMaxima) {
 //     try {
 //         if (campo.value.length > (longitudMaxima - 1))
