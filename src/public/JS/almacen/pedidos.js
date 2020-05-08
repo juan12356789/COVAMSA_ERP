@@ -40,6 +40,7 @@ let sendData = (data) => {
     let table = '';
     ruta = ["NORTE", "SUR"];
     estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'URGENTE'];
+    prioridad_info = ["NORMAL", "NORMAL", "URGENTE"];
     colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E"];
     data.forEach(data => {
         table += `<tr>
@@ -52,8 +53,9 @@ let sendData = (data) => {
                 
                   <td  style="background-color:${data.ruta ==  1 ? "#DFBC92" : "#92C1DF"} " >${ruta[data.ruta - 1]}</td>
                   <td id="userinput" >${data.importe}</td> 
-                  <td style="background-color:${colores[data.estatus - 1]}">${estatus[data.estatus - 1]}</td>
-                  <td>${data.observacion}</td>
+                  <td style="background-color:${colores[data.estatus - 1]}" ondblclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.num_pedido}')">${estatus[data.estatus - 1]}</td>
+                  <td >${prioridad_info[data.prioridad]}</td>
+                  <td><p class="line-clamp" >${data.observacion}</p></td>
                   <td>${data.fecha_inicial}</td>
                
                 </tr>`;
@@ -61,6 +63,18 @@ let sendData = (data) => {
     document.getElementById('pedidos').innerHTML = table;
 }
 
+
+const   chanche_estatus_almacen  = ( order ) => {
+    $('#change_status').modal('hide');
+    let estado_nuevo = document.getElementById('estado_nuevo').value;
+         $.ajax({type: "POST",url: "/almacen/cambio_estado",data: {estado_nuevo, order },success: function (response) {
+             pedidos(); 
+        }
+    });
+
+};
+
+/*  preguntarle a rosa para que es esto 
 document.getElementById("userinput").onblur = function() {
 
     //number-format the user input
@@ -72,4 +86,4 @@ document.getElementById("userinput").onblur = function() {
     //set the numeric value to a number input
     document.getElementById("number").value = this.value.replace(/,/g, "")
 
-}
+}*/

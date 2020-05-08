@@ -12,14 +12,19 @@ router.get('/', async(req, res) => {
 
 router.get('/pedidos', async(req, res) => {
 
-    const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%Y-%M-%d %H:%i %p') fecha_inicial,comprobante_pago,importe
-                                        FROM pedidos 
-                                        WHERE   DATE_FORMAT(fecha_inicial,'%Y-%m-%d ')  = DATE_FORMAT(NOW(),'%Y-%m-%d ')  OR estatus  != 5 `);
+    const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad
+                                      FROM pedidos 
+                                      WHERE   DATE_FORMAT(fecha_inicial,'%Y-%m-%d ')  = DATE_FORMAT(NOW(),'%Y-%m-%d ')  or estatus  < 5 
+                                      group by prioridad,fecha_inicial
+                                      order by prioridad desc,fecha_inicial desc`);
 
     res.send(pedidos);
 });
 
-
+router.post('/cambio_estado', async (req , res)=>{
+   const status = await pool.query(`UPDATE pedidos SET estatus = ${req.body.estado_nuevo} WHERE num_pedido = ?`, req.body.order);
+    res.send(status);
+});
 
 
 // Descarga el PDF 
