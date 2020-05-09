@@ -105,15 +105,21 @@ let cambios_status_pedidos = (current_status, order) => {
 
     document.getElementById('status').innerHTML = elementsHTML;
 
-};
+    //     <<
+    //     << << < HEAD
+    // }; ===
+    // === =
+    // }; >>>
+    // >>> > est
 
-function ValidaLongitud(campo, longitudMaxima) {
-    try {
-        if (campo.value.length > (longitudMaxima - 1))
+    function ValidaLongitud(campo, longitudMaxima) {
+        try {
+            if (campo.value.length > (longitudMaxima - 1))
+                return false;
+            else
+                return true;
+        } catch (e) {
             return false;
-        else
-            return true;
-    } catch (e) {
-        return false;
+        }
     }
 }
