@@ -194,6 +194,12 @@ $("#prioridad").click(function (e) {
 
                 if (response == 'false') {
                     alert('El pedido no ha sigo  guardado favor de revisar los campos ');
+                    $('input[type="text"]').removeAttr('disabled');
+                    $('input[type="file"]').removeAttr('disabled');
+                    $('button[type="submit"]').removeAttr('disabled');
+                    $('button[type="button"]').removeAttr('disabled');
+                    $('select').removeAttr('disabled');
+                    $('#imgct').trigger("reset");
                     $("#spinner").hide();
                 } else {
                     pedidos(response);
