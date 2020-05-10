@@ -89,8 +89,8 @@ let piorityTable = () => {
                 "render": function(data, type, full, meta) {
                     let disabled = ''
                     if (full.estatus == "CANCELADO") disabled = 'disabled';
-                    return `<button type="button" class="btn btn-primary btn-xs" onclick="pedidos_urgentes_normales(${3},'${full.num_pedido}',${2})"    >Aceptar</button>
-                            <button type="button" class="btn btn-primary btn-xs" onclick="pedidos_urgentes_normales(${3},'${full.num_pedido}',${0})"    >nel</button>`;
+                    return `<button type="button" class="btn btn-success  btn-sm" onclick="pedidos_urgentes_normales(${3},'${full.num_pedido}',${2})"    >Aceptar</button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="pedidos_urgentes_normales(${3},'${full.num_pedido}',${0})"    >Rechazar</button>`;
                 }
             }
 

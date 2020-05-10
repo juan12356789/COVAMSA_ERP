@@ -77,7 +77,7 @@ tr,table{
        }
        tbody td {
            display: block;
-           {{!-- text-align:center; --}}
+            text-align:center; 
        }
        tbody td:before {
           
@@ -90,7 +90,7 @@ tr,table{
        display: block;
        overflow-x:visible;
      }
-}*/
+}
 	
 	@media only screen and (max-width: 760px), (min-width: 768px) and (max-width: 1024px)  
 	{
@@ -118,7 +118,7 @@ tr,table{
 	
 	}
 	
-	/* Smartphones (portrait and landscape) ----------- */
+	/* Smartphones (portrait and landscape) ----------- 
 	@media only screen and (min-width : 320px) and (max-width : 480px) 
 	{
 		body { width: 320px; }
@@ -152,14 +152,14 @@ tr,table{
             <div class="jumbotron">
               <div class="container">
                 <div class="row">
-                  <label for="oc" class="col-sm-2 col-form-label"><p class="primera">No. de Orden de Compra:</p></label>
+                  <label for="oc" class="col-sm-2 col-form-label"><p class="primera"> Orden de Compra:</p></label>
                   <div class="col-md-4">
                     <input type="text" class="form-control valid border border-secondary" required name="orden"
                       maxlength="30" minlength="2"
                       id="orden" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Maximo 30 caracteres">
                     <input type="file" class="form-control-file " required name="gimg" id="gimg" style="color: black;">
                   </div>
-                  <label for="" class="col-sm-2 col-form-label"><p class="primera"> Cliente:</p></label>
+                  <label for="" class="col-sm-2 col-form-label"><p class="primera"> Cliente:&nbsp;</p></label>
                    {{!-- <div class="row "> --}}
                      <div class="col-md-4">
                        <div class="row">
@@ -176,7 +176,7 @@ tr,table{
                     {{/each}}
                     <div id="spinner">
                       <div class="d-flex">
-                        <div class="spinner-border" style="width: 3rem; height: 3rem; align:center;" role="status">
+                        <div class="spinner-border" style="width: 3rem; height: 3rem; " role="status">
                           <span class="sr-only">Cargando...</span>
                         </div>
                       </div>
@@ -224,7 +224,7 @@ tr,table{
                   </div>
                 </div>
               </div>
-                </div>
+                {{!-- </div> --}}
                <br>
                 <div class=" row ">
                   <label for="" class="col-sm-2 col-form-label"><p class="primera">No. de Pedido:</p></label>
@@ -237,7 +237,7 @@ tr,table{
                       style="color: black;">
                   <br>   
                   </div>
-                  <label for="" class="col-sm-2 col-form-label "><p class="primera">Rutas:</p></label> 
+                  <label for="" class="col-sm-2 col-form-label "><p class="primera">Rutas:&nbsp;</p></label> 
                   <div class="col-sm-4">
                   <select class="custom-select" name="ruta">
                       <option value="1">Norte</option>
@@ -266,9 +266,12 @@ tr,table{
                       onkeypress="return filterFloat(event,this);"
                       title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales">
                   </div>
+                  
+
+                </div>
                   </div>
                  
-                     <p class="primera">Tipo de Prioridad: </p>
+                     <p class="primera">Tipo de Prioridad:</p>
                     <select class="custom-select" id="prioridad" name="prioridad">
                       <option value="0">Normal</option>
                       <option value="1">Urgente</option>
@@ -291,16 +294,16 @@ tr,table{
                       <option value="2" >Transferencia</option>
                       <option value="3" >Normal</option>
                     </select>
-
+                </div>
 
               {{!-- <div class="form-group row justify-content-center"> --}}
                 <label for="" class="col-sm-2 col-form-label">Observacion:</label>
-                {{!-- <div class="col-sm-5"> --}}
+                <div class="col-sm-12">
                   <textarea class="form-control border border-secondary" name="observaciones" required
                     title="En caso de ques sea necesario poner observaciones" placeholder="Escribe aqui tus observaciones (como maximo 250 caracteres)"maxlength="250" rows="2"></textarea>
                 </div>
              
-        
+      
               <div class="form-group row justify-content-center">
                 <label for="" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
@@ -469,13 +472,14 @@ tr,table{
                         </div>
                       </div>
                     </div>
-          <table id="orders" border="1"  width="100%" class="width200">
+           <div class="table-responsive">
+          <table id="orders" class="table table-striped table-bordered"width="100%">
           {{!-- <table id="orders" class="table table-sm" width="100%"></table> --}}
-            <thead>
+            <thead class="thead-dark">
               <tr>
-                <th scope="col">Orden De Compra</th>
-                <th scope="col">Numero De Pedido</th>
-                <th scope="col">Comprabante De Pago</th>
+                <th scope="col" class="bg-warning">Orden De Compra</th>
+                <th scope="col" class="bg-success">Numero De Pedido</th>
+                <th scope="col" class="bg-primary">Comprabante De Pago</th>
                 <th scope="col">Ruta</th>
                 <th scope="col">Importe</th>
                 <th scope="col">Estatus</th>
@@ -487,7 +491,7 @@ tr,table{
             </thead>
 
           </table>
-
+</div>
         </div>
       </div>
     </div>
