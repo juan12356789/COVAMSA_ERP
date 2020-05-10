@@ -3,8 +3,8 @@ const router = express.Router();
 const path = require("path");
 const multer = require("multer");
 const pool = require('../../database');
-const nodemailer = require('nodemailer');
 const { isLoggedIn } = require('../../lib/auth');
+const nodemailer =  require('nodemailer');
 
 const rutimage = path.join(__dirname, "../../files");
 
@@ -20,17 +20,15 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-router.get('/', isLoggedIn, async(req, res) => {
 
+router.get('/', isLoggedIn, async(req, res) => {
     res.render('links/ventas/formularioVentas');
 });
 
-
-
 router.post('/', async(req, res) => {
-    console.log(req.body.words);
+
     let clientes;
-    if (req.body.words != undefined && req.body.words != '') {
+    if (req.body.validaciones == 1) {
         clientes = await pool.query("SELECT * FROM clientes  where  nombre like ?", '%' + [req.body.words] + '%');
     } else {
         clientes = await pool.query("SELECT * FROM clientes");
@@ -53,35 +51,36 @@ router.post('/importe', async(req, res) => {
     res.send(monto);
 
 });
-
-
-
-router.post("/add", upload.array('gimg', 12), async(req, res) => {
-
-    if (req.body.nombre != undefined && req.body.nombre != ' ') {
+   
+router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { name: 'num_pedido', maxCount: 1 },{ name: 'comprobante_pago', maxCount: 1 }]),async(req, res) => {
+        
         console.log(req.body);
-
-
+        
+   
+    if (req.body.nombre != undefined && req.body.nombre != ' '  && req.files.num_pedido != undefined) {
         const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre);
-
         let f = new Date();
+
         const insert = {
             id_pedido: null,
             id_empleado: cliente_id[0].id_empleados,
             idcliente: cliente_id[0].idcliente,
-            orden_de_compra: req.body.orden,
+            orden_de_compra: req.body.orden != undefined?req.body.orden:'' ,
             ruta: req.body.ruta,
-            estatus: 1,
-            ruta_pdf_orden_compra: req.files[0].filename,
-            ruta_pdf_pedido: req.files[1].filename,
-            ruta_pdf_comprobante_pago: req.files[2].filename,
+            estatus: (req.body.tipos_pago == 1  && req.body.comprobante_pago == '')? 7 : 1 ,
+            ruta_pdf_orden_compra: req.files.orden_compra != undefined? req.files.orden_compra[0].filename: '',
+            ruta_pdf_pedido: req.files.num_pedido != undefined? req.files.num_pedido[0].filename: '',
+            ruta_pdf_comprobante_pago: req.files.comprobante_pago != undefined? req.files.comprobante_pago[0].filename: '',
             num_pedido: req.body.numeroPedido,
             observacion: req.body.observaciones,
             fecha_inicial: f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes(),
-            comprobante_pago: req.body.comprobante_pago,
+            comprobante_pago: req.body.comprobante_pago != undefined?req.body.comprobante_pago:'' ,
             importe: req.body.importe,
-            prioridad: req.body.prioridad
+            prioridad: req.body.prioridad,
+            tipo_de_pago:req.body.tipos_pago
         };
+        console.log(insert);
+        
         await pool.query("INSERT INTO pedidos set ? ", [insert]);
 
         const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
@@ -91,7 +90,6 @@ router.post("/add", upload.array('gimg', 12), async(req, res) => {
     } else {
 
         res.send(false);
-
     }
 
 });
@@ -100,7 +98,7 @@ router.post("/add", upload.array('gimg', 12), async(req, res) => {
 
 router.post('/pedidos_vendedor', async(req, res) => {
 
-    const ordenes_vendedores = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe 
+    const ordenes_vendedores = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,tipo_de_pago
                                                 FROM pedidos  INNER JOIN empleados  on id_empleado = id_empleados
                                                 WHERE idacceso = ?  
                                                 ORDER BY fecha_inicial ASC`, req.user[0].idacceso);
@@ -118,4 +116,3 @@ router.post('/cancel', async(req, res) => {
 
 module.exports = router;
 
-//avance rleo
