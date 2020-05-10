@@ -116,6 +116,7 @@ $(document).ready(function() {
                 ]
 
             }); 
+            pedidos_vendedores(); 
 });
 
 

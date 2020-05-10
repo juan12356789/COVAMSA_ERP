@@ -34,6 +34,11 @@ socket.on('data:pedidos', function(data) {
     pedidos(data);
 
 });
+const  actualizar = ( data ) => {
+  
+    socket.emit('data:pedidos', data);
+ 
+ };
 
 
 let sendData = (data) => {
@@ -69,6 +74,7 @@ const   chanche_estatus_almacen  = ( order ) => {
     let estado_nuevo = document.getElementById('estado_nuevo').value;
          $.ajax({type: "POST",url: "/almacen/cambio_estado",data: {estado_nuevo, order },success: function (response) {
              pedidos(); 
+             actualizar(); 
         }
     });
 
