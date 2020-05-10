@@ -1,3 +1,5 @@
+
+
 let order_priority = () => {
 
     $('#Ventana_Modal').modal('show');
@@ -62,10 +64,10 @@ let reson_to_cancel = (order) => {
 
 let cambios_status_pedidos = ( current_status , order ) =>{
 
+    if(current_status == "CANCELADO") return alert("Este pedido ha sido cancelado no es posible cambias el status");
     $('#change_status').modal('show');
     let nuevo_estatus = document.getElementById('estado_nuevo'); 
     let elementsHTML = `
-
         <div class="modal-header">
             <h5 class="modal-title">Cambio de Status</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -87,12 +89,11 @@ let cambios_status_pedidos = ( current_status , order ) =>{
             
                 <label>Nuevo Estado:</label>
                  <select  id="estado_nuevo"   class="form-control">
-                 <option value="2">Proceso</option>
+                 <option value="2">En Proceso</option>
                  <option value="3">Parcial</option>
                  <option value="4">Completo</option>
                  <option value="5">Ruta</option>
                  </select>
-
             </div>       
         </div>
         </div>
@@ -106,6 +107,7 @@ let cambios_status_pedidos = ( current_status , order ) =>{
     document.getElementById('status').innerHTML = elementsHTML;
 
 }; 
+
 
 function ValidaLongitud(campo, longitudMaxima) {
     try {

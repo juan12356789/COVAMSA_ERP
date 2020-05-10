@@ -29,7 +29,13 @@ let orderTable = () => {
         { data: 'importe' },
         { data: 'nombre_estatus' },
         { data: 'prioridad' },
-        { data: 'observacion' },
+        {
+        sortable:false,
+        "render": function(data, type, full ,meta){
+            
+            return `  <p class="line-clamp" >${full.observacion}</p>`;
+        }  
+        },
         { data: 'fecha_inicial' }, {
             sortable: false,
             "render": function (data, type, full, meta) {
@@ -71,7 +77,13 @@ let piorityTable = () => {
         { data: 'importe' },
         { data: 'nombre_estatus' },
         { data: 'prioridad' },
-        { data: 'observacion' },
+        {
+        sortable:false,
+        "render": function(data, type, full ,meta){
+            
+            return `  <p class="line-clamp" >${full.observacion}</p>`;
+        }  
+        },
         { data: 'fecha_inicial' }, {
             sortable: false,
             "render": function (data, type, full, meta) {
