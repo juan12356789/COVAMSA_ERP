@@ -72,7 +72,7 @@ $(document).ready(function() {
     document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`; 
    
     dataTable =  $("#orders").DataTable({
-        "order": [[ 8, "desc" ]], 
+        "order": [[ 9, "desc" ]], 
         "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
              if(aData.estatus == 6)    $('td', nRow).css('color', 'red');  
             } ,
@@ -90,9 +90,16 @@ $(document).ready(function() {
             },{
                 sortable: false,
                 "render": function ( data, type, full, meta ) {
-                    return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago}</a>`;
+                    return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'<a href=""> COMPROBANTE</a>':full.comprobante_pago }</a>`;
                 }
-            },
+            },{
+                sortable:false,
+                "render": function(data, type, full ,meta){
+                 let pagos  = ['TRANSFERENCIA','ANTICIPADO','CONTRA ENTREGA','CREDITO'];  
+                 return `${pagos[ full.tipo_de_pago - 1 ]}`;
+            
+                }  
+              },
                  { data: 'ruta'},
                  { data: 'importe'},
                  { data: 'nombre_estatus' },
@@ -104,11 +111,10 @@ $(document).ready(function() {
                      return `  <p class="line-clamp" >${full.observacion}</p>`;
                     }  
                   },
-                //  { data: 'observacion' },
                  { data: 'fecha_inicial'},{
                    sortable:false,
                    "render": function(data, type, full ,meta){
-                    if(full.estatus <= 3 )return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close"    ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button><br>`;
+                    if(full.estatus <= 3 || full.estatus == 7  )return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close"    ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button><br>`;
                     return ' '; 
                    }  
                  }
@@ -125,14 +131,16 @@ let pedidos_vendedores = () => {
         type: "POST",
         url: "/ventas/pedidos_vendedor",
         success: function(response) {
+            
             let ruta = ['NORTE', 'SUR'];
-            let estatus = ['NUEVO','EN PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','URGENTE'];
+            let estatus = ['NUEVO','EN PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','DETENIDO'];
             let prioridad_info  = ["NORMAL","NOMRAL","URGENTE"];
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
             response.filter(n => n.nombre_estatus = estatus[n.estatus - 1]);
             response.filter(n =>  n.prioridad = prioridad_info[ n.prioridad ] );
             dataTable.rows().remove();  
             dataTable.rows.add(response).draw();
+            
         }
     });
     
@@ -209,7 +217,8 @@ $("#prioridad").click(function (e) {
                     $('button[type="submit"]').removeAttr('disabled');
                     $('button[type="button"]').removeAttr('disabled');
                     $('select').removeAttr('disabled');
-                    $('#imgct').trigger("reset");
+                    $("#comprobante").hide();
+                    $("#input").hide();
                     $("#spinner").hide();
                 } else {
                     pedidos(response);
@@ -222,6 +231,8 @@ $("#prioridad").click(function (e) {
                     $('button[type="button"]').removeAttr('disabled');
                     $('select').removeAttr('disabled');
                     $('#imgct').trigger("reset");
+                    $("#comprobante").hide();
+                    $("#input").hide();
                     cliente(' ');
                     $("#inputCliente").hide();
                 }

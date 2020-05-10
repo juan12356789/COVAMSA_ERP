@@ -72,7 +72,6 @@ input:placeholder-shown {
         <br>
 
       </div>
-
       <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
         <div class="card-body">
 
@@ -111,7 +110,7 @@ input:placeholder-shown {
                       style="color: black;">
                      <br>
                     <label for="" >&squf;Tipo de Pago:</label>
-                    <select class="form-control"  id="pagos_transferencia">
+                    <select class="form-control" name="tipos_pago" id="pagos_transferencia">
                       <option value="2" > Anticipado</option>
                       <option value="1"  >Transferencia </option>
                       <option value="3" > Contra Entrega</option>
@@ -232,7 +231,7 @@ input:placeholder-shown {
               <div class="form-group row justify-content-center">
                 <label for="" class="col-sm-2 col-form-label">&squf;Observaciones:</label>
                 <div class="col-sm-5">
-                  <textarea class="form-control border border-secondary" name="observaciones" required
+                  <textarea class="form-control border border-secondary" name="observaciones" 
                     title="En caso de ques sea necesario poner observaciones" placeholder="Escribe aqui tus observaciones (como maximo 250 caracteres)"maxlength="250" rows="2"></textarea>
                 </div>
               </div>
@@ -272,6 +271,7 @@ input:placeholder-shown {
                 <th>Orden De Compra</th>
                 <th>Numero De Pedido</th>
                 <th>Comprabante De Pago</th>
+                <th>Tipo De Pago</th>
                 <th>Ruta</th>
                 <th>Importe</th>
                 <th>Estatus</th>

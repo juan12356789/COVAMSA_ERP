@@ -44,7 +44,7 @@ const  actualizar = ( data ) => {
 let sendData = (data) => {
     let table = '';
     ruta = ["NORTE", "SUR"];
-    estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'URGENTE'];
+    let estatus = ['NUEVO','EN PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','DETENIDO'];
     prioridad_info = ["NORMAL", "NORMAL", "URGENTE"];
     colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E"];
     data.forEach(data => {
