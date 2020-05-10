@@ -26,7 +26,6 @@ router.get('/', isLoggedIn, async(req, res) => {
 });
 
 router.post('/', async(req, res) => {
-    console.log(req.body);
 
     let clientes;
     if (req.body.validaciones == 1) {
@@ -53,31 +52,33 @@ router.post('/importe', async(req, res) => {
 
 });
    
-router.post("/add", upload.array('gimg', 12),async(req, res) => {
-
-    if (req.body.nombre != undefined && req.body.nombre != ' ') {
-     
+router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { name: 'num_pedido', maxCount: 1 },{ name: 'comprobante_pago', maxCount: 1 }]),async(req, res) => {
         
+        
+   
+    if (req.body.nombre != undefined && req.body.nombre != ' '  && req.files.num_pedido != undefined) {
         const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre);
-
         let f = new Date();
+
         const insert = {
             id_pedido: null,
             id_empleado: cliente_id[0].id_empleados,
             idcliente: cliente_id[0].idcliente,
-            orden_de_compra: req.body.orden,
+            orden_de_compra: req.body.orden != undefined?req.body.orden:'' ,
             ruta: req.body.ruta,
             estatus: 1,
-            ruta_pdf_orden_compra: req.files[0].filename,
-            ruta_pdf_pedido: req.files[1].filename,
-            ruta_pdf_comprobante_pago: req.files[2].filename,
+            ruta_pdf_orden_compra: req.files.orden_compra != undefined? req.files.orden_compra[0].filename: '',
+            ruta_pdf_pedido: req.files.num_pedido != undefined? req.files.num_pedido[0].filename: '',
+            ruta_pdf_comprobante_pago: req.files.comprobante_pago != undefined? req.files.comprobante_pago[0].filename: '',
             num_pedido: req.body.numeroPedido,
             observacion: req.body.observaciones,
             fecha_inicial: f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes(),
-            comprobante_pago: req.body.comprobante_pago,
+            comprobante_pago: req.body.comprobante_pago != undefined?req.body.comprobante_pago:'' ,
             importe: req.body.importe,
             prioridad: req.body.prioridad
         };
+        console.log(insert);
+        
         await pool.query("INSERT INTO pedidos set ? ", [insert]);
 
         const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
@@ -87,7 +88,6 @@ router.post("/add", upload.array('gimg', 12),async(req, res) => {
     } else {
 
         res.send(false);
-
     }
 
 });

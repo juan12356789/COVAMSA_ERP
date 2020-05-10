@@ -4,14 +4,7 @@
     height: 200px;
     overflow: auto;
   }
-  .text{
-      width: 200px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      word-wrap:break-word; 
 
-  }
 
 .line-clamp {
   display: -webkit-box;
@@ -90,10 +83,10 @@ input:placeholder-shown {
                   <label for="oc" class="col-sm-2 col-form-label">&squf;Orden de Compra:</label>
                   <div class="col-sm-5">
 
-                    <input type="text" class="form-control valid border border-secondary" required name="orden"
+                    <input type="text" class="form-control valid border border-secondary"  name="orden"
                       maxlength="30" minlength="2"
                       id="orden" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Maximo 30 caracteres">
-                    <input type="file" class="form-control-file " required name="gimg" id="gimg" style="color: black;">
+                    <input type="file" class="form-control-file " name="orden_compra" id="oeden" style="color: black;">
                   </div>
                 </div>
 
@@ -102,30 +95,30 @@ input:placeholder-shown {
                   <div class="col-sm-5">
                     <input type="text" class="form-control valid border border-secondary" name="numeroPedido" required
                        maxlength="30" minlength="2"
-                      {{!-- pattern="[A-Za-z0-9]+"  --}}
                       title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Maximo 30 caracteres">
-                    <input type="file" class="form-control-file " required name="gimg" id="no_pedido"
+                    <input type="file" class="form-control-file " required name="num_pedido" id="no_pedido"
                       style="color: black;">
                   </div>
                 </div>
                 <div class="form-group row justify-content-center">
+
                   <label for="" class="col-sm-2 col-form-label">&squf;Comprobante de Pago:</label>
                   <div class="col-sm-5">
-                    <input type="text" class="form-control valid border border-secondary" minlength="2"  id="input" required
+                    <input type="text" class="form-control valid border border-secondary" minlength="2"  id="input" 
                      maxlength="30" minlength="2"
                       id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números. Maximo 30 caracteres">
-                    <input type="file" class="form-control-file " required name="gimg" id="comprobante"
+                    <input type="file" class="form-control-file "  name="comprobante_pago" id="comprobante"
                       style="color: black;">
-
-                    {{!--
-                    INCOMPLETO  
-                    <br> Tipo de Pago:
-                     <select class="form-control" name='id_categoria' id='id_categoria' onchange="carg(this);">
-                      <option value="1" selected>--Opciones--</option>
-                      <option value="2" >Transferencia</option>
-                      <option value="3" >Normal</option>
-                    </select> --}}
-                    <br> Tipo de Prioridad: 
+                     <br>
+                    <label for="" >&squf;Tipo de Pago:</label>
+                    <select class="form-control"  id="pagos_transferencia">
+                      <option value="2" > Anticipado</option>
+                      <option value="1"  >Transferencia </option>
+                      <option value="3" > Contra Entrega</option>
+                      <option value="4">Crédito</option>
+                    </select>
+                      <br>
+                     Tipo de Prioridad: 
                     <select class="custom-select" id="prioridad" name="prioridad">
                       <option value="0">Normal</option>
                       <option value="1">Urgente</option>
@@ -226,8 +219,6 @@ input:placeholder-shown {
                   <div class="input-group-prepend">
                     <span class="input-group-text border border-secondary">$</span>
                     <input type="text"  class="form-control border border-secondary" name="importe" required
-                      {{!-- pattern="^[0-9]{1,9}(\.[0-9]{0,2})?$" --}}
-                      {{!-- size="57"  --}}
                       maxLength="12" minlength="1"
                       onkeypress="return filterFloat(event,this);"
                       title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales">
@@ -237,32 +228,6 @@ input:placeholder-shown {
                     
                 </div>
               </div>
-           
-
-              {{!-- <div class="form-group row justify-content-center">
-                <label for="" class="col-sm-2 col-form-label">&squf;Tipo de Pago:</label>
-                <div class="col-sm-5">
-                  <div class="input-group-prepend">
-                    <label for="exampleFormControlSelect1">Crédito</label>
-                    <select class="form-control" id="exampleFormControlSelect1">
-                      <option>Pago Anticipado</option>
-                      <option>Pago Contra Entrega</option>
-
-                    </select>
-
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                      Contado
-                    </label>
-                  </div>
-                </div>
-              </div> --}}
-              
-              
-           
-
               <br>
               <div class="form-group row justify-content-center">
                 <label for="" class="col-sm-2 col-form-label">&squf;Observaciones:</label>

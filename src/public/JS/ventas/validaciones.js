@@ -4,13 +4,9 @@ const  dot_obervaciones = document.querySelector("#observaciones");
 $("#spinner").hide();
 
 
-// $("#tusClientes").click(function(e) {
 let clickClientes  = ()=>{
-
     $('.col-sm-8').val("");
-    let words = ''; 
     clientes();
-
 };
 
 $("#inputBusqueda").click(function (e) { 
@@ -55,6 +51,20 @@ let cliente = (nombre) => {
     document.getElementById('inputCliente').innerHTML = mandar;
 
 };
+
+// pagos ..
+$("#comprobante").hide();
+$("#input").hide();
+let tipo_pago  = document.getElementById('pagos_transferencia');
+$("#pagos_transferencia").click(function (e) { 
+    if (tipo_pago.value == 1) {
+        $("#comprobante").show();
+        $("#input").show();
+    }else{
+        $("#comprobante").hide();
+        $("#input").hide();
+    }
+}); 
 
 $(document).ready(function() {
   
@@ -106,9 +116,6 @@ $(document).ready(function() {
                 ]
 
             }); 
-            const para  = document.querySelector('p');
-            shave(para,1);
-            pedidos_vendedores();
 });
 
 
@@ -159,6 +166,8 @@ socket.on('data:pedidos', function(data) {
     pedidos_vendedores(); 
 
 });
+
+//---------------------------------------
 
 // componente guardar  
 var correoPrioridad  = document.getElementById('prioridad'); 
