@@ -1,10 +1,11 @@
 const mysql = require('mysql');
 const { promisify } = require('util'); // se utiliza para usar promesas
 const database = {
-        host: 'localhost',
-        user: 'root',
-        password: 'password',
-        database: 'covamsa_desarrollo'
+    host: 'localhost',
+    user: 'root',
+    password: 'juan',
+    database: 'covamsa_desarrollo',
+    port:3307
 }
 
 //ver si se pueden subir cambios al servidor xd
