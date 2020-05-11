@@ -4,36 +4,26 @@ const dot_obervaciones = document.querySelector("#observaciones");
 $("#spinner").hide();
 
 
-// $("#tusClientes").click(function(e) {
 let clickClientes = () => {
-
-    $('.col-sm-8').val("");
-    let words = '';
+    $('.col-sm-12').val("");
     clientes();
-
 };
 
-let inputClinete = document.getElementById('inputBusqueda');
-$("#inputBusqueda").on('keypress', function() {
-    clientes($("#inputBusqueda").val())
+$("#inputBusqueda").click(function(e) {
+    e.preventDefault();
+    $("#inputBusqueda").on('keydown', function() {
 
+        clientes($("#inputBusqueda").val())
+    });
 });
-// $("#inputBusqueda").keydown(function (e) { 
-//     console.log(inputClinete.value);
 
-//     if($("#inputBusqueda").val() == "") cliente("");
-//     clientes($("#inputBusqueda").val()); 
-// });
-// });
-// ventana Modal 
-
-
-let clientes = (words) => {
-    console.log(words);
-
-    $.post("/ventas", { words: words }, function(data) {
+let clientes = (words = '') => {
+    let validacio = 1;
+    if (words.length == 0 || words.length == 1) validacio = 2;
+    $.post("/ventas", { words: words, validaciones: validacio }, function(data) {
+        console.log(data);
+        if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de dato...<p>";
         let table = '';
-        // if (data.length == 0) clientes();
         data.forEach(data => {
             table += `
             <tr>
@@ -49,18 +39,30 @@ let clientes = (words) => {
 
 let cliente = (nombre) => {
     let mandar = `
-       <div class="form-group row justify-content-center ">
-       <label for="" class="col-sm-2 col-form-label"></label>
-       <div class="col-sm-12">
+    
+       <div class="col-sm-14">
          <input type="text"  class="form-control valid border border-secondary" value="${nombre}" name="nombre" require readonly >
        </div>
-       </div>
-       </div>
+       
     `;
     $("#inputCliente").show();
     document.getElementById('inputCliente').innerHTML = mandar;
 
 };
+
+// pagos ..
+$("#comprobante").hide();
+$("#input").hide();
+let tipo_pago = document.getElementById('pagos_transferencia');
+$("#pagos_transferencia").click(function(e) {
+    if (tipo_pago.value == 1) {
+        $("#comprobante").show();
+        $("#input").show();
+    } else {
+        $("#comprobante").hide();
+        $("#input").hide();
+    }
+});
 
 $(document).ready(function() {
 
@@ -69,7 +71,7 @@ $(document).ready(function() {
 
     dataTable = $("#orders").DataTable({
         "order": [
-            [8, "desc"]
+            [9, "desc"]
         ],
         "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             if (aData.estatus == 6) $('td', nRow).css('color', 'red');
@@ -87,7 +89,14 @@ $(document).ready(function() {
             }, {
                 sortable: false,
                 "render": function(data, type, full, meta) {
-                    return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago}</a>`;
+                    return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'<a href="#"> COMPROBANTE</a>':full.comprobante_pago }</a>`;
+                }
+            }, {
+                sortable: false,
+                "render": function(data, type, full, meta) {
+                    let pagos = ['TRANSFERENCIA', 'ANTICIPADO', 'CONTRA ENTREGA', 'CREDITO'];
+                    return `${pagos[ full.tipo_de_pago - 1 ]}`;
+
                 }
             },
             { data: 'ruta' },
@@ -97,14 +106,14 @@ $(document).ready(function() {
             {
                 sortable: false,
                 "render": function(data, type, full, meta) {
-                    return `  <p class="observaciones"  >${full.observacion}</p>`;
+
+                    return `  <p class="line-clamp" >${full.observacion}</p>`;
                 }
             },
-            //  { data: 'observacion' },
             { data: 'fecha_inicial' }, {
                 sortable: false,
                 "render": function(data, type, full, meta) {
-                    if (full.estatus <= 3) return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close"    ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button><br>`;
+                    if (full.estatus <= 3 || full.estatus == 7) return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close"    ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button><br>`;
                     return ' ';
                 }
             }
@@ -112,7 +121,6 @@ $(document).ready(function() {
         ]
 
     });
-    shave(dot_obervaciones, 30);
     pedidos_vendedores();
 });
 
@@ -122,14 +130,16 @@ let pedidos_vendedores = () => {
         type: "POST",
         url: "/ventas/pedidos_vendedor",
         success: function(response) {
+
             let ruta = ['NORTE', 'SUR'];
-            let estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'URGENTE'];
+            let estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'DETENIDO'];
             let prioridad_info = ["NORMAL", "NOMRAL", "URGENTE"];
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
             response.filter(n => n.nombre_estatus = estatus[n.estatus - 1]);
             response.filter(n => n.prioridad = prioridad_info[n.prioridad]);
             dataTable.rows().remove();
             dataTable.rows.add(response).draw();
+
         }
     });
 
@@ -163,6 +173,8 @@ socket.on('data:pedidos', function(data) {
     pedidos_vendedores();
 
 });
+
+//---------------------------------------
 
 // componente guardar  
 var correoPrioridad = document.getElementById('prioridad');
@@ -202,6 +214,13 @@ $(function() {
 
                 if (response == 'false') {
                     alert('El pedido no ha sigo  guardado favor de revisar los campos ');
+                    $('input[type="text"]').removeAttr('disabled');
+                    $('input[type="file"]').removeAttr('disabled');
+                    $('button[type="submit"]').removeAttr('disabled');
+                    $('button[type="button"]').removeAttr('disabled');
+                    $('select').removeAttr('disabled');
+                    $("#comprobante").hide();
+                    $("#input").hide();
                     $("#spinner").hide();
                 } else {
                     pedidos(response);
@@ -214,6 +233,8 @@ $(function() {
                     $('button[type="button"]').removeAttr('disabled');
                     $('select').removeAttr('disabled');
                     $('#imgct').trigger("reset");
+                    $("#comprobante").hide();
+                    $("#input").hide();
                     cliente(' ');
                     $("#inputCliente").hide();
                 }

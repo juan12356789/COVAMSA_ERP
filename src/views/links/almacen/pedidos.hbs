@@ -12,10 +12,14 @@
   font-family: sans-serif;
   line-height: 1.4;  
 }
-.line-clamp:hover {
-  -webkit-line-clamp: 100;
-  cursor: pointer;
+.table td.text span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
 }
+
 </style>
 <!DOCTYPE html>
 <html lang="en">
@@ -95,7 +99,7 @@
     <script src="librerias/bootstrap.js"></script>
     <script src="/socket.io/socket.io.js" ></script>    
     <script src="JS/ventanasEmergentes/ventanasModales.js"></script>
-    <script src="https://kit.fontawesome.com/385704f43e.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/385704f43e.js" crossorigin="anonymous"></script>s
     <script src="JS/almacen/pedidos.js" ></script>
 
 </body>

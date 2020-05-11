@@ -92,7 +92,6 @@ let cambios_status_pedidos = (current_status, order) => {
                  <option value="4">Completo</option>
                  <option value="5">Ruta</option>
                  </select>
-
             </div>       
         </div>
         </div>
@@ -104,53 +103,17 @@ let cambios_status_pedidos = (current_status, order) => {
     `;
 
     document.getElementById('status').innerHTML = elementsHTML;
-    //modal para avisar que un pedido fue cancelado y se den cuenta en almacen.
-    let cancel_almacen = (order) => {
 
-        $('#Ventana_Modal_cancelarPedido').modal('show');
-
-        let elementsHTML = `
-    
-        <div class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p>El pedido # ${order}, ha sido Cancelado, Si el surtido esta en progreso devolver los productos.</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Confirmado-Enterado</button>
-            </div>
-          </div>
-        </div>
-      </div
-        `;
-
-        document.getElementById('cancel_pedido').innerHTML = elementsHTML;
+};
 
 
-        //     <<
-        //     << << < HEAD
-        // }; ===
-        // === =
-        // }; >>>
-        // >>> > est
-
-        function ValidaLongitud(campo, longitudMaxima) {
-            try {
-                if (campo.value.length > (longitudMaxima - 1))
-                    return false;
-                else
-                    return true;
-            } catch (e) {
-                return false;
-            }
-        }
-    }
-}
+// function ValidaLongitud(campo, longitudMaxima) {
+//     try {
+//         if (campo.value.length > (longitudMaxima - 1))
+//             return false;
+//         else
+//             return true;
+//     } catch (e) {
+//         return false;
+//     }
+// }
