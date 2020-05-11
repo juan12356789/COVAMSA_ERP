@@ -4,6 +4,7 @@ module.exports = {
         user: 'root',
         password: 'juan',
         database: 'covamsa_desarrollo',
-        port: 3307
+        port:3307
+
     }
 };
