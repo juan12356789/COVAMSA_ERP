@@ -26,12 +26,13 @@ router.get('/', isLoggedIn, async(req, res) => {
 });
 
 router.post('/', async(req, res) => {
-
+    
     let clientes;
-    if (req.body.validaciones == 1) {
-        clientes = await pool.query("SELECT * FROM clientes  where  nombre like ?", '%' + [req.body.words] + '%');
+    const empleado_id = await pool.query("SELECT id_empleados from empleados inner join acceso using(idacceso) where idacceso  = ?",req.user[0].idacceso);    
+    if (req.body.validaciones ==  1) {
+        clientes = await pool.query(`SELECT * FROM clientes  where  id_empleados = ${empleado_id[0].id_empleados}  and nombre like ?`, '%' + [req.body.words] + '%' );
     } else {
-        clientes = await pool.query("SELECT * FROM clientes");
+        clientes = await pool.query("SELECT * FROM clientes where id_empleados = ?",empleado_id[0].id_empleados);
     }
 
     res.send(clientes);
@@ -74,7 +75,7 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
             num_pedido: req.body.numeroPedido,
             observacion: req.body.observaciones,
             fecha_inicial: f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes(),
-            comprobante_pago: req.body.comprobante_pago != undefined?req.body.comprobante_pago:'' ,
+            comprobante_pago: req.body.comprobante_pago != undefined && req.body.comprobante_pago ?req.body.comprobante_pago:'' ,
             importe: req.body.importe,
             prioridad: req.body.prioridad,
             tipo_de_pago:req.body.tipos_pago
