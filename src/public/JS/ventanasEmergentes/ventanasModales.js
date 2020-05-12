@@ -106,6 +106,34 @@ let cambios_status_pedidos = (current_status, order) => {
 
 };
 
+let cancel_almacen_general = (order) => {
+
+    $('#Ventana_Modal_order').modal('show');
+
+    let elementsHTML = `
+
+        <div class="modal-header">
+            <h5 class="modal-title">Confirmacion de Cancelación Del Pedido</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>
+            El pedido ${order}, ha sido cancelado. Si el surtido de la orden esta en progreso, retorne los productos y cambie 
+            el estado a enterado. 
+            </p>
+        </div>
+        <div class="modal-footer">
+          <button value="0"  class="btn btn-primary"  id="enterado">Enterado</button>
+          
+        </div>
+        
+    `;
+
+    document.getElementById('cancel_almacen').innerHTML = elementsHTML;
+
+};
 
 // function ValidaLongitud(campo, longitudMaxima) {
 //     try {
