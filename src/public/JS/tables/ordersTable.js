@@ -41,35 +41,8 @@ let orderTable = () => {
         "render": function(data, type, full ,meta){
             
             return `  <p class="line-clamp" >${full.observacion}</p>`;
-        }  
+        } , 
         },
-        columns: [{
-                sortable: false,
-                "render": function(data, type, full, meta) {
-                    return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}" >${full.orden_de_compra}</a>`;
-                }
-            }, {
-                sortable: false,
-                "render": function(data, type, full, meta) {
-                    return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
-                }
-            }, {
-                sortable: false,
-                "render": function(data, type, full, meta) {
-                    return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago}</a>`;
-                }
-            },
-            { data: 'ruta' },
-            { data: 'importe' },
-            { data: 'nombre_estatus' },
-            { data: 'prioridad' },
-            {
-                sortable: false,
-                "render": function(data, type, full, meta) {
-
-                    return `  <p class="line-clamp" >${full.observacion}</p>`;
-                }
-            },
             { data: 'fecha_inicial' }, {
                 sortable: false,
                 "render": function(data, type, full, meta) {
