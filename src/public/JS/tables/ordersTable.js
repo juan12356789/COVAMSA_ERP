@@ -137,7 +137,6 @@ let pedidos_urgentes_normales = (tipo_de_pedido, numero_pedido, tipo_prioridad) 
                 dataTable.rows.add(response).draw();
 
             } else {
-
                 tablePriority.rows().remove();
                 tablePriority.rows.add(response).draw();
 
