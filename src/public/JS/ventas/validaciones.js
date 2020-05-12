@@ -1,5 +1,5 @@
 const socket = io();
-const  dot_obervaciones = document.querySelector("#observaciones");
+const dot_obervaciones = document.querySelector("#observaciones");
 
 $("#spinner").hide();
 
@@ -9,20 +9,20 @@ let clickClientes  = ()=>{
     clientes();
 };
 
-$("#inputBusqueda").click(function (e) { 
+$("#inputBusqueda").click(function(e) {
     e.preventDefault();
-    $("#inputBusqueda").on('keydown', function () {
-        
-          clientes($("#inputBusqueda").val())   
+    $("#inputBusqueda").on('keydown', function() {
+
+        clientes($("#inputBusqueda").val())
     });
 });
 
 let clientes = (words = '') => {
-    let validacio = 1 ; 
-    if(words.length == 0 || words.length== 1)  validacio = 2; 
+    let validacio = 1;
+    if (words.length == 0 || words.length == 1) validacio = 2;
     $.post("/ventas", { words: words, validaciones: validacio }, function(data) {
         console.log(data);
-        if(data.length == 0   ) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de dato...<p>";
+        if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de dato...<p>";
         let table = '';
         data.forEach(data => {
             table += `
@@ -39,13 +39,11 @@ let clientes = (words = '') => {
 
 let cliente = (nombre) => {
     let mandar = `
-       <div class="form-group row justify-content-center ">
-       <label for="" class="col-sm-2 col-form-label"></label>
-       <div class="col-sm-5">
+    
+       <div class="col-sm-14">
          <input type="text"  class="form-control valid border border-secondary" value="${nombre}" name="nombre" require readonly >
        </div>
-       </div>
-       </div>
+       
     `;
     $("#inputCliente").show();
     document.getElementById('inputCliente').innerHTML = mandar;
@@ -79,15 +77,15 @@ $(document).ready(function() {
         columns: [
             {
                 sortable: false,
-                "render": function ( data, type, full, meta ) {
+                "render": function(data, type, full, meta) {
                     return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}"  style="a {color:#130705;} " >${full.orden_de_compra}</a>`;
                 }
             }, {
                 sortable: false,
-                "render": function ( data, type, full, meta ) {
+                "render": function(data, type, full, meta) {
                     return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
                 }
-            },{
+            }, {
                 sortable: false,
                 "render": function ( data, type, full, meta ) {
                     return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'<a href="#"> COMPROBANTE</a>':full.comprobante_pago }</a>`;
@@ -102,7 +100,13 @@ $(document).ready(function() {
               },
                  { data: 'ruta'},
                  { data: 'importe'},
-                 { data: 'nombre_estatus' },
+                //  { data: 'nombre_estatus' },
+                {
+                    sortable:false,
+                    "render": function (data, type, full ,meta) {
+                        return `${full.nombre_estatus == "DETENIDO"?`<a  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
+                      }
+                },
                  { data: 'prioridad' },
                  {
                     sortable:false,
@@ -137,15 +141,14 @@ let pedidos_vendedores = () => {
             let prioridad_info  = ["NORMAL","NOMRAL","URGENTE"];
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
             response.filter(n => n.nombre_estatus = estatus[n.estatus - 1]);
-            response.filter(n =>  n.prioridad = prioridad_info[ n.prioridad ] );
-            dataTable.rows().remove();  
+            response.filter(n => n.prioridad = prioridad_info[n.prioridad]);
+            dataTable.rows().remove();
             dataTable.rows.add(response).draw();
             
         }
     });
-    
-};
 
+};
 let cancelOrder = ( order ) =>{
     
     reson_to_cancel( order ); 
@@ -164,47 +167,55 @@ let cancelOrder = ( order ) =>{
     
 }; 
 
+
 // socket -----------
-const  pedidos = ( data ) => {
-  
-   socket.emit('data:pedidos', data);
+const pedidos = (data) => {
+
+    socket.emit('data:pedidos', data);
 
 };
 
 socket.on('data:pedidos', function(data) {
-    pedidos_vendedores(); 
+    pedidos_vendedores();
 
 });
 
 //---------------------------------------
 
 // componente guardar  
-var correoPrioridad  = document.getElementById('prioridad'); 
-$("#prioridad").click(function (e) { 
+var correoPrioridad = document.getElementById('prioridad');
+$("#prioridad").click(function(e) {
 
-    if(correoPrioridad.value == 0 ) {
-        document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`; 
-    }else{
-        document.getElementById('button_send').innerHTML = `<button   type="button"  class="btn btn-success btn-lg btn-block"  onclick="order_priority()" >Enviar</button>`; 
+    if (correoPrioridad.value == 0) {
+        document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`;
+    } else {
+        document.getElementById('button_send').innerHTML = `<button   type="button"  class="btn btn-success btn-lg btn-block"  onclick="order_priority()" >Enviar</button>`;
     }
 
 });
+
+// Se manda el file de transferencia 
+
 
  $(function () {  
     $("#imgct").submit(function (e) { 
         $('#Ventana_Modal').modal('hide'); 
         e.preventDefault();
         var formData = new FormData(document.getElementById("imgct"));
-   
+
         formData.append("dato", "valor");
 
-        $.ajax({ url: "/ventas/add", type: "POST", dataType: "html", data: formData,
+        $.ajax({
+            url: "/ventas/add",
+            type: "POST",
+            dataType: "html",
+            data: formData,
             beforeSend: function() {
-                $('input[type="text"]').attr('disabled','disabled');
-                $('input[type="file"]').attr('disabled','disabled');
-                $('button[type="submit"]').attr('disabled','disabled');
-                $('button[type="button"]').attr('disabled','disabled');
-                $('select').attr('disabled','disabled');
+                $('input[type="text"]').attr('disabled', 'disabled');
+                $('input[type="file"]').attr('disabled', 'disabled');
+                $('button[type="submit"]').attr('disabled', 'disabled');
+                $('button[type="button"]').attr('disabled', 'disabled');
+                $('select').attr('disabled', 'disabled');
                 $("#spinner").show(); // Le quito la clase que oculta mi animación 
 
             },
