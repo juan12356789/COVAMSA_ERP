@@ -4,7 +4,7 @@ let orderTable = () => {
 
     dataTable = $("#orders").DataTable({
         "order": [
-            [8, "desc"]
+            [9, "desc"]
         ], 
         "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
              if(aData.estatus == 6)    $('td', nRow).css('color', 'red');  
@@ -19,15 +19,22 @@ let orderTable = () => {
             "render": function (data, type, full, meta) {
                 return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
             }
-        }, {
-            sortable: false,
-            "render": function (data, type, full, meta) {
-                return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago}</a>`;
-            }
-        },
+        },{
+            sortable:false,
+            "render": function(data, type, full ,meta){
+             let pagos  = ['TRANSFERENCIA','ANTICIPADO','CONTRA ENTREGA','CREDITO'];  
+             return `${pagos[ full.tipo_de_pago - 1 ]}`;
+        
+            }  
+          },
         { data: 'ruta' },
         { data: 'importe' },
-        { data: 'nombre_estatus' },
+        {
+            sortable:false,
+            "render": function (data, type, full ,meta) {
+                return `${full.nombre_estatus == "DETENIDO"?`<a  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
+              }
+        },
         { data: 'prioridad' },
         {
         sortable:false,
@@ -117,7 +124,7 @@ let pedidos_urgentes_normales = (tipo_de_pedido, numero_pedido, tipo_prioridad) 
             }
             
             let ruta = ['NORTE', 'SUR'];
-            let estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'URGENTE'];
+            let estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'DETENIDO'];
             let prioridad_info = ["NORMAL", "NORMAL", "URGENTE"];
 
             response.filter(n => n.ruta = ruta[n.ruta - 1]);

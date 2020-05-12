@@ -102,7 +102,13 @@ $(document).ready(function() {
               },
                  { data: 'ruta'},
                  { data: 'importe'},
-                 { data: 'nombre_estatus' },
+                //  { data: 'nombre_estatus' },
+                {
+                    sortable:false,
+                    "render": function (data, type, full ,meta) {
+                        return `${full.nombre_estatus == "DETENIDO"?`<a  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
+                      }
+                },
                  { data: 'prioridad' },
                  {
                     sortable:false,
@@ -145,7 +151,6 @@ let pedidos_vendedores = () => {
     });
     
 };
-
 let cancelOrder = ( order ) =>{
     
     reson_to_cancel( order ); 
@@ -163,6 +168,7 @@ let cancelOrder = ( order ) =>{
     });  
     
 }; 
+
 
 // socket -----------
 const  pedidos = ( data ) => {
@@ -189,6 +195,9 @@ $("#prioridad").click(function (e) {
     }
 
 });
+
+// Se manda el file de transferencia 
+
 
  $(function () {  
     $("#imgct").submit(function (e) { 
