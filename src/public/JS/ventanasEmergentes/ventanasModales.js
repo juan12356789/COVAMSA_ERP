@@ -76,7 +76,7 @@ let cambios_status_pedidos = ( current_status , order ) =>{
     }
     if(current_status == "CANCELADO") return alert("Este pedido ha sido cancelado no es posible cambias el status");
     $('#change_status').modal('show');
-    let nuevo_estatus = document.getElementById('estado_nuevo'); 
+    let nuevo_estatus = document.getElementById('estado_nuevo');
     let elementsHTML = `
         <div class="modal-header">
             <h5 class="modal-title">Cambio de Status</h5>
