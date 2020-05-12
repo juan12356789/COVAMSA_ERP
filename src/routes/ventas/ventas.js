@@ -52,12 +52,18 @@ router.post('/importe', async(req, res) => {
     res.send(monto);
 
 });
+
+router.post("/updateTrasferencia",upload.fields([{ name: 'comprobante_pago', maxCount: 1  }]), async(req , res)=>{
+    console.log(req.files);
+    console.log(req.body);
+        const  updateComprobante  =  await pool.query(`UPDATE pedidos SET comprobante_pago='${req.body.comprobante_pago}'  ,ruta_pdf_comprobante_pago='${req.files.comprobante_pago[0].filename}', estatus = 1 WHERE num_pedido = ?`,req.body.num_pedido); 
+        res.end("sí se pudo ");
+        
+    
+    
+}); 
    
 router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { name: 'num_pedido', maxCount: 1 },{ name: 'comprobante_pago', maxCount: 1 }]),async(req, res) => {
-        
-        console.log(req.body);
-        
-   
     if (req.body.nombre != undefined && req.body.nombre != ' '  && req.files.num_pedido != undefined) {
         const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre);
         let f = new Date();
@@ -80,7 +86,6 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
             prioridad: req.body.prioridad,
             tipo_de_pago:req.body.tipos_pago
         };
-        console.log(insert);
         
         await pool.query("INSERT INTO pedidos set ? ", [insert]);
 

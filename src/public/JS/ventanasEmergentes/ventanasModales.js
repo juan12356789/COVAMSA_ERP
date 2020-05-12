@@ -63,10 +63,20 @@ let reson_to_cancel = (order) => {
 };
 
 let cambios_status_pedidos = ( current_status , order ) =>{
-
+    console.log(current_status);
+    let opciones_pago  = ``; 
+    switch (current_status) {
+        case "NUEVO":
+            opciones_pago = `<option value="2">En Proceso</option>`; 
+        break;
+        case "EN PROCESO" || "COMPLETO":
+            opciones_pago+=`<option value="3">Parcial</option>
+                            <option value="4">Completo</option>`; 
+        break;
+    }
     if(current_status == "CANCELADO") return alert("Este pedido ha sido cancelado no es posible cambias el status");
     $('#change_status').modal('show');
-    let nuevo_estatus = document.getElementById('estado_nuevo'); 
+    let nuevo_estatus = document.getElementById('estado_nuevo');
     let elementsHTML = `
         <div class="modal-header">
             <h5 class="modal-title">Cambio de Status</h5>
@@ -89,10 +99,10 @@ let cambios_status_pedidos = ( current_status , order ) =>{
             
                 <label>Nuevo Estado:</label>
                  <select  id="estado_nuevo"   class="form-control">
-                 <option value="2">En Proceso</option>
-                 <option value="3">Parcial</option>
-                 <option value="4">Completo</option>
-                 <option value="5">Ruta</option>
+                    <option value="2">En Proceso</option>
+                    <option value="3">Parcial</option>
+                    <option value="4">Completo</option>
+                    <option value="5">Ruta</option>
                  </select>
             </div>       
         </div>
@@ -101,13 +111,51 @@ let cambios_status_pedidos = ( current_status , order ) =>{
           <button value="0"  class="btn btn-primary"  onclick="chanche_estatus_almacen('${order}' )" >Aceptar</button>
           <button value="1" type="button" class="btn btn-secondary"  id=""cancelar"  data-dismiss="modal">Cancelar</button>
         </div>
-        
     `;
 
     document.getElementById('status').innerHTML = elementsHTML;
 
 }; 
 
+const uploadFileTransferencia = (num_pedido) =>{
+    $('#Ventana_Modal_order').modal('show');
+
+    let elementsHTML = `
+        <div class="modal-header">
+            <h5 class="modal-title">Transferencia</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+        <form id="uploadForm" enctype="multipart/form-data"   >
+        <div  class="row"  >
+            <div class="col-4" >
+            <label for="" class="col-form-label">Número de  pedido: </label>
+            <input type="text" name="num_pedido" id="num_pedido" class ="form-control" value="${num_pedido}" readonly />
+            </div>
+            <div class="col-6" >
+                 <label for="" class=" col-form-label">&squf;Comprobante de Pago:</label>
+                 <input type="text" class="form-control valid border border-secondary" minlength="2"  required  id="comp" maxlength="30" minlength="2" name="comp" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números. Maximo 30 caracteres">
+                 <input type="file" class="form-control-file "  required id="comprobante_pago" name="comprobante_pago" style="color: black;">
+             </div>
+           
+        </div>
+        <br>
+        <div class="modal-footer">  
+          <button type="button"  onclick="pagosTrasnsferencia()" class="btn btn-primary" >Aceptar</button>
+          <button   class="btn btn-secondary"    data-dismiss="modal">Cancelar</button>
+          </div>
+        </div>
+
+        </form>
+        
+    `;
+
+    document.getElementById('cancel_order').innerHTML = elementsHTML;
+
+
+}; 
 
 function ValidaLongitud(campo, longitudMaxima) {
     try {
