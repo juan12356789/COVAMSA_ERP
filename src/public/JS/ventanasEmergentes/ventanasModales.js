@@ -19,7 +19,7 @@ let order_priority = () => {
             <input type="checkbox"  name="enviar_correo"  id="enviar_correo">  
         </div>
         <div class="modal-footer">
-          <button  type="submit"  class="btn btn-primary"   >Aceptar</button>
+          <button  type="submit"  class="btn btn-primary"  onclick="enviarCorreo('Pedido Urgente')"   >Aceptar</button>
           <button type="button" class="btn btn-secondary"  data-dismiss="modal">Cancelar</button>
 
         </div>
@@ -97,7 +97,7 @@ let cambios_status_pedidos = (current_status, order) => {
         </div>
         <div class="modal-footer">
           <button value="0"  class="btn btn-primary"  onclick="chanche_estatus_almacen('${order}' )" >Aceptar</button>
-          <button value="1" type="button" class="btn btn-secondary"  id=""cancelar"  data-dismiss="modal">Cancelar</button>
+          <button value="1" type="button" class="btn btn-secondary"  id="cancelar"  data-dismiss="modal">Cancelar</button>
         </div>
         
     `;

@@ -183,15 +183,7 @@
                     
                     <br>
 
-                    {{!-- Ventana Modal --}}
-                    {{!-- <div class="modal fade bd-example-modal-lg" id="Ventana_Modal" tabindex="-1" role="dialog"
-                      aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                      <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                          <div id="elements_of_modal"></div>
-                        </div>
-                      </div>
-                    </div> --}}
+
 
                   </div>
                   <label for="" class="col-sm-2 col-form-label">Importe:</label>
@@ -209,10 +201,16 @@
                 </div>
                 <br>
                 Tipo de Prioridad:
-                <select class="custom-select" id="prioridad" name="prioridad">
+                <div>
+                <select class="custom-select" id="prioridad" name="prioridad" >
                   <option value="0">Normal</option>
-                  <option value="1">Urgente</option>
+                  <option value="1">Urgente</option> 
                 </select>
+                </div>
+                <div>
+                Nota: Si la prioridad del Pedido fue "Urgente" mandar un correo a su Administrador para su confirmacion:
+                <a href="#" onclick="enviarCorreo('Hay un Pedido urgente')">Enviar Mensaje</a>
+                </div>
                 <div class="correo"></div>
                 <br>
                 Observaciones:
@@ -220,6 +218,7 @@
                   title="En caso de ques sea necesario poner observaciones"
                   placeholder="Escribe aqui tus observaciones (como maximo 250 caracteres)" maxlength="250" rows="2">
                 </textarea>
+                
                 <div class="form-group row justify-content-right">
                   <label for="" class="col-sm-2 col-form-label"></label><label for="" class="col-sm-2 col-form-label"></label>
                   <div class="col-sm-4">
@@ -329,7 +328,7 @@
 <script src="dataTables/datatables.min.js"></script>
 {{!-- <script src="JS/ventas/observacionesC.js"></script> --}}
 <script src="JS/ventas/importe2D.js"></script>
-
+<script src="JS/emails/email.js"></script>
 
 
 <script>
