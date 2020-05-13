@@ -34,18 +34,18 @@ socket.on('data:pedidos', function(data) {
     pedidos(data);
 
 });
-const  actualizar = ( data ) => {
-  
+const actualizar = (data) => {
+
     socket.emit('data:pedidos', data);
- 
- };
+
+};
 
 
 let sendData = (data) => {
     let table = '';
-    ruta = ["NORTE", "SUR"];
-    let estatus = ['NUEVO','EN PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','DETENIDO'];
-    prioridad_info = ["NORMAL", "NORMAL", "URGENTE"];
+    ruta = ["Norte", "Sur"];
+    let estatus = ['Nuevo', 'En Proceso', 'Parcial', 'Completo', 'Ruta', 'Cancelado', 'Detenido'];
+    prioridad_info = ["Normal", "Normal", "Urgente"];
     colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E"];
     data.forEach(data => {
         table += `<tr>
@@ -69,12 +69,16 @@ let sendData = (data) => {
 }
 
 
-const   chanche_estatus_almacen  = ( order ) => {
+const chanche_estatus_almacen = (order) => {
     $('#change_status').modal('hide');
     let estado_nuevo = document.getElementById('estado_nuevo').value;
-         $.ajax({type: "POST",url: "/almacen/cambio_estado",data: {estado_nuevo, order },success: function (response) {
-             pedidos(); 
-             actualizar(); 
+    $.ajax({
+        type: "POST",
+        url: "/almacen/cambio_estado",
+        data: { estado_nuevo, order },
+        success: function(response) {
+            pedidos();
+            actualizar();
         }
     });
 

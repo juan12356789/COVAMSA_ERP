@@ -89,12 +89,12 @@ $(document).ready(function() {
             }, {
                 sortable: false,
                 "render": function(data, type, full, meta) {
-                    return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'<a href="#"> COMPROBANTE</a>':full.comprobante_pago }</a>`;
+                    return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'<a href="#"> Comprobante</a>':full.comprobante_pago }</a>`;
                 }
             }, {
                 sortable: false,
                 "render": function(data, type, full, meta) {
-                    let pagos = ['TRANSFERENCIA', 'ANTICIPADO', 'CONTRA ENTREGA', 'CREDITO'];
+                    let pagos = ['Transferencia', 'Anticipado', 'Contra Entrega', 'Crédito'];
                     return `${pagos[ full.tipo_de_pago - 1 ]}`;
 
                 }
@@ -131,9 +131,9 @@ let pedidos_vendedores = () => {
         url: "/ventas/pedidos_vendedor",
         success: function(response) {
 
-            let ruta = ['NORTE', 'SUR'];
-            let estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'DETENIDO'];
-            let prioridad_info = ["NORMAL", "NOMRAL", "URGENTE"];
+            let ruta = ['Norte', 'Sur'];
+            let estatus = ['Nuevo', 'En Proceso', 'Parcial', 'Completo', 'Ruta', 'Cancelado', 'Detenido'];
+            let prioridad_info = ["Normal", "Normal", "Urgente"];
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
             response.filter(n => n.nombre_estatus = estatus[n.estatus - 1]);
             response.filter(n => n.prioridad = prioridad_info[n.prioridad]);

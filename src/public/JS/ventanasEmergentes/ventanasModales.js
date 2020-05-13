@@ -12,8 +12,8 @@ let order_priority = () => {
         </div>
         <div class="modal-body">
             <p>
-                Se ha seleccionado el  pedido como urgente, el administrador debe aprobar la solicitud para que el cambio en el estado tenga efecto en el reporte de almacen,  
-                informe a su administrador para que apruebe el cambio de prioridad. 
+                Se ha seleccionado el  pedido como urgente, el administrador debe aprobar la solicitud para que el cambio en el estado tenga efecto en el reporte de almacén,  
+                informe a su Administrador para que apruebe el cambio de prioridad. 
             </p>
             <label>  Desea notificar la urgencia por e-mail  </label>
             <input type="checkbox"  name="enviar_correo"  id="enviar_correo">  
@@ -37,14 +37,14 @@ let reson_to_cancel = (order) => {
     let elementsHTML = `
 
         <div class="modal-header">
-            <h5 class="modal-title">Cancelación Del Pedido</h5>
+            <h5 class="modal-title">Cancelación del Pedido</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
             <p>
-              Alerta. Esta a punto de cancelar el pedido con el numero ${order}, Si desea proceder, introduzca un 'motivo para la cancelacion'
+              Alerta.Está a punto de cancelar el pedido con el número ${order}, Si desea proceder, introduzca un 'Motivo para la Cancelación'
             </p>
             <label>Motivo de cancelación: </label>
             <input type="text"  class="form-control"  name="motivo_cancelacion"    maxlength="85" id="motivo_cancelacion">
@@ -113,7 +113,7 @@ let cancel_almacen_general = (order) => {
     let elementsHTML = `
 
         <div class="modal-header">
-            <h5 class="modal-title">Confirmacion de Cancelación Del Pedido</h5>
+            <h5 class="modal-title">Confirmación de Cancelación Del Pedido</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
