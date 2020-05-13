@@ -1,0 +1,12 @@
+npm i 
+express : framworck de  node 
+express-handlebars : platillas de node 
+express-session: administrar las seciones de la app 
+express-mysql-session : almacena  las seciones en la base de datos, en lugar del servidor
+morgan: muestra las peticiones  que van llegado al servidor 
+bcryptjs: este modulo se usa para cifrar las contraseñas de los usuarios antes de guardar los datos 
+passport: modulo para autentificar, y manejar el prpceso de login de un usuario 
+passport-local: es un  complemento de passport para autentificar a los usuarios con nuestra base de datos 
+timeago.js:  convierte el formato de fecha de base ded datos a 2minutes ago, 2 hours ago, etc. 
+connect-flash: muestra mensajes de error y exito cuando el usuario realice una operacion 
+express-validator: es un modulo para validar los datos que el usuario nos envia desde la aplicación

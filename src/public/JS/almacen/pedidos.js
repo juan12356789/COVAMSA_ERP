@@ -29,7 +29,6 @@ let pedidos = (data) => {
 pedidos();
 
 socket.on('data:pedidos', function(data) {
-    console.log(data);
 
     pedidos(data);
 
@@ -47,9 +46,12 @@ let sendData = (data) => {
     let estatus = ['NUEVO','EN PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','DETENIDO'];
     prioridad_info = ["NORMAL", "NORMAL", "URGENTE"];
     colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E"];
+    let numeracion_pedidos = 1, numero_de_pedidos_urgentes =  0;
+    console.log(data.length);
     data.forEach(data => {
+        if(data.prioridad == 2 ) numero_de_pedidos_urgentes++; 
         table += `<tr>
-                 
+                  <th scope="row">${numeracion_pedidos++}</th>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
 
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
@@ -60,11 +62,13 @@ let sendData = (data) => {
                   <td id="userinput" >${data.importe}</td> 
                   <td style="background-color:${colores[data.estatus - 1]}" ondblclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.num_pedido}')">${estatus[data.estatus - 1]}</td>
                   <td >${prioridad_info[data.prioridad]}</td>
-                  <td  class="text"  > <span >${data.observacion}</span></td>
+                  <td >  <p class="line-clamp" >${data.observacion}</p></td>
                   <td>${data.fecha_inicial}</td>
                
                 </tr>`;
     });
+    document.getElementById('numero_pedidos').innerHTML = `Total De Pedidos: <input type="text"  value="${numeracion_pedidos}" disabled>  Pedidos Urgentes: <input type="text"  value="${numero_de_pedidos_urgentes}" disabled>`;  
+   
     document.getElementById('pedidos').innerHTML = table;
 }
 

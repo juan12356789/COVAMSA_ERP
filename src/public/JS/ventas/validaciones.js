@@ -236,8 +236,6 @@ $("#prioridad").click(function(e) {
                     pedidos(response);
                     pedidos_vendedores();
                     notifications("Su pedido se ha guardado con éxito",'success'); 
-                    // alert('El pedido ha sigo guardado con éxito '); 
-                    
                     document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`;
                     $("#spinner").hide();
                     $('input[type="text"]').removeAttr('disabled');

@@ -98,7 +98,7 @@ let piorityTable = () => {
             {
                 sortable:false,
                 "render": function (data, type, full ,meta) {
-                    return `${full.nombre_estatus == "DETENIDO"?`<a href="#" onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
+                    return `${full.nombre_estatus == "DETENIDO"?`${full.nombre_estatus}`:full.nombre_estatus}`;
                   }
             },
             { data: 'prioridad' },
