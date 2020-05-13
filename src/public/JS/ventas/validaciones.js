@@ -154,9 +154,9 @@ let cancelOrder = ( order ) =>{
     reson_to_cancel( order ); 
     let inputReason = document.getElementById('motivo_cancelacion'); 
     $("#aceptar").click(function (e) {
-        if( inputReason.value == ''  || inputReason.value.length < 30 )  return  alert('Ingrese la razón de cancelación  con un mínimo de 30 caracteres')  ; 
+        if( inputReason.value == ''  || inputReason.value.length < 30 )  return  notifications(" Ingrese la razón de cancelación  con un mínimo de 30 caracteres",'warning');  
            $.post("/ventas/cancel", {data : order ,  reason : inputReason.value }, function (data) {
-        
+                  notifications(`El pedido con el numero "${order}" ha sido cancelado`,'success');
                    pedidos_vendedores(); 
                    pedidos(order);   
                    $('#Ventana_Modal_order').modal('hide'); 
@@ -191,7 +191,7 @@ $("#prioridad").click(function(e) {
     } else {
         document.getElementById('button_send').innerHTML = `<button   type="button"  class="btn btn-success btn-lg btn-block"  onclick="order_priority()" >Enviar</button>`;
     }
-
+    
 });
 
 // Se manda el file de transferencia 
@@ -222,7 +222,7 @@ $("#prioridad").click(function(e) {
             success: function(response) {
 
                 if (response == 'false') {
-                    alert('El pedido no ha sigo  guardado favor de revisar los campos ');
+                    // alert('El pedido no ha sigo  guardado favor de revisar los campos ');
                     $('input[type="text"]').removeAttr('disabled');
                     $('input[type="file"]').removeAttr('disabled');
                     $('button[type="submit"]').removeAttr('disabled');
@@ -231,10 +231,14 @@ $("#prioridad").click(function(e) {
                     $("#comprobante").hide();
                     $("#input").hide();
                     $("#spinner").hide();
+                    notifications("No se pudo guardar su pedido favor de checar sus campos",'warning'); 
                 } else {
                     pedidos(response);
                     pedidos_vendedores();
+                    notifications("Su pedido se ha guardado con éxito",'success'); 
                     // alert('El pedido ha sigo guardado con éxito '); 
+                    
+                    document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`;
                     $("#spinner").hide();
                     $('input[type="text"]').removeAttr('disabled');
                     $('input[type="file"]').removeAttr('disabled');

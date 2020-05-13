@@ -28,7 +28,7 @@ router.post('/urgentes' ,  async (req , res)=>{
         case '3':
 
             await pool.query(`UPDATE pedidos SET prioridad= ${req.body.tipo_prioridad} where num_pedido = ?`,req.body.numero_pedido); 
-            res.send(req.body); 
+            res.send(req.body.tipo_prioridad); 
 
         break;  
     }

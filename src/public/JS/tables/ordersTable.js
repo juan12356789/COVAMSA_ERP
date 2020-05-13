@@ -21,6 +21,12 @@ let orderTable = () => {
             }
         },{
             sortable:false,
+            "render": function (data, type, full, meta) {
+                
+                return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'<a href="#"> COMPROBANTE</a>':full.comprobante_pago }</a>`;
+            }
+        },{
+            sortable:false,
             "render": function(data, type, full ,meta){
              let pagos  = ['TRANSFERENCIA','ANTICIPADO','CONTRA ENTREGA','CREDITO'];  
              return `${pagos[ full.tipo_de_pago - 1 ]}`;
@@ -32,7 +38,7 @@ let orderTable = () => {
         {
             sortable:false,
             "render": function (data, type, full ,meta) {
-                return `${full.nombre_estatus == "DETENIDO"?`<a  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
+                return `${full.nombre_estatus == "DETENIDO"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
               }
         },
         { data: 'prioridad' },
@@ -62,7 +68,7 @@ let piorityTable = () => {
 
     tablePriority = $("#orders_priority").DataTable({
         "order": [
-            [8, "desc"]
+            [9, "desc"]
         ],
         columns: [{
                 sortable: false,
@@ -79,10 +85,22 @@ let piorityTable = () => {
                 "render": function(data, type, full, meta) {
                     return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago}</a>`;
                 }
-            },
+            },{
+                sortable:false,
+                "render": function(data, type, full ,meta){
+                 let pagos  = ['TRANSFERENCIA','ANTICIPADO','CONTRA ENTREGA','CREDITO'];  
+                 return `${pagos[ full.tipo_de_pago - 1 ]}`;
+            
+                }  
+              },
             { data: 'ruta' },
             { data: 'importe' },
-            { data: 'nombre_estatus' },
+            {
+                sortable:false,
+                "render": function (data, type, full ,meta) {
+                    return `${full.nombre_estatus == "DETENIDO"?`<a href="#" onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
+                  }
+            },
             { data: 'prioridad' },
             {
                 sortable: false,
@@ -96,8 +114,8 @@ let piorityTable = () => {
                 "render": function(data, type, full, meta) {
                     let disabled = ''
                     if (full.estatus == "CANCELADO") disabled = 'disabled';
-                    return `<button type="button" class="btn btn-success  btn-sm" style="width: 100%; onclick="pedidos_urgentes_normales(${3},'${full.num_pedido}',${2})"    >Aceptar</button>
-                            <button type="button" class="btn btn-danger btn-sm" style="width: 100%; onclick="pedidos_urgentes_normales(${3},'${full.num_pedido}',${0})"    >Rechazar</button>`;
+                    return `<button type="button" class="btn btn-success  btn-sm" style="width: 100%;" onclick="pedidos_urgentes_normales(${3},'${full.num_pedido}',${2})"    >Aceptar</button>
+                            <button type="button" class="btn btn-danger btn-sm" style="width: 100%;" onclick="pedidos_urgentes_normales(${3},'${full.num_pedido}',${0})"    >Rechazar</button>`;
                 }
             }
 
@@ -110,19 +128,23 @@ let piorityTable = () => {
 
 
 let pedidos_urgentes_normales = (tipo_de_pedido, numero_pedido, tipo_prioridad) => {
-
+   
     $.ajax({
         type: "POST",
         url: "/admin/urgentes",
         data: { tipo_de_pedido, numero_pedido, tipo_prioridad },
         success: function(response) {
+            
+            if(response === '2' )notifications(`El pedido ha sido aceptado como  urgente `,'success');
+            if(response === '0' )notifications(`El pedido se ha aceptado como normal  `,'success');
+            
             if (tipo_de_pedido == 3) {
                 pedidos_urgentes_normales(1, null, null);
                 pedidos_urgentes_normales(2, null, null);
                 pedidos();
                 return;
             }
-
+            
             let ruta = ['NORTE', 'SUR'];
             let estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'DETENIDO'];
             let prioridad_info = ["NORMAL", "NORMAL", "URGENTE"];
@@ -135,7 +157,7 @@ let pedidos_urgentes_normales = (tipo_de_pedido, numero_pedido, tipo_prioridad) 
 
                 dataTable.rows().remove();
                 dataTable.rows.add(response).draw();
-
+                
             } else {
                 tablePriority.rows().remove();
                 tablePriority.rows.add(response).draw();
@@ -151,12 +173,12 @@ let cancelOrder = (order) => {
     reson_to_cancel(order);
     let inputReason = document.getElementById('motivo_cancelacion');
     $("#aceptar").click(function(e) {
-        if (inputReason.value == '') return alert('Ingrese la razón de cancelación ');
+        if (inputReason.value == '') return  notifications(" Ingrese la razón de cancelación  con un mínimo de 30 caracteres",'warning');
         $.post("/ventas/cancel", { data: order, reason: inputReason.value }, function(data) {
-
             pedidos_urgentes_normales(1);
             pedidos(order);
             $('#Ventana_Modal_order').modal('hide');
+            notifications(`El pedido con el numero "${order}" ha sido cancelado`,'success');
 
         });
     });

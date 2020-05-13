@@ -63,18 +63,27 @@ let reson_to_cancel = (order) => {
 };
 
 let cambios_status_pedidos = ( current_status , order ) =>{
-    console.log(current_status);
-    let opciones_pago  = ``; 
-    switch (current_status) {
-        case "NUEVO":
-            opciones_pago = `<option value="2">En Proceso</option>`; 
-        break;
-        case "EN PROCESO" || "COMPLETO":
-            opciones_pago+=`<option value="3">Parcial</option>
-                            <option value="4">Completo</option>`; 
-        break;
-    }
+    
+    
     if(current_status == "CANCELADO") return alert("Este pedido ha sido cancelado no es posible cambias el status");
+        switch (current_status) {
+            case "NUEVO":
+                opciones_pago = `<option value="2">En Proceso</option>`; 
+            break;
+            case "EN PROCESO":
+                opciones_pago=`<option value="3">Parcial</option>
+                                <option value="4">Completo</option>`; 
+            break;
+            case "PARCIAL" :
+                opciones_pago=`<option value="2">EN PROGRESO</option>
+                               <option value="5">RUTA</option>`;
+            break;
+            case "COMPLETO":
+                opciones_pago=`<option value="2">EN PROGRESO</option>
+                                <option value="5">RUTA</option>`;
+            break;      
+    
+         }
     $('#change_status').modal('show');
     let nuevo_estatus = document.getElementById('estado_nuevo');
     let elementsHTML = `
@@ -98,13 +107,10 @@ let cambios_status_pedidos = ( current_status , order ) =>{
             <div class="col"  >
             
                 <label>Nuevo Estado:</label>
-                 <select  id="estado_nuevo"   class="form-control">
-                    <option value="2">En Proceso</option>
-                    <option value="3">Parcial</option>
-                    <option value="4">Completo</option>
-                    <option value="5">Ruta</option>
-                 </select>
-            </div>       
+                        <select  id="estado_nuevo"   class="form-control">
+                        ${opciones_pago}
+                        </select>
+                 </div>       
         </div>
         </div>
         <div class="modal-footer">
@@ -115,11 +121,23 @@ let cambios_status_pedidos = ( current_status , order ) =>{
 
     document.getElementById('status').innerHTML = elementsHTML;
 
+};
+
+const notifications  = ( texto_notificacion  ,tipo_notificacion   )  =>{
+
+    swal({
+        title: `${texto_notificacion}`,
+        type:  `${tipo_notificacion}`,
+        showConfirmButton: true
+    });
+
 }; 
 
-const uploadFileTransferencia = (num_pedido) =>{
-    $('#Ventana_Modal_order').modal('show');
 
+const uploadFileTransferencia = ( num_pedido ) =>{
+
+    $('#Ventana_Modal_order').modal('show');
+    
     let elementsHTML = `
         <div class="modal-header">
             <h5 class="modal-title">Transferencia</h5>
@@ -145,17 +163,18 @@ const uploadFileTransferencia = (num_pedido) =>{
         <div class="modal-footer">  
           <button type="button"  onclick="pagosTrasnsferencia()" class="btn btn-primary" >Aceptar</button>
           <button   class="btn btn-secondary"    data-dismiss="modal">Cancelar</button>
-          </div>
+          </div> 
         </div>
 
         </form>
         
     `;
 
-    document.getElementById('cancel_order').innerHTML = elementsHTML;
+    document.getElementById('send_trasferencia').innerHTML = elementsHTML;
 
 
 }; 
+
 
 function ValidaLongitud(campo, longitudMaxima) {
     try {
