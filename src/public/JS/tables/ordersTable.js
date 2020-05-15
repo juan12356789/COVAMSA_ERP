@@ -38,7 +38,7 @@ let orderTable = () => {
                             {
                                 sortable: false,
                                 "render": function(data, type, full, meta) {
-                                        return `${full.nombre_estatus == "DETENIDO"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
+                                        return `${full.nombre_estatus == "Detenido"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
               }
         },
         { data: 'prioridad' },
@@ -52,8 +52,8 @@ let orderTable = () => {
             { data: 'fecha_inicial' }, {
                 sortable: false,
                 "render": function(data, type, full, meta) {
-                    if (full.estatus <= 3) return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close"    ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button><br>`;
-                    return ' ';
+                    if(full.estatus <= 3 || full.estatus == 7  )return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close"    ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button><br>`;
+                    return ' '; 
                 }
             }
 
@@ -98,7 +98,7 @@ let piorityTable = () => {
             {
                 sortable:false,
                 "render": function (data, type, full ,meta) {
-                    return `${full.nombre_estatus == "DETENIDO"?`${full.nombre_estatus}`:full.nombre_estatus}`;
+                    return `${full.nombre_estatus == "Detenido"?`${full.nombre_estatus}`:full.nombre_estatus}`;
                   }
             },
             { data: 'prioridad' },
@@ -146,7 +146,7 @@ let pedidos_urgentes_normales = (tipo_de_pedido, numero_pedido, tipo_prioridad) 
             }
 
             let ruta = ['Norte', 'Sur'];
-            let estatus = ['Nuevo', 'En Proceso', 'Parcial', 'Completo', 'Ruta', 'Cancelado', 'Urgente'];
+            let estatus = ['Nuevo', 'En Proceso', 'Parcial', 'Completo', 'Ruta', 'Cancelado', 'Detenido'];
             let prioridad_info = ["Normal", "Normal", "Urgente"];
 
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
