@@ -220,8 +220,8 @@ $("#prioridad").click(function(e) {
     
 });
 
-// Se manda el file de transferencia 
-
+let pdf_orden  =  document.getElementById('orden_pdf');
+let orden_compra =  document.getElementById('orden') ;
 
  $(function () {  
     $("#imgct").submit(function (e) { 
@@ -230,7 +230,7 @@ $("#prioridad").click(function(e) {
         var formData = new FormData(document.getElementById("imgct"));
 
         formData.append("dato", "valor");
-
+        if((pdf_orden.value  !=  "" && orden_compra.value == "") || (pdf_orden.value  ==  "" && orden_compra.value != "")  ) return notifications("Ingrese el número de orden de compra y seleccione el archivo",'warning');
         $.ajax({
             url: "/ventas/add",
             type: "POST",

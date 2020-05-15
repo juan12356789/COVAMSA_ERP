@@ -65,6 +65,7 @@ app.use(require('./routes/menu/menu'));
 app.use('/ventas', require('./routes/ventas/ventas'));
 app.use('/almacen', require('./routes/almacen/almacen'));
 app.use('/admin', require('./routes/admin/admin'));
+app.use('/user', require('./routes/user/user'));
 
 // Public 
 app.use(express.static(path.join(__dirname, 'public')));

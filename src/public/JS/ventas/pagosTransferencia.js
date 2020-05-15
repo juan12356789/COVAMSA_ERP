@@ -22,7 +22,9 @@ const  pagosTrasnsferencia  = () =>{
   
           request.done(function( msg )
           {
-            $('#Ventana_Modal_order').modal('hide');
+            
+            $('#transferencia').modal('hide');
+            
             notifications(`El comprobante de pago con el número: "${msg}" ha sido guardado `,'success');
             try {
               pedidos_vendedores(); 

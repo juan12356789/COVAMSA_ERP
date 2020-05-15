@@ -35,9 +35,7 @@ let order_priority = () => {
 let reson_to_cancel = (order) => {
 
     $('#Ventana_Modal_order').modal('show');
-
     let elementsHTML = `
-
         <div class="modal-header">
             <h5 class="modal-title">Cancelación Del Pedido</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -136,7 +134,7 @@ const notifications  = ( texto_notificacion  ,tipo_notificacion   )  =>{
 
 const uploadFileTransferencia = ( num_pedido ) =>{
 
-    $('#Ventana_Modal_order').modal('show');
+    $('#transferencia').modal('show');
     
     let elementsHTML = `
         <div class="modal-header">
@@ -174,7 +172,6 @@ const uploadFileTransferencia = ( num_pedido ) =>{
 
 
 }; 
-
 
 function ValidaLongitud(campo, longitudMaxima) {
     try {
