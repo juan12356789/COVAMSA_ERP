@@ -4,7 +4,7 @@ const dot_obervaciones = document.querySelector("#observaciones");
 $("#spinner").hide();
 
 
-let clickClientes  = ()=>{
+let clickClientes = () => {
     $('.col-sm-8').val("");
     clientes();
 };
@@ -53,58 +53,59 @@ let cliente = (nombre) => {
 // pagos ..
 $("#comprobante").hide();
 $("#input").hide();
-let tipo_pago  = document.getElementById('pagos_transferencia');
-$("#pagos_transferencia").click(function (e) { 
+let tipo_pago = document.getElementById('pagos_transferencia');
+$("#pagos_transferencia").click(function(e) {
     if (tipo_pago.value == 1) {
         $("#comprobante").show();
         $("#input").show();
-    }else{
+    } else {
         $("#comprobante").hide();
         $("#input").hide();
     }
-}); 
+});
 
 $(document).ready(function() {
-  
-   
-    document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`; 
-   
-    dataTable =  $("#orders").DataTable({
-        "order": [[ 9, "desc" ]], 
-        "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
-             if(aData.estatus == 6)    $('td', nRow).css('color', 'red');  
-            } ,
-        columns: [
-            {
-                sortable: false,
-                "render": function(data, type, full, meta) {
-                    return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}"  style="a {color:#130705;} " >${full.orden_de_compra}</a>`;
-                }
-            }, {
-                sortable: false,
-                "render": function(data, type, full, meta) {
-                    return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
-                }
-            }, {
-                sortable: false,
-                "render": function ( data, type, full, meta ) {
-                    return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'<a href="#"> COMPROBANTE</a>':full.comprobante_pago }</a>`;
-                }
-            },{
-                sortable:false,
-                "render": function(data, type, full ,meta){
-                 let pagos  = ['TRANSFERENCIA','ANTICIPADO','CONTRA ENTREGA','CREDITO'];  
-                 return `${pagos[ full.tipo_de_pago - 1 ]}`;
-            
-                }  
-              },
-                 { data: 'ruta'},
-                 { data: 'importe'},
-                //  { data: 'nombre_estatus' },
-                {
-                    sortable:false,
-                    "render": function (data, type, full ,meta) {
-                        return `${full.nombre_estatus == "DETENIDO"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
+
+
+            document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`;
+
+            dataTable = $("#orders").DataTable({
+                        "order": [
+                            [9, "desc"]
+                        ],
+                        "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                            if (aData.estatus == 6) $('td', nRow).css('color', 'red');
+                        },
+                        columns: [{
+                                    sortable: false,
+                                    "render": function(data, type, full, meta) {
+                                        return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}"  style="a {color:#130705;} " >${full.orden_de_compra}</a>`;
+                                    }
+                                }, {
+                                    sortable: false,
+                                    "render": function(data, type, full, meta) {
+                                        return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
+                                    }
+                                }, {
+                                    sortable: false,
+                                    "render": function(data, type, full, meta) {
+                                        return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'<a href="#"> Comprobante</a>':full.comprobante_pago }</a>`;
+                                    }
+                                }, {
+                                    sortable: false,
+                                    "render": function(data, type, full, meta) {
+                                        let pagos = ['Transferencia', 'Anticipado', 'Cntra Entrega', 'Crédito'];
+                                        return `${pagos[ full.tipo_de_pago - 1 ]}`;
+
+                                    }
+                                },
+                                { data: 'ruta' },
+                                { data: 'importe' },
+                                //  { data: 'nombre_estatus' },
+                                {
+                                    sortable: false,
+                                    "render": function(data, type, full, meta) {
+                                            return `${full.nombre_estatus == "DETENIDO"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
                       }
                 },
                  { data: 'prioridad' },
@@ -135,10 +136,10 @@ let pedidos_vendedores = () => {
         type: "POST",
         url: "/ventas/pedidos_vendedor",
         success: function(response) {
-            
-            let ruta = ['NORTE', 'SUR'];
-            let estatus = ['NUEVO','EN PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','DETENIDO'];
-            let prioridad_info  = ["NORMAL","NOMRAL","URGENTE"];
+
+            let ruta = ['Norte', 'Sur'];
+            let estatus = ['Nuevo', 'En Proceso', 'Parcial', 'Completo', 'Ruta', 'Cancelado', 'Detenido'];
+            let prioridad_info = ["Normal", "Normal", "Urgente"];
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
             response.filter(n => n.nombre_estatus = estatus[n.estatus - 1]);
             response.filter(n => n.prioridad = prioridad_info[n.prioridad]);
@@ -228,7 +229,6 @@ let orden_compra =  document.getElementById('orden') ;
         $('#Ventana_Modal').modal('hide'); 
         e.preventDefault();
         var formData = new FormData(document.getElementById("imgct"));
-
         formData.append("dato", "valor");
         if((pdf_orden.value  !=  "" && orden_compra.value == "") || (pdf_orden.value  ==  "" && orden_compra.value != "")  ) return notifications("Ingrese el número de orden de compra y seleccione el archivo",'warning');
         $.ajax({

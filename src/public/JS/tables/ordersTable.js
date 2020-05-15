@@ -2,43 +2,43 @@ const socket = io();
 
 let orderTable = () => {
 
-    dataTable = $("#orders").DataTable({
-        "order": [
-            [9, "desc"]
-        ], 
-        "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
-             if(aData.estatus == 6)    $('td', nRow).css('color', 'red');  
-            } ,
-        columns: [{
-            sortable: false,
-            "render": function (data, type, full, meta) {
-                return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}" >${full.orden_de_compra}</a>`;
-            }
-        }, {
-            sortable: false,
-            "render": function (data, type, full, meta) {
-                return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
-            }
-        },{
-            sortable:false,
-            "render": function (data, type, full, meta) {
-                
-                return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'<a href="#"> COMPROBANTE</a>':full.comprobante_pago }</a>`;
-            }
-        },{
-            sortable:false,
-            "render": function(data, type, full ,meta){
-             let pagos  = ['TRANSFERENCIA','ANTICIPADO','CONTRA ENTREGA','CREDITO'];  
-             return `${pagos[ full.tipo_de_pago - 1 ]}`;
-        
-            }  
-          },
-        { data: 'ruta' },
-        { data: 'importe' },
-        {
-            sortable:false,
-            "render": function (data, type, full ,meta) {
-                return `${full.nombre_estatus == "DETENIDO"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
+        dataTable = $("#orders").DataTable({
+                    "order": [
+                        [9, "desc"]
+                    ],
+                    "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                        if (aData.estatus == 6) $('td', nRow).css('color', 'red');
+                    },
+                    columns: [{
+                                sortable: false,
+                                "render": function(data, type, full, meta) {
+                                    return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}" >${full.orden_de_compra}</a>`;
+                                }
+                            }, {
+                                sortable: false,
+                                "render": function(data, type, full, meta) {
+                                    return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
+                                }
+                            }, {
+                                sortable: false,
+                                "render": function(data, type, full, meta) {
+
+                                    return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'<a href="#"> COMPROBANTE</a>':full.comprobante_pago }</a>`;
+                                }
+                            }, {
+                                sortable: false,
+                                "render": function(data, type, full, meta) {
+                                    let pagos = ['TRANSFERENCIA', 'ANTICIPADO', 'CONTRA ENTREGA', 'CREDITO'];
+                                    return `${pagos[ full.tipo_de_pago - 1 ]}`;
+
+                                }
+                            },
+                            { data: 'ruta' },
+                            { data: 'importe' },
+                            {
+                                sortable: false,
+                                "render": function(data, type, full, meta) {
+                                        return `${full.nombre_estatus == "DETENIDO"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
               }
         },
         { data: 'prioridad' },
@@ -144,10 +144,10 @@ let pedidos_urgentes_normales = (tipo_de_pedido, numero_pedido, tipo_prioridad) 
                 pedidos();
                 return;
             }
-            
-            let ruta = ['NORTE', 'SUR'];
-            let estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'DETENIDO'];
-            let prioridad_info = ["NORMAL", "NORMAL", "URGENTE"];
+
+            let ruta = ['Norte', 'Sur'];
+            let estatus = ['Nuevo', 'En Proceso', 'Parcial', 'Completo', 'Ruta', 'Cancelado', 'Urgente'];
+            let prioridad_info = ["Normal", "Normal", "Urgente"];
 
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
             response.filter(n => n.nombre_estatus = estatus[n.estatus - 1]);

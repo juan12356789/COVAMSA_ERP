@@ -89,7 +89,7 @@
           
         <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseOne"
           aria-expanded="true" aria-controls="collapseOne">
-          Agregar nuevo Pedido
+          Agregar Pedidos
         </button>
         <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseTwo"
           aria-expanded="false" aria-controls="collapseTwo">
@@ -143,7 +143,7 @@
                   <div class="col-sm-4">
                     <input type="text" class="form-control valid border border-secondary" name="numeroPedido" required
                       maxlength="30" minlength="2"
-                      title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Maximo 30 caracteres">
+                      title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Máximo 30 caracteres">
                     <input type="file" class="form-control-file " required name="num_pedido" id="no_pedido"
                       style="color: black;">
                       
@@ -167,7 +167,7 @@
                    
                     <input type="text" class="form-control valid border border-secondary" minlength="2" id="input"
                       maxlength="30" minlength="2" id="comprobante_pago" name="comprobante_pago" pattern="[A-Za-z0-9]+"
-                      title="Solo se permite letras(mayúsculas y/o minúsculas) y números. Maximo 30 caracteres"
+                      title="Solo se permite letras(mayúsculas y/o minúsculas) y números. Máximo 30 caracteres"
                       placeholder="Ingresa el Comprobante de Pago">
                     <input type="file" class="form-control-file " name="comprobante_pago" id="comprobante"
                       style="color: black;">
@@ -183,15 +183,6 @@
                     
                     <br>
 
-                    {{!-- Ventana Modal --}}
-                    <div class="modal fade bd-example-modal-lg" id="Ventana_Modal" tabindex="-1" role="dialog"
-                      aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                      <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                          <div id="elements_of_modal"></div>
-                        </div>
-                      </div>
-                    </div>
 
 
                   </div>
@@ -210,17 +201,24 @@
                 </div>
                 <br>
                 Tipo de Prioridad:
-                <select class="custom-select" id="prioridad" name="prioridad">
+                <div>
+                <select class="custom-select" id="prioridad" name="prioridad" >
                   <option value="0">Normal</option>
-                  <option value="1">Urgente</option>
+                  <option value="1">Urgente</option> 
                 </select>
+                </div>
+                <div>
+                Nota: Si la prioridad del Pedido fue "Urgente" mandar un correo a su Administrador para su confirmacion:
+                <a href="#" onclick="enviarCorreo('Hay un Pedido Urgente')">Enviar Mensaje</a>
+                </div>
                 <div class="correo"></div>
                 <br>
                 Observaciones:
                 <textarea class="form-control border border-secondary" name="observaciones"
                   title="En caso de ques sea necesario poner observaciones"
-                  placeholder="Escribe aqui tus observaciones (como maximo 250 caracteres)" maxlength="250" rows="2">
+                  placeholder="Escribe aquí tus observaciones (como máximo 250 caracteres)" maxlength="250" rows="2">
                 </textarea>
+                
                 <div class="form-group row justify-content-right">
                   <label for="" class="col-sm-2 col-form-label"></label><label for="" class="col-sm-2 col-form-label"></label>
                   <div class="col-sm-4">
@@ -242,16 +240,16 @@
                       </button>
                     </div>
                     <div class="modal-bodyss">
-                      <center>Busqueda Cliente: <input type="text" id="inputBusqueda" class="col-sm-8"></center>
+                      <center>Búsqueda Cliente: <input type="text" id="inputBusqueda" class="col-sm-8"></center>
 
                       <div class="table-wrapper-scroll-y my-custom-scrollbar">
 
                         <table class="table table-bordered-responsive-sm justify-content-center">
                           <thead class="thead-light">
                             <tr>
-                              <th scope="col">NOMBRE</th>
-                              <th scope="col">ID</th>
-                              <th scope="col">BUSCAR</th>
+                              <th scope="col">Nombre</th>
+                              <th scope="col">Id</th>
+                              <th scope="col">Buscar</th>
                             </tr>
                           </thead>
                           <tbody id="clientes">
@@ -311,7 +309,7 @@
             <thead class="thead-dark">
               <tr>
                 <th scope="col" class="bg-warning">Orden De Compra</th>
-                <th scope="col" class="bg-success">Numero De Pedido</th>
+                <th scope="col" class="bg-success">Número De Pedido</th>
                 <th scope="col" class="bg-primary">Comprabante De Pago</th>
                 <th scope="col">Tipo De Pago</th>
                 <th scope="col">Ruta</th>
@@ -341,7 +339,7 @@
 <script src="dataTables/datatables.min.js"></script>
 {{!-- <script src="JS/ventas/observacionesC.js"></script> --}}
 <script src="JS/ventas/importe2D.js"></script>
-
+<script src="JS/emails/email.js"></script>
 
 
 <script>

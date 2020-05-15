@@ -1,5 +1,3 @@
-
-
 let order_priority = () => {
 
     $('#Ventana_Modal').modal('show');
@@ -14,14 +12,14 @@ let order_priority = () => {
         </div>
         <div class="modal-body">
             <p>
-                Se ha seleccionado el  pedido como urgente, el administrador debe aprobar la solicitud para que el cambio en el estado tenga efecto en el reporte de almacen,  
-                informe a su administrador para que apruebe el cambio de prioridad. 
+                Se ha seleccionado el  pedido como urgente, el administrador debe aprobar la solicitud para que el cambio en el estado tenga efecto en el reporte de almacén,  
+                informe a su Administrador para que apruebe el cambio de prioridad. 
             </p>
             <label>  Desea notificar la urgencia por e-mail  </label>
             <input type="checkbox"  name="enviar_correo"  id="enviar_correo">  
         </div>
         <div class="modal-footer">
-          <button  type="submit"  class="btn btn-primary"   >Aceptar</button>
+          <button  type="submit"  class="btn btn-primary"  onclick="enviarCorreo('Pedido Urgente')"   >Aceptar</button>
           <button type="button" class="btn btn-secondary"  data-dismiss="modal">Cancelar</button>
 
         </div>
@@ -37,14 +35,14 @@ let reson_to_cancel = (order) => {
     $('#Ventana_Modal_order').modal('show');
     let elementsHTML = `
         <div class="modal-header">
-            <h5 class="modal-title">Cancelación Del Pedido</h5>
+            <h5 class="modal-title">Cancelación del Pedido</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
             <p>
-              Alerta. Esta a punto de cancelar el pedido con el numero ${order}, Si desea proceder, introduzca un 'motivo para la cancelacion'
+              Alerta.Está a punto de cancelar el pedido con el número ${order}, Si desea proceder, introduzca un 'Motivo para la Cancelación'
             </p>
             <label>Motivo de cancelación: </label>
             <input type="text"  class="form-control"  name="motivo_cancelacion"    maxlength="85" id="motivo_cancelacion">
@@ -60,28 +58,29 @@ let reson_to_cancel = (order) => {
 
 };
 
-let cambios_status_pedidos = ( current_status , order ) =>{
-    
-    
-    if(current_status == "CANCELADO") return alert("Este pedido ha sido cancelado no es posible cambias el status");
-        switch (current_status) {
-            case "NUEVO":
-                opciones_pago = `<option value="2">En Proceso</option>`; 
+let cambios_status_pedidos = (current_status, order) => {
+
+
+    if (current_status == "CANCELADO") return alert("Este pedido ha sido cancelado no es posible cambias el status");
+    let opciones_pago = ''; 
+    switch (current_status) {
+        case "NUEVO":
+            opciones_pago = `<option value="2">En Proceso</option>`;
             break;
-            case "EN PROCESO":
-                opciones_pago=`<option value="3">Parcial</option>
-                                <option value="4">Completo</option>`; 
+        case "EN PROCESO":
+            opciones_pago = `<option value="3">Parcial</option>
+                                <option value="4">Completo</option>`;
             break;
-            case "PARCIAL" :
-                opciones_pago=`<option value="2">EN PROGRESO</option>
+        case "PARCIAL":
+            opciones_pago = `<option value="2">EN PROGRESO</option>
                                <option value="5">RUTA</option>`;
             break;
-            case "COMPLETO":
-                opciones_pago=`<option value="2">EN PROGRESO</option>
+        case "COMPLETO":
+            opciones_pago = `<option value="2">EN PROGRESO</option>
                                 <option value="5">RUTA</option>`;
-            break;      
-    
-         }
+            break;
+
+    }
     $('#change_status').modal('show');
     let nuevo_estatus = document.getElementById('estado_nuevo');
     let elementsHTML = `
@@ -113,7 +112,7 @@ let cambios_status_pedidos = ( current_status , order ) =>{
         </div>
         <div class="modal-footer">
           <button value="0"  class="btn btn-primary"  onclick="chanche_estatus_almacen('${order}' )" >Aceptar</button>
-          <button value="1" type="button" class="btn btn-secondary"  id=""cancelar"  data-dismiss="modal">Cancelar</button>
+          <button value="1" type="button" class="btn btn-secondary"  id="cancelar"  data-dismiss="modal">Cancelar</button>
         </div>
     `;
 
@@ -121,18 +120,18 @@ let cambios_status_pedidos = ( current_status , order ) =>{
 
 };
 
-const notifications  = ( texto_notificacion  ,tipo_notificacion   )  =>{
+const notifications = (texto_notificacion, tipo_notificacion) => {
 
     swal({
         title: `${texto_notificacion}`,
-        type:  `${tipo_notificacion}`,
+        type: `${tipo_notificacion}`,
         showConfirmButton: true
     });
 
-}; 
+};
 
 
-const uploadFileTransferencia = ( num_pedido ) =>{
+const uploadFileTransferencia = (num_pedido) => {
 
     $('#transferencia').modal('show');
     
@@ -170,8 +169,37 @@ const uploadFileTransferencia = ( num_pedido ) =>{
 
     document.getElementById('send_trasferencia').innerHTML = elementsHTML;
 
+    let cancel_almacen = (order) => {
 
-}; 
+        $('#Ventana_Modal_order').modal('show');
+
+        let elementsHTML = `
+    
+            <div class="modal-header">
+                <h5 class="modal-title">Cancelación del Pedido</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                  Alerta.Está a punto de cancelar el pedido con el número ${order}, Si desea proceder, introduzca un 'Motivo para la Cancelación'
+                </p>
+                <label>Motivo de cancelación: </label>
+                <input type="text"  class="form-control"  name="motivo_cancelacion"    maxlength="85" id="motivo_cancelacion">
+            </div>
+            <div class="modal-footer">
+              <button value="0"  class="btn btn-primary"  id="aceptar"  >Aceptar</button>
+              <button value="1" type="button" class="btn btn-secondary"  id=""cancelar"  data-dismiss="modal">Cancelar</button>
+            </div>
+            
+        `;
+
+        document.getElementById('cancel_almacenxd').innerHTML = elementsHTML;
+
+    };
+
+};
 
 function ValidaLongitud(campo, longitudMaxima) {
     try {
