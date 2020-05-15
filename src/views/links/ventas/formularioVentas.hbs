@@ -102,6 +102,7 @@
       <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
         <div class="card-body">
 
+
           <form enctype="multipart/form-data" method="post" id="imgct" class="columinput">
             <div class="jumbotron">
               <div class="container">
@@ -171,8 +172,7 @@
                     <input type="file" class="form-control-file " name="comprobante_pago" id="comprobante"
                       style="color: black;">
                       
-                    
-                 
+                      
                     <label for=""></label>
                     <select class="form-control" name="tipos_pago" id="pagos_transferencia">
                       <option value="2">Anticipado</option>
@@ -182,7 +182,6 @@
                     </select>
                     
                     <br>
-
 
 
                   </div>
@@ -287,7 +286,7 @@
             aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
-
+                <div id="send_trasferencia" ></div>
                 <div id="cancel_order"></div>
 
               </div>
@@ -320,10 +319,10 @@
 </div>
 <script src="librerias/jquery.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script src="librerias/shave.js"></script>
 <script src="librerias/popper.js"></script>
 <script src="librerias/bootstrap.js"></script>
-<script src="JS/ventanasEmergentes/ventanasModales.js"></script>
+<script src="JS/ventas/pagosTransferencia.js"></script>
+<script src="JS/ventanasEmergentes/ventanasModales.js"></script> 
 <script src="JS/ventas/validaciones.js"></script>
 <script src="dataTables/datatables.min.js"></script>
 {{!-- <script src="JS/ventas/observacionesC.js"></script> --}}
