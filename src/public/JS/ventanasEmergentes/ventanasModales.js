@@ -23,7 +23,6 @@ let order_priority = () => {
           <button type="button" class="btn btn-secondary"  data-dismiss="modal">Cancelar</button>
 
         </div>
-        
     `;
 
     document.getElementById('elements_of_modal').innerHTML = elementsHTML;
