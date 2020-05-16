@@ -17,4 +17,20 @@ router.post('/updatePassword', async ( req , res )=>{
    res.send(true); 
 
 });
+
+router.post('/selectUser',async(req , res)=>{
+
+   const infto_empleados  = await pool.query("select idacceso,correo,password,tipo_usuario,nombre,apellido_paterno,apellido_materno from acceso inner join empleados  using(idacceso)");
+   res.send(infto_empleados);
+    
+});
+
+router.post('/selectIdUser',async(req , res)=>{
+   const empleado  = await pool.query("select idacceso,correo,password,tipo_usuario,nombre,apellido_paterno,apellido_materno from acceso inner join empleados  using(idacceso) WHERE idacceso = ?",req.body.id);
+   console.log(empleado);
+   
+   res.send(empleado);
+      
+}); 
+
 module.exports = router;

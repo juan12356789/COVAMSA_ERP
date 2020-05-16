@@ -8,17 +8,25 @@
 <body>
 <br>
 <div class="container">
-    <div class="card">
-        <div class="card-body">
-            <div id="profile" ></div>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                 Cambiar contraseña
-            </button>
-        </div>
-    </div>
-    
-    
+  <p>
+   <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    Mi perfil
+  </button>
+  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExampletwo" aria-expanded="false" aria-controls="collapseExample">
+    Empleados
+  </button>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
 
+    <div class="card">
+      <div class="card-body">
+        <div id="profile" ></div>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+               Cambiar contraseña
+          </button>
+      </div>
+  </div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -39,15 +47,66 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="submit"    class="btn btn-primary">Aceptar</button>
+
+        {{!-- Update User  --}}
+    
+
       </div>
       </form>
     </div>
   </div>
 </div>
-    
-
 </div>
+
+  </div>
+
+<div class="collapse" id="collapseExampletwo">
+  <div class="card card-body">
+      <div class="card">
+      <div class="card-body">
+              <div class="modal fade" id="updateUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                   <div id="update" ></div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+         <div class="table-responsive">
+          <table id="orders" class="table table-striped table-bordered" >
+            <thead >
+              <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido paterno</th>
+                <th scope="col">Apellido materno</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Contraseña</th>
+                <th scope="col">Tipo de usuario</th>
+                <th scope="col" >Editar</th>
+              </tr>
+            </thead>
+          </table>
+          </div>
+          
+      </div>
+  </div>
+  </div>
+</div>
+</div>
+ 
 <script src="librerias/jquery.js"></script>
+<script src="dataTables/datatables.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="librerias/bootstrap.js"></script>
 <script src="librerias/popper.js"></script>

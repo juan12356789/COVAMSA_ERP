@@ -77,6 +77,7 @@ const   chanche_estatus_almacen  = ( order ) => {
     $('#change_status').modal('hide');
     let estado_nuevo = document.getElementById('estado_nuevo').value;
          $.ajax({type: "POST",url: "/almacen/cambio_estado",data: {estado_nuevo, order },success: function (response) {
+            notifications(`El status del pedido ${order} ha sido cambiado `,'success'); 
              pedidos(); 
              actualizar(); 
         }
