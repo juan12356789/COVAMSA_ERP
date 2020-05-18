@@ -9,7 +9,7 @@ let pedidos = (data) => {
             url: "/almacen/pedidos",
             success: function(response) {
 
-                if (typeof(data) == "string" && data.length < 20) alert(`EL PEDIDO CON EL CÓDIGO ${data} HA SIDO CANCELADO`);
+                if (typeof(data) == "string" && data.length < 20) notifications(`El pedido ${data}, ha sido cancelado. Si el surtido de la orden esta en progreso, retorne los productos y cambie el estado a enterado. Si no, de click de enterado.`, 'warning');
 
                 sendData(response);
 
@@ -33,23 +33,24 @@ socket.on('data:pedidos', function(data) {
     pedidos(data);
 
 });
-const  actualizar = ( data ) => {
-  
+const actualizar = (data) => {
+
     socket.emit('data:pedidos', data);
- 
- };
+
+};
 
 
 let sendData = (data) => {
     let table = '';
     ruta = ["NORTE", "SUR"];
-    let estatus = ['NUEVO','EN PROCESO','PARCIAL','COMPLETO','RUTA','CANCELADO','DETENIDO'];
+    let estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'DETENIDO'];
     prioridad_info = ["NORMAL", "NORMAL", "URGENTE"];
     colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E"];
-    let numeracion_pedidos = 1, numero_de_pedidos_urgentes =  0;
+    let numeracion_pedidos = 1,
+        numero_de_pedidos_urgentes = 0;
     console.log(data.length);
     data.forEach(data => {
-        if(data.prioridad == 2 ) numero_de_pedidos_urgentes++; 
+        if (data.prioridad == 2) numero_de_pedidos_urgentes++;
         table += `<tr>
                   <th scope="row">${numeracion_pedidos++}</th>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
@@ -67,19 +68,23 @@ let sendData = (data) => {
                
                 </tr>`;
     });
-    document.getElementById('numero_pedidos').innerHTML = `Total De Pedidos: <input type="text"  value="${numeracion_pedidos}" disabled>  Pedidos Urgentes: <input type="text"  value="${numero_de_pedidos_urgentes}" disabled>`;  
-   
+    document.getElementById('numero_pedidos').innerHTML = `Total De Pedidos: <input type="text"  value="${numeracion_pedidos}" disabled>  Pedidos Urgentes: <input type="text"  value="${numero_de_pedidos_urgentes}" disabled>`;
+
     document.getElementById('pedidos').innerHTML = table;
 }
 
 
-const   chanche_estatus_almacen  = ( order ) => {
+const chanche_estatus_almacen = (order) => {
     $('#change_status').modal('hide');
     let estado_nuevo = document.getElementById('estado_nuevo').value;
-         $.ajax({type: "POST",url: "/almacen/cambio_estado",data: {estado_nuevo, order },success: function (response) {
-            notifications(`El status del pedido ${order} ha sido cambiado `,'success'); 
-             pedidos(); 
-             actualizar(); 
+    $.ajax({
+        type: "POST",
+        url: "/almacen/cambio_estado",
+        data: { estado_nuevo, order },
+        success: function(response) {
+            notifications(`El status del pedido ${order} ha sido cambiado `, 'success');
+            pedidos();
+            actualizar();
         }
     });
 

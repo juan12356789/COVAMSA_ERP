@@ -22,7 +22,7 @@ let clientes = (words = '') => {
     if (words.length == 0 || words.length == 1) validacio = 2;
     $.post("/ventas", { words: words, validaciones: validacio }, function(data) {
         console.log(data);
-        if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de dato...<p>";
+        if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de datos...<p>";
         let table = '';
         data.forEach(data => {
             table += `
