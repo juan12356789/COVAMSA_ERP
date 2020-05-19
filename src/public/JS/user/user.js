@@ -63,20 +63,20 @@ const selectUserc=  id  => {
         
             let form_usuario = `
             <div class="container" >
-                <label>Id</label>
-                <input type="text" value="${response[0].nombre}" id="id"  style=" border: 0;" readonly   name="id" ><br>
-                <label>Nombre</label>
-                <input type="text" value="${response[0].nombre}" id="nombre" name="nombre" ><br>
-                <label> Apellido paterno </label>
-                <input type="text" value="${response[0].apellido_paterno}" id="apellidoP" name="apellidoP" ><br>
-                <label>Apellido Materno</label>
-                <input type="text" value="${response[0].apellido_materno}" id="apellidoM" name="apellidoM" ><br>
-                <label>Correo</label>
-                <input type="text" value="${response[0].correo}" id="correo" name="correo" ><br>
-                <label>Contraseña</label>
-                <input type="text" value="${response[0].password}" id="password" name="password" ><br>
-                <label>Tipo de usuario</label>
-                <input type="text" value="${response[0].tipo_usuerio}" id="usuario" name="usuario" ><br>
+                <label>Id:</label>
+                <input type="text" value="${response[0].idacceso}" id="id"      style=" border: 0;" readonly   name="id" ><br>
+                <label>Nombre:</label>
+                <input type="text" value="${response[0].nombre}" id="nombre"    name="nombre" ><br>
+                <label> Apellido paterno: </label>
+                <input type="text" value="${response[0].apellido_paterno}"   id="apellidoP" name="apellidoP" ><br>
+                <label>Apellido Materno:</label>
+                <input type="text" value="${response[0].apellido_materno}"   id="apellidoM" name="apellidoM" ><br>
+                <label>Correo:</label>
+                <input type="text" value="${response[0].correo}" id="correo"   name="correo" ><br>
+                <label>Contraseña:</label>
+                <input type="text" value="${response[0].password}" id="password"   name="password" ><br>
+                <label>Tipo de usuario:</label>
+                <input type="text" value="${response[0].tipo_usuario}" id="usuario"   name="usuario" ><br>
             </div>
             `; 
 
