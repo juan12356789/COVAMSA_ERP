@@ -8,7 +8,11 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.29.0/sweetalert2.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
+<meta http-equiv="Expires" content="0" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta charset="utf-8"> 
+{{!-- el contenido se muestra en español --}}
+<meta http-equiv="Content-Language" content="es"/>
 {{!-- <style>
     input[type=text] {
     width: 40ch;
@@ -22,6 +26,7 @@
 
 <!------ inicio de login echo con bootstrap y css ---------->
 <br></br><br><br></br><br></br>
+<html </html></html> ></html>
 <body background="https://covamsa.com/inicio/wp-content/uploads/2019/07/slider_fondo_02_covamsa.jpg">
 <div class="container-lg">
     <div class="row text-center login-page">
@@ -77,5 +82,31 @@
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
 <script src="JS/buttonLogin.js"></script>
+
+
+
+<script>
+document.getElementById('validar').addEventListener('click', valida);
+let contador = 1;
+function valida(){
+
+        const campo = document.getElementById('campo');
+            valido = document.getElementById('campoOK'),
+
+            regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$%*&\-\_])[A-Za-z\d$@$%*&\-\_]{8,16}$/;
+
+        if (regex.test(campo.value)) {
+            valido.innerHTML = "válido";
+
+        } else {
+            valido.innerHTML = "incorrecto";
+            console.log(`Intento: ${contador}`);
+            if(contador === 3){
+              document.getElementById('validar').disabled = 'true';
+            }
+            contador++;
+        }
+}
+</script>
 
 
