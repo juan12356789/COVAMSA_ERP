@@ -169,29 +169,6 @@ let cancelOrder = ( order ) =>{
 }; 
 
 
-function myFunction() {
-   console.log('hola');
-   
-  }
-let checkInput = () =>{
-
-    console.log('hola');
-    
-
-    // $("#orden").keypress(function (e) { 
-    //     console.log($("#orden").val() );
-    //     if($("#orden").val() != '' || $("#orden").val() !=' ' ){
-    //             document.getElementById("orden").required =  true; 
-    //             document.getElementById("orden_pdf").required = true; 
-    //     }else{
-    //         console.log('hoolal');
-            
-    //         document.getElementById("orden").required =  false; 
-    //         document.getElementById("orden_pdf").required = false;
-    //     }
-    // });
-
-};
 
 // socket -----------
 const pedidos = (data) => {

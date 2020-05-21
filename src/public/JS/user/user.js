@@ -14,12 +14,16 @@ $(document).ready(function () {
             { sortable: false,
                 "render": function(data, type, full, meta) {
                     return  `<input type="password" style="border: 0;"  id="password" readonly  value=${full.password} >`;
-                }},
+            }},
             {data: 'tipo_usuario'},
             { sortable: false,
                 "render": function(data, type, full, meta) {
+                    return  `${ full.estado == 0 ? "Inactivo" : "Activo" }`;
+            }},
+            { sortable: false,
+                "render": function(data, type, full, meta) {
                     return  `<button  class="btn btn-success" onclick="selectUserc(${full.idacceso})" >Editar</button>`;
-                }},
+                }}
             ]
     });
     users(); 
@@ -49,6 +53,7 @@ const tu_usuario  = () =>{
 const users = (option) =>{
 
     $.ajax({type: "POST",url: "/user/selectUser",success: function (response) {
+            console.log(response);
             
             dataTable.rows().remove();
             dataTable.rows.add(response).draw();
@@ -57,26 +62,63 @@ const users = (option) =>{
 
 }; 
 
+
+
 const selectUserc=  id  => {
 
     $.ajax({type: "POST",url:"/user/selectIdUser",data:{id} ,success: function (response) {
         
             let form_usuario = `
             <div class="container" >
-                <label>Id:</label>
-                <input type="text" value="${response[0].idacceso}" id="id"      style=" border: 0;" readonly   name="id" ><br>
-                <label>Nombre:</label>
-                <input type="text" value="${response[0].nombre}" id="nombre"    name="nombre" ><br>
-                <label> Apellido paterno: </label>
-                <input type="text" value="${response[0].apellido_paterno}"   id="apellidoP" name="apellidoP" ><br>
-                <label>Apellido Materno:</label>
-                <input type="text" value="${response[0].apellido_materno}"   id="apellidoM" name="apellidoM" ><br>
-                <label>Correo:</label>
-                <input type="text" value="${response[0].correo}" id="correo"   name="correo" ><br>
-                <label>Contraseña:</label>
-                <input type="text" value="${response[0].password}" id="password"   name="password" ><br>
-                <label>Tipo de usuario:</label>
-                <input type="text" value="${response[0].tipo_usuario}" id="usuario"   name="usuario" ><br>
+                <div class="row" >
+                    <div class="col" >
+                        <label>Id:</label>
+                        <input type="text" value="${response[0].idacceso}" id="id"    class="form-control"  required    style=" border: 0;" readonly   name="id" ><br>
+                    </div>
+
+                    <div class="col">
+                        <label>Nombre:</label>
+                        <input type="text"   class="form-control"  value="${response[0].nombre}" required  id="nombre"    name="nombre" ><br>
+                    </div>
+                </div>
+                <div class="row" >
+                    <div class="col">
+                        <label> Apellido paterno: </label>
+                        <input type="text" value="${response[0].apellido_paterno}"  required class="form-control"  id="apellidoP" name="apellidoP" ><br>
+                    </div>
+                    <div class="col">
+                        <label>Apellido Materno:</label>
+                        <input type="text" value="${response[0].apellido_materno}"  required  class="form-control"  id="apellidoM" name="apellidoM" ><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>Correo:</label>
+                        <input type="text" value="${response[0].correo}"  required  id="correo" class="form-control"  name="correo" ><br>
+                    </div>
+                    <div class="col">
+                        <label>Contraseña:</label>
+                        <input type="text" value="${response[0].password}"  required     id="contra" class="form-control"   name="contra" ><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label>Tipo de usuario:</label>
+                        <select name="tipo_usuario" id="tipo_usuario" class="form-control" >
+                            <option value="Ventas" >Ventas</option>
+                            <option value="Almacen" >Almacén</option>
+                            <option value="Administrador" >Administrador</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                            <label>Activo</label>
+                            <input type="radio"   required  name="estado_usuario" id="activo" value="1"  >
+                    </div>
+                    <div class="col-2">
+                            <label>Inactivo</label>
+                            <input type="radio"   required  name="estado_usuario" id="inactivo" value="0" >
+                    </div>
+                </div>
             </div>
             `; 
 
@@ -88,6 +130,109 @@ const selectUserc=  id  => {
     });
 
 }; 
+const insertUser  = () =>{
+    let form_usuario = `
+    <div class="container" >
+        <div class="row" >
+
+
+            <div class="col">
+                <label>Nombre:</label>
+                <input type="text"   class="form-control"   required  id="nombre"    name="nombre" ><br>
+            </div>
+        </div>
+        <div class="row" >
+            <div class="col">
+                <label> Apellido paterno: </label>
+                <input type="text"   required class="form-control"  id="apellidoP" name="apellidoP" ><br>
+            </div>
+            <div class="col">
+                <label>Apellido Materno:</label>
+                <input type="text"   required  class="form-control"  id="apellidoM" name="apellidoM" ><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label>Correo:</label>
+                <input type="text"   required  id="correo" class="form-control"  name="correo" ><br>
+            </div>
+            <div class="col">
+                <label>Contraseña:</label>
+                <input type="text"  required     id="contra" class="form-control"   name="contra" ><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label>Tipo de usuario:</label>
+                <select name="tipo_usuario" id="tipo_usuario" class="form-control" >
+                    <option value="Ventas" >Ventas</option>
+                    <option value="Almacen" >Almacén</option>
+                    <option value="Administrador" >Administrador</option>
+                </select>
+            </div>
+            <div class="col-2">
+                    <label>Activo</label>
+                    <input type="radio"   required  name="estado_usuario" id="activo" value="1"  >
+            </div>
+            <div class="col-2">
+                    <label>Inactivo</label>
+                    <input type="radio"   required  name="estado_usuario" id="inactivo" value="0" >
+            </div>
+        </div>
+    </div>
+    `; 
+
+    $('#insertUser').modal('show');
+
+    document.getElementById("insert").innerHTML =  form_usuario; 
+}; 
+$(function () {
+    $("#user_insert").submit(function (e) { 
+        e.preventDefault();
+        let formData = {
+            nombre: $("#nombre").val(),
+            apellidoP: $("#apellidoP").val(),
+            apellidoM:$("#apellidoM").val(),
+            correo: $("#correo").val(),
+            password: $("#contra").val(),
+            tipo_usuario: $("#tipo_usuario").val(),
+            actividad: $('input:radio[name=estado_usuario]:checked').val() 
+        }; 
+
+        $.ajax({type: "POST",url: "/user/insert",data: formData ,success: function (response) {
+                        users(); 
+                        notifications("Se ha guardado con éxito ",'success');
+                        $('#insertUser').modal('hide');
+            }
+        });
+        
+    });
+});
+
+$(function () {
+    $("#user_update").submit(function (e) { 
+        e.preventDefault();
+        let formData = {
+            id : $("#id").val(),
+            nombre: $("#nombre").val(),
+            apellidoP: $("#apellidoP").val(),
+            apellidoM:$("#apellidoM").val(),
+            correo: $("#correo").val(),
+            password: $("#contra").val(),
+            tipo_usuario: $("#tipo_usuario").val(),
+            actividad: $('input:radio[name=estado_usuario]:checked').val() 
+        }; 
+
+        $.ajax({type: "POST",url: "/user/updateInfoUsers",data: formData ,success: function (response) {
+                        users(); 
+                        notifications("La actualización ha sido exitosa ",'success');
+                        $('#updateUser').modal('hide');
+            }
+        });
+
+    });
+}); 
+
 
 $(function () { 
     $("#sendContra").submit(function (e) { 
@@ -101,7 +246,6 @@ $(function () {
             return $('#exampleModal').modal('hide');
 
             }
-
             notifications("El cambio de contraseña no ha sido exitoso favor de verificar los campos ",'warning');
             
         }
