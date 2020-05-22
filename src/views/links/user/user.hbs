@@ -9,12 +9,7 @@
 <br>
 <div class="container">
   <p>
-   <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-    Mi perfil
-  </button>
-  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExampletwo" aria-expanded="false" aria-controls="collapseExample">
-    Empleados
-  </button>
+    <div  id="buttons" ></div>
 </p>
 <div class="collapse" id="collapseExample">
   <div class="card card-body">
@@ -32,13 +27,15 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Actualizar contraseña</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <form id="sendContra" method="post"  > 
+        <label for="">Ingrese  contraseña actual: </label>
+        <input type="password" name="aContra" id="aContra" class="form-control"  placeholder="Contraseña actual" >
         <label for="">Ingrese su nueva contraseña: </label>
         <input type="password" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*"  minlength="8"  title="El fomrato requerido es Mayusculas,5 caracteres o más  miínusculas y número ejemplo:1aA"   maxlength="30"  class="form-control" name="nuevaContra" id="nuevaContra" placeholder="contraseña">
         <label for="">Confitme la contraseña: </label>
@@ -85,7 +82,7 @@
               </div>
             </div>
             {{!-- insert Modal --}}
-            <span style="font-size: 2em; color: green;" onclick="insertUser()" >
+            <span style="font-size: 1em;" onclick="insertUser()" >
             <i class="fas fa-user-plus"></i>
             </span>
             <br>

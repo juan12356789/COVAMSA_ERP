@@ -1,7 +1,6 @@
 $(document).ready(function () {
-    
     tu_usuario();
-    
+    userId(); 
    dataTable = $("#orders").DataTable({
         "order": [
             [0, "desc"]
@@ -48,6 +47,32 @@ const tu_usuario  = () =>{
     });
 
 }; 
+
+const userId = () =>{
+
+    $.ajax({type: "POST", url: "/user/id",success: function (response) {
+            let buttons = '';
+            if(response == "Administrador"){
+                 buttons = `
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                  Mi perfil
+                </button>
+                <button class="btn btn-primary" type="button" data-toggle="collapse" id="empleadosControl" data-target="#collapseExampletwo" aria-expanded="false" aria-controls="collapseExample">
+                  Empleados
+                </button>`;
+            } else{
+                buttons =`
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                 Mi perfil
+                </button>`; 
+            }
+
+            document.getElementById("buttons").innerHTML = buttons; 
+
+        }
+    });
+
+};
 
 
 const users = (option) =>{
@@ -238,7 +263,7 @@ $(function () {
     $("#sendContra").submit(function (e) { 
         e.preventDefault();
         if ($("#nuevaContra").val() != $("#confirmarContra").val() ) return notifications("Favor de checar los campos",'warning'); 
-        $.ajax({type: "POST",url: "/user/updatePassword",data: { id:$("#acceso").val(),nuevContra:$("#nuevaContra").val() ,conf:$("#confirmarContra").val() },success: function (response) {
+        $.ajax({type: "POST",url: "/user/updatePassword",data: { id:$("#acceso").val(),nuevContra:$("#nuevaContra").val() ,conf:$("#confirmarContra").val(),aContra:$("#aContra").val() },success: function (response) {
             
             if(response == true) {
 
