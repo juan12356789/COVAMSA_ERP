@@ -263,7 +263,7 @@ $(function () {
     $("#sendContra").submit(function (e) { 
         e.preventDefault();
         if ($("#nuevaContra").val() != $("#confirmarContra").val() ) return notifications("Favor de checar los campos",'warning'); 
-        $.ajax({type: "POST",url: "/user/updatePassword",data: { id:$("#acceso").val(),nuevContra:$("#nuevaContra").val() ,conf:$("#confirmarContra").val(),aContra:$("#aContra").val() },success: function (response) {
+        $.ajax({type: "POST",url: "/user/updatePassword",data: { id:$("#acceso").val(),nuevContra:$("#nuevaContra").val() ,conf:$("#confirmarContra").val(), aContra:$("#aContra").val() },success: function (response) {
             
             if(response == true) {
 
