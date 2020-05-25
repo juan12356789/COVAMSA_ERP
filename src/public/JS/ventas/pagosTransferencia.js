@@ -1,10 +1,10 @@
 
 const  pagosTrasnsferencia  = () =>{
 
-    let num_pedido  = document.getElementById('num_pedido').value; 
-    let comprobante_pago = document.getElementById('comp').value; 
-
+      let num_pedido  = document.getElementById('num_pedido').value; 
+      let comprobante_pago = document.getElementById('comp').value; 
       var csvFile=$('#comprobante_pago')[0].files[0];
+      if(comprobante_pago == '' || csvFile == undefined) return  notifications(`Ingrese todos los campos `,'warning');
       
       var data = new FormData(); 
       data.append('num_pedido',num_pedido);

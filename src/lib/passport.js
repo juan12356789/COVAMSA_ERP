@@ -9,7 +9,8 @@ passport.use('local.signin', new Strategy({
 }, async(req, email, password, done) => {
 
     const rows = await pool.query("SELECT * FROM  acceso WHERE  correo = ?  and password = ? ", [email, password]);
-    if (rows.length > 0) {
+  
+    if (rows.length > 0 && rows[0].estado != 0 ) {
         const user = rows[0];
         // const validPassword =   await helpers.matchPassword(password,user.password); validar contraseña convertida 
         done(null, user);
