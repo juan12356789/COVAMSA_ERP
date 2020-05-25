@@ -64,6 +64,7 @@ router.post("/updateTrasferencia",upload.fields([{ name: 'comprobante_pago', max
 }); 
    
 router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { name: 'num_pedido', maxCount: 1 },{ name: 'comprobante_pago', maxCount: 1 }]),async(req, res) => {
+    console.log(req.body);
               
     if (req.body.nombre != undefined && req.body.nombre != ' '  && req.files.num_pedido != undefined && req.body.observaciones.length < 250) {
         const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre);
