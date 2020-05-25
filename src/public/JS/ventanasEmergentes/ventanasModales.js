@@ -60,8 +60,8 @@ let reson_to_cancel = (order) => {
 let cambios_status_pedidos = (current_status, order) => {
 
 
-    if (current_status == "CANCELADO") return alert("Este pedido ha sido cancelado no es posible cambias el status");
-    let opciones_pago = ''; 
+    if (current_status == "CANCELADO") return notifications("Este pedido ha sido cancelado no es posible cambiar  el status", 'warning');
+    let opciones_pago = '';
     switch (current_status) {
         case "NUEVO":
             opciones_pago = `<option value="2">En Proceso</option>`;
@@ -133,7 +133,7 @@ const notifications = (texto_notificacion, tipo_notificacion) => {
 const uploadFileTransferencia = (num_pedido) => {
 
     $('#transferencia').modal('show');
-    
+
     let elementsHTML = `
         <div class="modal-header">
             <h5 class="modal-title">Transferencia</h5>

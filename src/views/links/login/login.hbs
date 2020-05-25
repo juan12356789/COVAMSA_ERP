@@ -1,3 +1,4 @@
+<html>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>  
@@ -26,7 +27,6 @@
 
 <!------ inicio de login echo con bootstrap y css ---------->
 <br></br><br><br></br><br></br>
-<html </html></html> ></html>
 <body background="https://covamsa.com/inicio/wp-content/uploads/2019/07/slider_fondo_02_covamsa.jpg">
 <div class="container-lg">
     <div class="row text-center login-page">
@@ -61,9 +61,12 @@
             {{!-- ingresar- Comenzar --}}
                 <div class="form-group row justify-content-center">
                     <input type="submit"  name="btn" value="Comenzar" 
-                    class="btn btn-success" class="inputFormu" id="boton"
-                    disabled>
+                    class="btn btn-success" class="inputFormu"  id="validar">
+                    {{!-- id="boton" --}}
+                    {{!-- disabled> --}}
                     {{!-- <button type="submit" class="btn btn-success" onclick="go()">Comenzar</button> --}}
+                    <input id="campo" type="text">
+                    <div id="campoOK"></div>
                 </div>
 
             {{!-- fin del form --}}
@@ -84,29 +87,33 @@
 <script src="JS/buttonLogin.js"></script>
 
 
-
 <script>
-document.getElementById('validar').addEventListener('click', valida);
-let contador = 1;
-function valida(){
+let intentos = 0;
 
-        const campo = document.getElementById('campo');
-            valido = document.getElementById('campoOK'),
+document
+  .getElementById('validar')
+  .addEventListener('click', function(evt) {
+    const campo = document.getElementById('campo'),
+      valido = document.getElementById('campoOK')
 
-            regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$%*&\-\_])[A-Za-z\d$@$%*&\-\_]{8,16}$/;
 
-        if (regex.test(campo.value)) {
-            valido.innerHTML = "válido";
+    if (intentos >= 2) {
+      return;
+    }
 
-        } else {
-            valido.innerHTML = "incorrecto";
-            console.log(`Intento: ${contador}`);
-            if(contador === 3){
-              document.getElementById('validar').disabled = 'true';
-            }
-            contador++;
-        }
-}
+    if (/^\d+$/g.test(campo.value)) {
+      valido.innerText = "válido";
+      intentos = 0;
+
+    } else {
+      intentos++;
+      valido.innerText = "incorrecto, intentos: " + intentos;
+
+      if (intentos >= 3) {
+        valido.innerText = "Nunca mas vas a poder intentar";
+      }
+    }
+  });
 </script>
 
 

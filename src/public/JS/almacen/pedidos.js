@@ -42,9 +42,9 @@ const actualizar = (data) => {
 
 let sendData = (data) => {
     let table = '';
-    ruta = ["NORTE", "SUR"];
-    let estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'DETENIDO'];
-    prioridad_info = ["NORMAL", "NORMAL", "URGENTE"];
+    ruta = ["Norte", "Sur"];
+    let estatus = ['Nuevo', 'En Proceso', 'Parcial', 'Completo', 'Ruta', 'Cancelado', 'Detenido'];
+    prioridad_info = ["Normal", "Normal", "Urgente"];
     colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E"];
     let numeracion_pedidos = 1,
         numero_de_pedidos_urgentes = 0;

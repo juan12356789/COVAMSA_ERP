@@ -28,7 +28,7 @@ let orderTable = () => {
                             }, {
                                 sortable: false,
                                 "render": function(data, type, full, meta) {
-                                    let pagos = ['TRANSFERENCIA', 'ANTICIPADO', 'CONTRA ENTREGA', 'CREDITO'];
+                                    let pagos = ['Transferencia', 'Anticipado', 'Contra Entrega', 'Crédito'];
                                     return `${pagos[ full.tipo_de_pago - 1 ]}`;
 
                                 }
@@ -88,7 +88,7 @@ let piorityTable = () => {
             },{
                 sortable:false,
                 "render": function(data, type, full ,meta){
-                 let pagos  = ['TRANSFERENCIA','ANTICIPADO','CONTRA ENTREGA','CREDITO'];  
+                 let pagos  = ['Transferencia','Anticipado','Contra Entrega','Crédito'];  
                  return `${pagos[ full.tipo_de_pago - 1 ]}`;
             
                 }  
