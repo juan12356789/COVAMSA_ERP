@@ -48,7 +48,7 @@ let reson_to_cancel = (order) => {
         </div>
         <div class="modal-footer">
           <button value="0"  class="btn btn-primary"  id="aceptar"  >Aceptar</button>
-          <button value="1" type="button" class="btn btn-secondary"  id=""cancelar"  data-dismiss="modal">Cancelar</button>
+          <button value="1" type="button" class="btn btn-danger"  id=""cancelar"  data-dismiss="modal">Cancelar</button>
         </div>
         
     `;
@@ -189,7 +189,7 @@ const uploadFileTransferencia = (num_pedido) => {
             </div>
             <div class="modal-footer">
               <button value="0"  class="btn btn-primary"  id="aceptar"  >Aceptar</button>
-              <button value="1" type="button" class="btn btn-secondary"  id=""cancelar"  data-dismiss="modal">Cancelar</button>
+              <button value="1" type="button" class="btn btn-danger"  id=""cancelar"  data-dismiss="modal">Cancelar</button>
             </div>
             
         `;

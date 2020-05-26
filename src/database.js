@@ -3,9 +3,9 @@ const { promisify } = require('util'); // se utiliza para usar promesas
 const database = {
     host: 'localhost',
     user: 'root',
-    password: 'juan',
+    // password: 'juan',
     database: 'covamsa_desarrollo',
-    port: 3307
+    port: 3306
 }
 
 //ver si se pueden subir cambios al servidor xd

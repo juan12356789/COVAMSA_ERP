@@ -135,8 +135,8 @@ let pedidos_urgentes_normales = (tipo_de_pedido, numero_pedido, tipo_prioridad) 
         data: { tipo_de_pedido, numero_pedido, tipo_prioridad },
         success: function(response) {
             
-            if(response === '2' )notifications(`El pedido ha sido aceptado como  urgente `,'success');
-            if(response === '0' )notifications(`El pedido se ha aceptado como normal  `,'success');
+            if(response === '2' )notifications(`El pedido ha sido aceptado como  Urgente `,'success');
+            if(response === '0' )notifications(`El pedido se ha aceptado como Normal  `,'success');
             
             if (tipo_de_pedido == 3) {
                 pedidos_urgentes_normales(1, null, null);

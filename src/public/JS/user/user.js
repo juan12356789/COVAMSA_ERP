@@ -1,39 +1,48 @@
-$(document).ready(function () {
+$(document).ready(function() {
     tu_usuario();
-    userId(); 
-   dataTable = $("#orders").DataTable({
+    userId();
+    dataTable = $("#orders").DataTable({
         "order": [
             [0, "desc"]
         ],
         columns: [
-            {data:'nombre'},
-            {data:'apellido_paterno'},
-            {data:'apellido_materno'},
-            {data:'correo'},
-            { sortable: false,
+            { data: 'nombre' },
+            { data: 'apellido_paterno' },
+            { data: 'apellido_materno' },
+            { data: 'correo' },
+            {
+                sortable: false,
                 "render": function(data, type, full, meta) {
-                    return  `<input type="password" style="border: 0;"  id="password" readonly  value=${full.password} >`;
-            }},
-            {data: 'tipo_usuario'},
-            { sortable: false,
+                    return `<input type="password" style="border: 0;"  id="password" readonly  value=${full.password} >`;
+                }
+            },
+            { data: 'tipo_usuario' },
+            {
+                sortable: false,
                 "render": function(data, type, full, meta) {
-                    return  `${ full.estado == 0 ? "Inactivo" : "Activo" }`;
-            }},
-            { sortable: false,
+                    return `${ full.estado == 0 ? "Inactivo" : "Activo" }`;
+                }
+            },
+            {
+                sortable: false,
                 "render": function(data, type, full, meta) {
-                    return  `<button  class="btn btn-success" onclick="selectUserc(${full.idacceso})" >Editar</button>`;
-                }}
-            ]
+                    return `<button  class="btn btn-success" onclick="selectUserc(${full.idacceso})" >Editar</button>`;
+                }
+            }
+        ]
     });
-    users(); 
+    users();
 });
 
-const tu_usuario  = () =>{
+const tu_usuario = () => {
 
-    $.ajax({type: "POST",url: "/user",success: function (response) {
-            
-        let info_profile =  `
-                id:  <input type="text"  id="acceso"  style=" border: 0;" readonly value="${response.idacceso}" ><br>
+    $.ajax({
+        type: "POST",
+        url: "/user",
+        success: function(response) {
+
+            let info_profile = `
+                ID:  <input type="text"  id="acceso"  style=" border: 0;" readonly value="${response.idacceso}" ><br><br>
                 Nombre: ${response.nombre}<br><br>
                 Apellido Paterno: ${response.apellido_paterno}<br><br>
                 Apellido Materno: ${response.apellido_materno}<br><br>
@@ -46,28 +55,35 @@ const tu_usuario  = () =>{
         }
     });
 
-}; 
+};
 
-const userId = () =>{
+const userId = () => {
 
-    $.ajax({type: "POST", url: "/user/id",success: function (response) {
+    $.ajax({
+        type: "POST",
+        url: "/user/id",
+        success: function(response) {
             let buttons = '';
-            if(response == "Administrador"){
-                 buttons = `
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            if (response == "Administrador") {
+                buttons = `
+                
+                
+                <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                   Mi perfil
                 </button>
-                <button class="btn btn-primary" type="button" data-toggle="collapse" id="empleadosControl" data-target="#collapseExampletwo" aria-expanded="false" aria-controls="collapseExample">
+                <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" id="empleadosControl" data-target="#collapseExampletwo" aria-expanded="false" aria-controls="collapseExample">
                   Empleados
-                </button>`;
-            } else{
-                buttons =`
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                </button>
+               
+                `;
+            } else {
+                buttons = `
+                <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                  Mi perfil
-                </button>`; 
+                </button>`;
             }
 
-            document.getElementById("buttons").innerHTML = buttons; 
+            document.getElementById("buttons").innerHTML = buttons;
 
         }
     });
@@ -75,24 +91,31 @@ const userId = () =>{
 };
 
 
-const users = (option) =>{
+const users = (option) => {
 
-    $.ajax({type: "POST",url: "/user/selectUser",success: function (response) {
+    $.ajax({
+        type: "POST",
+        url: "/user/selectUser",
+        success: function(response) {
             console.log(response);
-            
+
             dataTable.rows().remove();
             dataTable.rows.add(response).draw();
         }
     });
 
-}; 
+};
 
 
 
-const selectUserc=  id  => {
+const selectUserc = id => {
 
-    $.ajax({type: "POST",url:"/user/selectIdUser",data:{id} ,success: function (response) {
-        
+    $.ajax({
+        type: "POST",
+        url: "/user/selectIdUser",
+        data: { id },
+        success: function(response) {
+
             let form_usuario = `
             <div class="container" >
                 <div class="row" >
@@ -145,17 +168,17 @@ const selectUserc=  id  => {
                     </div>
                 </div>
             </div>
-            `; 
+            `;
 
             $('#updateUser').modal('show');
 
-            document.getElementById("update").innerHTML =  form_usuario; 
+            document.getElementById("update").innerHTML = form_usuario;
 
         }
     });
 
-}; 
-const insertUser  = () =>{
+};
+const insertUser = () => {
     let form_usuario = `
     <div class="container" >
         <div class="row" >
@@ -205,79 +228,88 @@ const insertUser  = () =>{
             </div>
         </div>
     </div>
-    `; 
+    `;
 
     $('#insertUser').modal('show');
 
-    document.getElementById("insert").innerHTML =  form_usuario; 
-}; 
-$(function () {
-    $("#user_insert").submit(function (e) { 
+    document.getElementById("insert").innerHTML = form_usuario;
+};
+$(function() {
+    $("#user_insert").submit(function(e) {
         e.preventDefault();
         let formData = {
             nombre: $("#nombre").val(),
             apellidoP: $("#apellidoP").val(),
-            apellidoM:$("#apellidoM").val(),
+            apellidoM: $("#apellidoM").val(),
             correo: $("#correo").val(),
             password: $("#contra").val(),
             tipo_usuario: $("#tipo_usuario").val(),
-            actividad: $('input:radio[name=estado_usuario]:checked').val() 
-        }; 
+            actividad: $('input:radio[name=estado_usuario]:checked').val()
+        };
 
-        $.ajax({type: "POST",url: "/user/insert",data: formData ,success: function (response) {
-                        users(); 
-                        notifications("Se ha guardado con éxito ",'success');
-                        $('#insertUser').modal('hide');
+        $.ajax({
+            type: "POST",
+            url: "/user/insert",
+            data: formData,
+            success: function(response) {
+                users();
+                notifications("Se ha guardado con éxito ", 'success');
+                $('#insertUser').modal('hide');
             }
         });
-        
+
     });
 });
 
-$(function () {
-    $("#user_update").submit(function (e) { 
+$(function() {
+    $("#user_update").submit(function(e) {
         e.preventDefault();
         let formData = {
-            id : $("#id").val(),
+            id: $("#id").val(),
             nombre: $("#nombre").val(),
             apellidoP: $("#apellidoP").val(),
-            apellidoM:$("#apellidoM").val(),
+            apellidoM: $("#apellidoM").val(),
             correo: $("#correo").val(),
             password: $("#contra").val(),
             tipo_usuario: $("#tipo_usuario").val(),
-            actividad: $('input:radio[name=estado_usuario]:checked').val() 
-        }; 
+            actividad: $('input:radio[name=estado_usuario]:checked').val()
+        };
 
-        $.ajax({type: "POST",url: "/user/updateInfoUsers",data: formData ,success: function (response) {
-                        users(); 
-                        notifications("La actualización ha sido exitosa ",'success');
-                        $('#updateUser').modal('hide');
+        $.ajax({
+            type: "POST",
+            url: "/user/updateInfoUsers",
+            data: formData,
+            success: function(response) {
+                users();
+                notifications("La actualización ha sido exitosa ", 'success');
+                $('#updateUser').modal('hide');
             }
         });
 
     });
-}); 
+});
 
 
-$(function () { 
-    $("#sendContra").submit(function (e) { 
+$(function() {
+    $("#sendContra").submit(function(e) {
         e.preventDefault();
-        if ($("#nuevaContra").val() != $("#confirmarContra").val() ) return notifications("Favor de checar los campos",'warning'); 
-        $.ajax({type: "POST",url: "/user/updatePassword",data: { id:$("#acceso").val(),nuevContra:$("#nuevaContra").val() ,conf:$("#confirmarContra").val(), aContra:$("#aContra").val() },success: function (response) {
-            
-            if(response == true) {
+        if ($("#nuevaContra").val() != $("#confirmarContra").val()) return notifications("Favor de checar los campos", 'warning');
+        $.ajax({
+            type: "POST",
+            url: "/user/updatePassword",
+            data: { id: $("#acceso").val(), nuevContra: $("#nuevaContra").val(), conf: $("#confirmarContra").val(), aContra: $("#aContra").val() },
+            success: function(response) {
 
-            notifications("Su contraseña ha sido actualizada correctamente ",'success'); 
-            return $('#exampleModal').modal('hide');
+                if (response == true) {
+
+                    notifications("Su contraseña ha sido actualizada correctamente ", 'success');
+                    return $('#exampleModal').modal('hide');
+
+                }
+                notifications("El cambio de contraseña no ha sido exitoso favor de verificar los campos ", 'warning');
 
             }
-            notifications("El cambio de contraseña no ha sido exitoso favor de verificar los campos ",'warning');
-            
-        }
-    });
-        
-    });
- })
-    
-    
+        });
 
+    });
+})
