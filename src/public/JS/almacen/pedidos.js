@@ -82,7 +82,7 @@ const chanche_estatus_almacen = (order) => {
         url: "/almacen/cambio_estado",
         data: { estado_nuevo, order },
         success: function(response) {
-            notifications(`El status del pedido ${order} ha sido cambiado `, 'success');
+            notifications(`El estado del pedido ${order} ha sido cambiado `, 'success');
             pedidos();
             actualizar();
         }

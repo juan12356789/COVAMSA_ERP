@@ -172,7 +172,7 @@ let cancelOrder = ( order ) =>{
     $("#aceptar").click(function (e) {
         if( inputReason.value == ''  || inputReason.value.length < 30 )  return  notifications(" Ingrese la razón de cancelación  con un mínimo de 30 caracteres",'warning');  
            $.post("/ventas/cancel", {data : order ,  reason : inputReason.value }, function (data) {
-                   notifications(`El pedido con el numero "${order}" ha sido cancelado`,'success');
+                   notifications(`El pedido con el número "${order}" ha sido cancelado`,'success');
                    pedidos_vendedores(); 
                    pedidos(order);   
                    $('#Ventana_Modal_order').modal('hide'); 
