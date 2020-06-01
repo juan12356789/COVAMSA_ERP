@@ -103,17 +103,17 @@ const selectUserc=  id  => {
 
                     <div class="col">
                         <label>Nombre:</label>
-                        <input type="text"   class="form-control"  value="${response[0].nombre}" required  id="nombre"    name="nombre" ><br>
+                        <input type="text"   class="form-control"  value="${response[0].nombre}"  pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}"  required  id="nombre"    name="nombre" ><br>
                     </div>
                 </div>
                 <div class="row" >
                     <div class="col">
                         <label> Apellido paterno: </label>
-                        <input type="text" value="${response[0].apellido_paterno}"  required class="form-control"  id="apellidoP" name="apellidoP" ><br>
+                        <input type="text" value="${response[0].apellido_paterno}" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}"  required class="form-control"  id="apellidoP" name="apellidoP" ><br>
                     </div>
                     <div class="col">
                         <label>Apellido Materno:</label>
-                        <input type="text" value="${response[0].apellido_materno}"  required  class="form-control"  id="apellidoM" name="apellidoM" ><br>
+                        <input type="text" value="${response[0].apellido_materno}"  pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}"  required  class="form-control"  id="apellidoM" name="apellidoM" ><br>
                     </div>
                 </div>
                 <div class="row">
@@ -123,7 +123,7 @@ const selectUserc=  id  => {
                     </div>
                     <div class="col">
                         <label>Contraseña:</label>
-                        <input type="text" value="${response[0].password}"  required     id="contra" class="form-control"   name="contra" ><br>
+                        <input type="text" value="${response[0].password}"  required   pattern="[A-Za-z0-9!?-]{8,12}"   id="contra" class="form-control"   name="contra" ><br>
                     </div>
                 </div>
                 <div class="row">
@@ -163,27 +163,27 @@ const insertUser  = () =>{
 
             <div class="col">
                 <label>Nombre:</label>
-                <input type="text"   class="form-control"   required  id="nombre"    name="nombre" ><br>
+                <input type="text"   class="form-control"  pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}"  required  id="nombre"    name="nombre" ><br>
             </div>
         </div>
         <div class="row" >
             <div class="col">
                 <label> Apellido paterno: </label>
-                <input type="text"   required class="form-control"  id="apellidoP" name="apellidoP" ><br>
+                <input type="text"   required class="form-control" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}"  id="apellidoP" name="apellidoP" ><br>
             </div>
             <div class="col">
                 <label>Apellido Materno:</label>
-                <input type="text"   required  class="form-control"  id="apellidoM" name="apellidoM" ><br>
+                <input type="text"   required  class="form-control" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}" id="apellidoM" name="apellidoM" ><br>
             </div>
         </div>
         <div class="row">
             <div class="col">
                 <label>Correo:</label>
-                <input type="text"   required  id="correo" class="form-control"  name="correo" ><br>
+                <input type="text"   required      id="correo" class="form-control"  name="correo" ><br>
             </div>
             <div class="col">
                 <label>Contraseña:</label>
-                <input type="text"  required     id="contra" class="form-control"   name="contra" ><br>
+                <input type="text"  required   pattern="[A-Za-z0-9!?-]{8,12}"   id="contra" class="form-control"   name="contra" ><br>
             </div>
         </div>
         <div class="row">
@@ -263,7 +263,7 @@ $(function () {
     $("#sendContra").submit(function (e) { 
         e.preventDefault();
         if ($("#nuevaContra").val() != $("#confirmarContra").val() ) return notifications("Favor de checar los campos",'warning'); 
-        $.ajax({type: "POST",url: "/user/updatePassword",data: { id:$("#acceso").val(),nuevContra:$("#nuevaContra").val() ,conf:$("#confirmarContra").val(),aContra:$("#aContra").val() },success: function (response) {
+        $.ajax({type: "POST",url: "/user/updatePassword",data: { id:$("#acceso").val(),nuevContra:$("#nuevaContra").val() ,conf:$("#confirmarContra").val(), aContra:$("#aContra").val() },success: function (response) {
             
             if(response == true) {
 
