@@ -21,7 +21,23 @@ let clientes = (words = '') => {
     let validacio = 1;
     if (words.length == 0 || words.length == 1) validacio = 2;
     $.post("/ventas", { words: words, validaciones: validacio }, function(data) {
-        if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de dato...<p>";
+        // <<<<<<< HEAD
+        // <<<<<<< HEAD
+        // <<<<<<< HEAD
+        console.log(data);
+        // if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de datos...<p>"; ===
+        // === =
+        // if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de dato...<p>"; >>>
+        // >>> > bfecd9566e1c0b057d0a57fc643948f622f20d82
+        //     ===
+        //     === =
+        //     if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de dato...<p>"; >>>
+        //     >>> > fd949e35a2d132065a7e315045a037fe660a265e
+        //     ===
+        //     === =
+        //     console.log(data);
+        // if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de datos...<p>"; >>>
+        // >>> > note8
         let table = '';
         data.forEach(data => {
             table += `
@@ -157,7 +173,7 @@ let cancelOrder = ( order ) =>{
     $("#aceptar").click(function (e) {
         if( inputReason.value == ''  || inputReason.value.length < 30 )  return  notifications(" Ingrese la razón de cancelación  con un mínimo de 30 caracteres",'warning');  
            $.post("/ventas/cancel", {data : order ,  reason : inputReason.value }, function (data) {
-                   notifications(`El pedido con el numero "${order}" ha sido cancelado`,'success');
+                   notifications(`El pedido con el número "${order}" ha sido cancelado`,'success');
                    pedidos_vendedores(); 
                    pedidos(order);   
                    $('#Ventana_Modal_order').modal('hide'); 
@@ -169,6 +185,29 @@ let cancelOrder = ( order ) =>{
 }; 
 
 
+function myFunction() {
+   console.log('hola');
+   
+  }
+let checkInput = () =>{
+
+    console.log('hola');
+    
+
+    // $("#orden").keypress(function (e) { 
+    //     console.log($("#orden").val() );
+    //     if($("#orden").val() != '' || $("#orden").val() !=' ' ){
+    //             document.getElementById("orden").required =  true; 
+    //             document.getElementById("orden_pdf").required = true; 
+    //     }else{
+    //         console.log('hoolal');
+            
+    //         document.getElementById("orden").required =  false; 
+    //         document.getElementById("orden_pdf").required = false;
+    //     }
+    // });
+
+};
 
 // socket -----------
 const pedidos = (data) => {

@@ -1,3 +1,4 @@
+<html>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>  
@@ -13,27 +14,17 @@
 <meta charset="utf-8"> 
 {{!-- el contenido se muestra en español --}}
 <meta http-equiv="Content-Language" content="es"/>
-{{!-- <style>
-    input[type=text] {
-    width: 40ch;
-    
-    }
-    input:invalid {
-    border: 2px solid red;
-    }
-    
-</style> --}}
+
 
 <!------ inicio de login echo con bootstrap y css ---------->
 <br></br><br><br></br><br></br>
-<html </html></html> ></html>
 <body background="https://covamsa.com/inicio/wp-content/uploads/2019/07/slider_fondo_02_covamsa.jpg">
 <div class="container-lg">
     <div class="row text-center login-page">
     <div class="card card-login mx-auto text-center bg-light" style="width: 50rem;">
         <div class="card-header mx-auto bg-light">
-            <span> 
-                <img class="" src="https://covamsa.com/inicio/wp-content/uploads/2019/06/covamsa_tiendas.png" width="120px">
+            <span>
+                <img src="images/logo.jpeg"  class="rounded mx-auto d-block" width="50%" height="">
             </span>
         </div>
     
@@ -45,7 +36,8 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                     </div>
-                    <input type="text" name="email" class="form-control" onkeyup="validar()"  required placeholder="Usuario"  pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}"  title="El correo electrónico que ingreses debe coincidir con una cuenta"> 
+                    <input type="text" name="email" class="form-control" onkeyup="validar()"  required placeholder="Usuario"  pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}"  
+                    title="El correo electrónico que ingreses debe coincidir con una cuenta"> 
                     {{!-- <input type="text" name="email" class="form-control"  placeholder="Username" title="Utiliza una cuenta asosiada con el Usuario">  --}}
 
                 </div>
@@ -55,22 +47,27 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-key"></i></span>
                     </div>
-                    <input type="password" onkeyup="validar()" name="password" class="form-control"  required class="inputFormu"  placeholder="Contraseña" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*" title="Debe tener al menos una mayúscula, una minúscula y un dígito">
+                    <input type="password" id="campo"  onkeyup="validar()" name="password" class="form-control"  required class="inputFormu"  placeholder="Contraseña" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*" title="Debe tener al menos una mayúscula, una minúscula y un dígito">
                 </div>
 
             {{!-- ingresar- Comenzar --}}
                 <div class="form-group row justify-content-center">
                     <input type="submit"  name="btn" value="Comenzar" 
-                    class="btn btn-success" class="inputFormu" id="boton"
-                    disabled>
-                    {{!-- <button type="submit" class="btn btn-success" onclick="go()">Comenzar</button> --}}
+                    class="btn btn-success" class="inputFormu"  
+                    id="validar" >
+                 
                 </div>
+                <div id="campoOK"></div>
+{{!-- <input id="campo" type="text"><button id="validar">validar</button> --}}
 
+</div>
             {{!-- fin del form --}}
+            
             </form>
         </div>
     </div>
     </div>
+    
 </div>
 
 </body>
@@ -85,28 +82,49 @@
 
 
 
-<script>
-document.getElementById('validar').addEventListener('click', valida);
-let contador = 1;
-function valida(){
-
-        const campo = document.getElementById('campo');
-            valido = document.getElementById('campoOK'),
-
-            regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$%*&\-\_])[A-Za-z\d$@$%*&\-\_]{8,16}$/;
-
-        if (regex.test(campo.value)) {
-            valido.innerHTML = "válido";
-
-        } else {
-            valido.innerHTML = "incorrecto";
-            console.log(`Intento: ${contador}`);
-            if(contador === 3){
-              document.getElementById('validar').disabled = 'true';
-            }
-            contador++;
-        }
-}
+<!--hacer que usuario ponga sus datos en los input, porque no va a poder copiar y pegar --->
+<script language="JavaScript"> 
+function right(e) { 
+var msg = " ¡ No permitido ! Por favor ingresa tu nombre de USUARIO y tu CONTRASEÑA. "; 
+if (navigator.appName == 'Netscape' && e.which == 3) { 
+alert(msg); // Delete this line to disable but not alert user 
+return false; 
+} 
+else 
+if (navigator.appName == 'Microsoft Internet Explorer' && event.button==2) { 
+alert(msg); // Delete this line to disable but not alert user 
+return false; 
+} 
+return true; 
+} 
+document.onmousedown = right; 
 </script>
 
+<script>
+    let intentos = 0;
 
+document
+  .getElementById('validar')
+  .addEventListener('click', function(evt) {
+    const campo = document.getElementById('campo'),
+      valido = document.getElementById('campoOK')
+
+
+    if (intentos >= 3) {
+      return;
+    }
+
+    if (/^\d+$/g.test(campo.value)) {
+      valido.innerText = "válido";
+      intentos = 0;
+
+    } else {
+      intentos++;
+      valido.innerText = "intentos: " + intentos;
+
+      if (intentos >= 3) {
+        valido.innerText = "Este usuario ha sido deshabilitado por intentos fallidos de acceso";
+      }
+    }
+  });
+</script>

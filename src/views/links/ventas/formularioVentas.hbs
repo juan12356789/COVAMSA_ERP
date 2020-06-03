@@ -211,6 +211,7 @@
                     <input type="text" class="form-control border border-secondary"  readonly id="importe" name="importe" required
                       {{!-- maxLength="12" minlength="1" onkeypress="return filterFloat(event,this);" --}}
                       {{!-- maxLength="12" minlength="1"  --}}
+
                       title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales">
                     <br>
                   </div>
@@ -232,11 +233,22 @@
                 </div>
                 <div class="correo"></div>
                 <br>
+                
+               Tipo de Entrega:
+                <div>
+                <select class="custom-select" id="prioridad" name="prioridad" >
+                  <option value="0">Entrega Parcial</option>
+                  <option value="1">Entrega Completa</option> 
+                </select>
+                </div>
+                <div>
+               
+                <br> 
                 Observaciones:
                 <textarea class="form-control border border-secondary" name="observaciones"
                   {{!-- title="En caso de ques sea necesario poner observaciones" --}}
                   placeholder="Escribe aquí tus observaciones (como máximo 250 caracteres)"
-                  {{!--  maxlength="250" rows="2"> --}}
+                   {{!-- maxlength="250" > --}}
                 ></textarea>
                 
                 <div class="form-group row justify-content-right">
@@ -348,7 +360,7 @@
                 <th >Estatus</th>
                 <th >Prioridad</th>
                 <th >Observaciones</th>
-                <th style="white-space:pre;">Fecha </th>
+                <th ><pre><code>CÓDIGO CONVERTIDO A TEXT</code></pre>Fecha</th>
                 <th >Cancelar</th>
               </tr>
             </thead>

@@ -28,7 +28,7 @@ let orderTable = () => {
                             }, {
                                 sortable: false,
                                 "render": function(data, type, full, meta) {
-                                    let pagos = ['TRANSFERENCIA', 'ANTICIPADO', 'CONTRA ENTREGA', 'CREDITO'];
+                                    let pagos = ['Transferencia', 'Anticipado', 'Contra Entrega', 'Crédito'];
                                     return `${pagos[ full.tipo_de_pago - 1 ]}`;
 
                                 }
@@ -88,7 +88,7 @@ let piorityTable = () => {
             },{
                 sortable:false,
                 "render": function(data, type, full ,meta){
-                 let pagos  = ['TRANSFERENCIA','ANTICIPADO','CONTRA ENTREGA','CREDITO'];  
+                 let pagos  = ['Transferencia','Anticipado','Contra Entrega','Crédito'];  
                  return `${pagos[ full.tipo_de_pago - 1 ]}`;
             
                 }  
@@ -135,8 +135,8 @@ let pedidos_urgentes_normales = (tipo_de_pedido, numero_pedido, tipo_prioridad) 
         data: { tipo_de_pedido, numero_pedido, tipo_prioridad },
         success: function(response) {
             
-            if(response === '2' )notifications(`El pedido ha sido aceptado como  urgente `,'success');
-            if(response === '0' )notifications(`El pedido se ha aceptado como normal  `,'success');
+            if(response === '2' )notifications(`El pedido ha sido aceptado como  Urgente `,'success');
+            if(response === '0' )notifications(`El pedido se ha aceptado como Normal  `,'success');
             
             if (tipo_de_pedido == 3) {
                 pedidos_urgentes_normales(1, null, null);
