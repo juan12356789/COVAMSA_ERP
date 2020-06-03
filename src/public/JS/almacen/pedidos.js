@@ -46,6 +46,7 @@ let sendData = (data) => {
     ruta = ["Norte", "Sur"];
     let estatus = ['Nuevo', 'En Proceso', 'Parcial', 'Completo', 'Ruta', 'Cancelado', 'Detenido'];
     prioridad_info = ["Normal", "Normal", "Urgente"];
+    prioridadE = ["Entrega Parcial", "Entrega Completa"];
     colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E"];
     let numeracion_pedidos = 1,
         numero_de_pedidos_urgentes = 0;
@@ -64,6 +65,7 @@ let sendData = (data) => {
                   <td id="userinput" >${data.importe}</td> 
                   <td style="background-color:${colores[data.estatus - 1]}" ondblclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.num_pedido}')">${estatus[data.estatus - 1]}</td>
                   <td >${prioridad_info[data.prioridad]}</td>
+                  <td >${prioridadE[data.prioridadE]}</td>
                   <td >  <p class="line-clamp" >${data.observacion}</p></td>
                   <td>${data.fecha_inicial}</td>
                
