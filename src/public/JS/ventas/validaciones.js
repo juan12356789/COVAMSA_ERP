@@ -21,23 +21,8 @@ let clientes = (words = '') => {
     let validacio = 1;
     if (words.length == 0 || words.length == 1) validacio = 2;
     $.post("/ventas", { words: words, validaciones: validacio }, function(data) {
-        // <<<<<<< HEAD
-        // <<<<<<< HEAD
-        // <<<<<<< HEAD
         console.log(data);
-        // if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de datos...<p>"; ===
-        // === =
-        // if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de dato...<p>"; >>>
-        // >>> > bfecd9566e1c0b057d0a57fc643948f622f20d82
-        //     ===
-        //     === =
-        //     if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de dato...<p>"; >>>
-        //     >>> > fd949e35a2d132065a7e315045a037fe660a265e
-        //     ===
-        //     === =
-        //     console.log(data);
-        // if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de datos...<p>"; >>>
-        // >>> > note8
+        if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de datos...<p>";
         let table = '';
         data.forEach(data => {
             table += `
