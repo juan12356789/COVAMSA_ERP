@@ -14,16 +14,7 @@
 <meta charset="utf-8"> 
 {{!-- el contenido se muestra en español --}}
 <meta http-equiv="Content-Language" content="es"/>
-{{!-- <style>
-    input[type=text] {
-    width: 40ch;
-    
-    }
-    input:invalid {
-    border: 2px solid red;
-    }
-    
-</style> --}}
+
 
 <!------ inicio de login echo con bootstrap y css ---------->
 <br></br><br><br></br><br></br>
@@ -56,28 +47,29 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-key"></i></span>
                     </div>
-                    <input type="password" onkeyup="validar()" name="password" class="form-control"  required class="inputFormu"  placeholder="Contraseña" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*" title="Debe tener al menos una mayúscula, una minúscula y un dígito">
+                    <input type="password" id="campo"  onkeyup="validar()" name="password" class="form-control"  required class="inputFormu"  placeholder="Contraseña" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*" title="Debe tener al menos una mayúscula, una minúscula y un dígito">
                 </div>
 
             {{!-- ingresar- Comenzar --}}
                 <div class="form-group row justify-content-center">
                     <input type="submit"  name="btn" value="Comenzar" 
-                    class="btn btn-success" class="inputFormu"  id="validar" >
+                    class="btn btn-success" class="inputFormu"  
+                    id="validar" >
                  
                 </div>
+                <div id="campoOK"></div>
+{{!-- <input id="campo" type="text"><button id="validar">validar</button> --}}
 
+</div>
             {{!-- fin del form --}}
             
             </form>
         </div>
     </div>
     </div>
+    
 </div>
 
-{{!-- <a href="login.html" 
-onclick="window.open('LOGIN.HTML', 
-'addonchat','width=620,height=500,status=no,scrollbars=no,menubar=no,resizable=yes');
-return false" class="boton">Login</a> --}}
 </body>
 </html>
 
@@ -90,7 +82,7 @@ return false" class="boton">Login</a> --}}
 
 
 
-
+<!--hacer que usuario ponga sus datos en los input, porque no va a poder copiar y pegar --->
 <script language="JavaScript"> 
 function right(e) { 
 var msg = " ¡ No permitido ! Por favor ingresa tu nombre de USUARIO y tu CONTRASEÑA. "; 
@@ -106,4 +98,33 @@ return false;
 return true; 
 } 
 document.onmousedown = right; 
+</script>
+
+<script>
+    let intentos = 0;
+
+document
+  .getElementById('validar')
+  .addEventListener('click', function(evt) {
+    const campo = document.getElementById('campo'),
+      valido = document.getElementById('campoOK')
+
+
+    if (intentos >= 3) {
+      return;
+    }
+
+    if (/^\d+$/g.test(campo.value)) {
+      valido.innerText = "válido";
+      intentos = 0;
+
+    } else {
+      intentos++;
+      valido.innerText = "intentos: " + intentos;
+
+      if (intentos >= 3) {
+        valido.innerText = "Este usuario ha sido deshabilitado por intentos fallidos de acceso";
+      }
+    }
+  });
 </script>
