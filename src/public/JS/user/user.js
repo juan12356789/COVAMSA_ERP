@@ -78,8 +78,7 @@ const userId = () =>{
 const users = (option) =>{
 
     $.ajax({type: "POST",url: "/user/selectUser",success: function (response) {
-            console.log(response);
-            
+     
             dataTable.rows().remove();
             dataTable.rows.add(response).draw();
         }
@@ -91,8 +90,11 @@ const users = (option) =>{
 
 const selectUserc=  id  => {
 
+console.log('hola');
+
     $.ajax({type: "POST",url:"/user/selectIdUser",data:{id} ,success: function (response) {
-        
+            console.log(response);
+                    
             let form_usuario = `
             <div class="container" >
                 <div class="row" >
@@ -123,25 +125,27 @@ const selectUserc=  id  => {
                     </div>
                     <div class="col">
                         <label>Contraseña:</label>
-                        <input type="text" value="${response[0].password}"  required   pattern="[A-Za-z0-9!?-]{8,12}"   id="contra" class="form-control"   name="contra" ><br>
+                        <input type="password" value="${response[0].password}"  required   pattern="[A-Za-z0-9!?-]{8,12}"   id="contra" class="form-control"   name="contra" ><br>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6">
                         <label>Tipo de usuario:</label>
-                        <select name="tipo_usuario" id="tipo_usuario" class="form-control" >
-                            <option value="Ventas" >Ventas</option>
-                            <option value="Almacen" >Almacén</option>
-                            <option value="Administrador" >Administrador</option>
+                        <input type="text"  value="${response[0].tipo_usuario}"  name="tipo_usuario" id="tipo_usuario" class="form-control"  required    style=" border: 0;" readonly  >
+                        <br>
+                        <select name="usuario" id="usuario"  onchange="option();" class="form-control" >
+                            <option  value="Ventas" >Ventas</option>
+                            <option  value="Almacen" >Almacén</option>
+                            <option  value="Administrador" >Administrador</option>
                         </select>
                     </div>
                     <div class="col-2">
                             <label>Activo</label>
-                            <input type="radio"   required  name="estado_usuario" id="activo" value="1"  >
+                            <input type="radio"   required  name="estado_usuario" id="activo" value="1"  ${response[0].estado == 1? "checked" :"" }  >
                     </div>
                     <div class="col-2">
                             <label>Inactivo</label>
-                            <input type="radio"   required  name="estado_usuario" id="inactivo" value="0" >
+                            <input type="radio"   required  name="estado_usuario" id="inactivo" value="0" ${response[0].estado == 0? "checked" :"" }>
                     </div>
                 </div>
             </div>
@@ -155,6 +159,13 @@ const selectUserc=  id  => {
     });
 
 }; 
+
+let  option = () =>{
+    var cod = document.getElementById("usuario").value;
+     $("#tipo_usuario").val(cod);
+    
+}; 
+
 const insertUser  = () =>{
     let form_usuario = `
     <div class="container" >

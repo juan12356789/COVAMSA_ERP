@@ -6,10 +6,12 @@ const pool = require('../../database');
 const { isLoggedIn } = require('../../lib/auth');
 
 router.get('/', isLoggedIn ,( req ,  res )=>{res.render('links/user/user.hbs') });
+
 router.post('/id' , async (req , res)=>{
    const user  = await pool.query("SELECT tipo_usuario FROM acceso WHERE  idacceso = ? ", req.user[0].idacceso);
    res.send(user[0].tipo_usuario);
 });
+
 router.post('/' , async( req , res )=>{
    const profile  = await pool.query("select * from  acceso inner join  empleados using(idacceso) where idacceso  = ?",req.user[0].idacceso); 
    res.send(profile[0]); 
@@ -39,7 +41,7 @@ router.post('/selectUser',async(req , res)=>{
 });
 
 router.post('/selectIdUser',async(req , res)=>{
-   const empleado  = await pool.query("select idacceso,correo,password,tipo_usuario,nombre,apellido_paterno,apellido_materno from acceso inner join empleados  using(idacceso) WHERE idacceso = ?",req.body.id);
+   const empleado  = await pool.query("select idacceso,estado,correo,password,tipo_usuario,nombre,apellido_paterno,apellido_materno, estado from acceso inner join empleados  using(idacceso) WHERE idacceso = ?",req.body.id);
    res.send(empleado);
 }); 
 

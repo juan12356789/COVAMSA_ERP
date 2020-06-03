@@ -107,8 +107,11 @@
       <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
         <div class="card-body">
 
-
+                <input type="file" name="excel" id="excel">
+               <button onclick="uploadExcel()" > Importar </button>
+                      
           <form enctype="multipart/form-data" method="post" id="imgct" class="columinput">
+
             <div class="jumbotron">
               <div class="container">
                 <div class="row ">
@@ -127,7 +130,7 @@
                     {{#each cliente }}
                     <input type="text" class="form-control border border-secondary" value="{{nombre}}" name="cliente">
                     {{/each}}
-                    <div id="inputCliente"></div>
+                    
                     <div id="spinner">
                       <div class="d-flex justify-content-center">
                         <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
@@ -135,23 +138,33 @@
                         </div>
                       </div>
                     </div>
-                    <button type="button" class="btn btn-dark btn-lg btn-block " id="tusClientes" data-toggle="modal"
+                    {{!-- <div id="inputCliente"></div> --}}
+                       <div class="col-sm-14">
+                          <input type="text"  class="form-control valid border border-secondary" id="nombre"  name="nombre" require readonly >
+                      </div>
+                    {{!-- <button type="button" class="btn btn-dark btn-lg btn-block " id="tusClientes" data-toggle="modal"
                       data-target="#staticBackdrop" href="/ventas/busquedaCliente" role="button" aria-expanded="false"
                       aria-controls="collapseExample" onclick="clickClientes()">
                       Clientes
-                    </button>
+                    </button> --}}
                   </div>
                 </div>
                 <br>
                 <div class=" row ">
                   <label for="" class="col-sm-2 col-form-label">No. de Pedido:</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control valid border border-secondary" name="numeroPedido" required
-                      maxlength="30" minlength="2"
+                    <input type="text" class="form-control valid border border-secondary" readonly name="numeroPedido" required
+                      maxlength="30" minlength="2" id="infoPedido"
                       title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Máximo 30 caracteres">
-                    <input type="file" class="form-control-file " required name="num_pedido" id="no_pedido"
-                      style="color: black;">
-                      
+                    {{!-- <input type="file" class="form-control-file " required name="num_pedido" id="no_pedido"
+                      style="color: black;"> --}}
+
+                  <label for="" >Fecha del Pedido: </label>
+                  <input type="date" name="fecha_pedido"  id="fecha_pedido" class="form-control valid border border-secondary" readonly >
+                  
+                  <label for="">No. partidas</label>
+                  <input type="number"  readonly class="form-control valid border border-secondary"  name="numero_partidas" id="numero_partidas">
+
                   </div>
                   <label for="" class="col-sm-2 col-form-label ">Ruta:</label>
                   {{!-- <div class="row"> --}}
@@ -187,7 +200,7 @@
                     </select>
                     
                     <br>
-
+                  
 
 
                   </div>
@@ -195,7 +208,7 @@
                   <div class="col-sm-4">
                   <div class="input-group-prepend">
                     <span class="input-group-text border border-secondary">$</span>
-                    <input type="text" class="form-control border border-secondary" name="importe" required
+                    <input type="text" class="form-control border border-secondary"  readonly id="importe" name="importe" required
                       {{!-- maxLength="12" minlength="1" onkeypress="return filterFloat(event,this);" --}}
                       {{!-- maxLength="12" minlength="1"  --}}
                       title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales">
@@ -354,6 +367,7 @@
 <script src="librerias/bootstrap.js"></script>
 <script src="JS/ventas/pagosTransferencia.js"></script>
 <script src="JS/ventanasEmergentes/ventanasModales.js"></script> 
+<script src="JS/ventas/uploadExcel.js"></script>
 <script src="JS/ventas/validaciones.js"></script>
 <script src="dataTables/datatables.min.js"></script>
 {{!-- <script src="JS/ventas/observacionesC.js"></script> --}}
