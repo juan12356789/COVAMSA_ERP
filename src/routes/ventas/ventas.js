@@ -4,8 +4,9 @@ const path = require("path");
 const multer = require("multer");
 const pool = require('../../database');
 const { isLoggedIn } = require('../../lib/auth');
-const nodemailer =  require('nodemailer');
-
+const upl = require('express-fileupload');
+const importExcel  =  require('convert-excel-to-json');
+const fs = require('fs');
 const rutimage = path.join(__dirname, "../../files");
 
 const storage = multer.diskStorage({
@@ -38,6 +39,51 @@ router.post('/', async(req, res) => {
     res.send(clientes);
 
 });
+
+
+router.post('/excel', (req , res) => {
+    let file = req.files.excel;
+    let filename = file.name;
+    
+    file.mv(  './excel/'+filename ,async (err)=>{
+
+        if(err){
+
+            console.log(err);
+
+        }else{
+            let result = importExcel({
+                sourceFile: './excel/'+filename,
+                // header:{rows:15},
+                // columnTokey:{B:'cantidad',C:'Clave',F:'Descripción',O:'Importe'},
+                sheets:['Sheet1']
+            });
+         
+            const infoPedidos = {
+                cotizacion:'',
+                fecha: '',
+                cliente:'',
+                vendedor:'',
+                total:''
+            }; 
+                
+            for (let i = 0; i < result.Sheet1.length; i++) {
+
+                    if(result.Sheet1[i].M == 'COTIZACIÓN No. :') infoPedidos.cotizacion =  result.Sheet1[i].O;
+                    if(result.Sheet1[i].M == 'Fecha') infoPedidos.fecha =  result.Sheet1[i].O;
+                    if(result.Sheet1[i].B == 'Cliente:')infoPedidos.cliente =  result.Sheet1[i].D;
+                    if(result.Sheet1[i].B == 'Vendedor :')infoPedidos.vendedor =  result.Sheet1[i].C;
+                    if(result.Sheet1[i].K == 'Total')infoPedidos.total =  result.Sheet1[i].O;
+
+            }
+             console.log(infoPedidos);
+             const cliente  = await pool.query("SELECT nombre FROM clientes where numero_interno = ?",infoPedidos.cliente); 
+             
+             infoPedidos.cliente = cliente[0].nombre;
+            res.send(infoPedidos); 
+        }
+    });
+}); 
 
 router.post('/pagos', async(req, res) => {
     const pagos = await pool.query(`SELECT tipo_pago FROM clientes INNER JOIN   preferencias_cliente  USING(idcliente) inner join preferencias_pagos using(idpreferencia) WHERE nombre = ? `, req.body.cliente);

@@ -9,7 +9,8 @@ let pedidos = (data) => {
             url: "/almacen/pedidos",
             success: function(response) {
 
-                if (typeof(data) == "string" && data.length < 20) notifications(`El pedido ${data}, ha sido cancelado. Si el surtido de la orden esta en progreso, retorne los productos y cambie el estado a enterado. Si no, de click de enterado.`, 'warning');
+                if (typeof(data) == "string" && data.length < 20) notifications(`El pedido ${data}, ha sido cancelado. Si el surtido de la 
+                orden esta en progreso, retorne los productos y cambie el estado a enterado. Si no, de click de enterado.`, 'warning');
 
                 sendData(response);
 
@@ -42,9 +43,9 @@ const actualizar = (data) => {
 
 let sendData = (data) => {
     let table = '';
-    ruta = ["NORTE", "SUR"];
-    let estatus = ['NUEVO', 'EN PROCESO', 'PARCIAL', 'COMPLETO', 'RUTA', 'CANCELADO', 'DETENIDO'];
-    prioridad_info = ["NORMAL", "NORMAL", "URGENTE"];
+    ruta = ["Norte", "Sur"];
+    let estatus = ['Nuevo', 'En Proceso', 'Parcial', 'Completo', 'Ruta', 'Cancelado', 'Detenido'];
+    prioridad_info = ["Normal", "Normal", "Urgente"];
     colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E"];
     let numeracion_pedidos = 1,
         numero_de_pedidos_urgentes = 0;
@@ -82,7 +83,7 @@ const chanche_estatus_almacen = (order) => {
         url: "/almacen/cambio_estado",
         data: { estado_nuevo, order },
         success: function(response) {
-            notifications(`El status del pedido ${order} ha sido cambiado `, 'success');
+            notifications(`El estado del pedido ${order} ha sido cambiado `, 'success');
             pedidos();
             actualizar();
         }
