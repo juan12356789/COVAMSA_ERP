@@ -63,18 +63,18 @@ let cambios_status_pedidos = (current_status, order) => {
     if (current_status == "CANCELADO") return notifications("Este pedido ha sido cancelado no es posible cambiar  el status", 'warning');
     let opciones_pago = '';
     switch (current_status) {
-        case "NUEVO":
+        case "Nuevo":
             opciones_pago = `<option value="2">En Proceso</option>`;
             break;
-        case "EN PROCESO":
+        case "En Proceso":
             opciones_pago = `<option value="3">Parcial</option>
                                 <option value="4">Completo</option>`;
             break;
-        case "PARCIAL":
+        case "Parcial":
             opciones_pago = `<option value="2">EN PROGRESO</option>
                                <option value="5">RUTA</option>`;
             break;
-        case "COMPLETO":
+        case "Completo":
             opciones_pago = `<option value="2">EN PROGRESO</option>
                                 <option value="5">RUTA</option>`;
             break;

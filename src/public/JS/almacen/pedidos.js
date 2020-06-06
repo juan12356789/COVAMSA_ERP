@@ -66,7 +66,7 @@ let sendData = (data) => {
                   <td style="background-color:${colores[data.estatus - 1]}" ondblclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.num_pedido}')">${estatus[data.estatus - 1]}</td>
                   <td >${prioridad_info[data.prioridad]}</td>
                   <td >${prioridadE[data.prioridadE]}</td>
-                  <td >  <p class="line-clamp" >${data.observacion}</p></td>
+                  <td ><p class="line-clamp" >${data.observacion}</p></td>
                   <td>${data.fecha_inicial}</td>
                
                 </tr>`;

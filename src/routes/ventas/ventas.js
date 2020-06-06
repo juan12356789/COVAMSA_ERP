@@ -4,8 +4,9 @@ const path = require("path");
 const multer = require("multer");
 const pool = require('../../database');
 const { isLoggedIn } = require('../../lib/auth');
-const nodemailer =  require('nodemailer');
-
+const upl = require('express-fileupload');
+const importExcel = require('convert-excel-to-json');
+const fs = require('fs');
 const rutimage = path.join(__dirname, "../../files");
 
 const storage = multer.diskStorage({
@@ -26,17 +27,62 @@ router.get('/', isLoggedIn, async(req, res) => {
 });
 
 router.post('/', async(req, res) => {
-    
+
     let clientes;
-    const empleado_id = await pool.query("SELECT id_empleados from empleados inner join acceso using(idacceso) where idacceso  = ?",req.user[0].idacceso);    
-    if (req.body.validaciones ==  1) {
-        clientes = await pool.query(`SELECT * FROM clientes  where  id_empleados = ${empleado_id[0].id_empleados}  and nombre like ?`, '%' + [req.body.words] + '%' );
+    const empleado_id = await pool.query("SELECT id_empleados from empleados inner join acceso using(idacceso) where idacceso  = ?", req.user[0].idacceso);
+    if (req.body.validaciones == 1) {
+        clientes = await pool.query(`SELECT * FROM clientes  where  id_empleados = ${empleado_id[0].id_empleados}  and nombre like ?`, '%' + [req.body.words] + '%');
     } else {
-        clientes = await pool.query("SELECT * FROM clientes where id_empleados = ?",empleado_id[0].id_empleados);
+        clientes = await pool.query("SELECT * FROM clientes where id_empleados = ?", empleado_id[0].id_empleados);
     }
 
     res.send(clientes);
 
+});
+
+
+router.post('/excel', (req, res) => {
+    let file = req.files.excel;
+    let filename = file.name;
+
+    file.mv('./excel/' + filename, async(err) => {
+
+        if (err) {
+
+            console.log(err);
+
+        } else {
+            let result = importExcel({
+                sourceFile: './excel/' + filename,
+                // header:{rows:15},
+                // columnTokey:{B:'cantidad',C:'Clave',F:'Descripción',O:'Importe'},
+                sheets: ['Sheet1']
+            });
+
+            const infoPedidos = {
+                cotizacion: '',
+                fecha: '',
+                cliente: '',
+                vendedor: '',
+                total: ''
+            };
+
+            for (let i = 0; i < result.Sheet1.length; i++) {
+
+                if (result.Sheet1[i].M == 'COTIZACIÓN No. :') infoPedidos.cotizacion = result.Sheet1[i].O;
+                if (result.Sheet1[i].M == 'Fecha') infoPedidos.fecha = result.Sheet1[i].O;
+                if (result.Sheet1[i].B == 'Cliente:') infoPedidos.cliente = result.Sheet1[i].D;
+                if (result.Sheet1[i].B == 'Vendedor :') infoPedidos.vendedor = result.Sheet1[i].C;
+                if (result.Sheet1[i].K == 'Total') infoPedidos.total = result.Sheet1[i].O;
+
+            }
+            console.log(infoPedidos);
+            const cliente = await pool.query("SELECT nombre FROM clientes where numero_interno = ?", infoPedidos.cliente);
+
+            infoPedidos.cliente = cliente[0].nombre;
+            res.send(infoPedidos);
+        }
+    });
 });
 
 router.post('/pagos', async(req, res) => {
@@ -53,44 +99,44 @@ router.post('/importe', async(req, res) => {
 
 });
 
-router.post("/updateTrasferencia",upload.fields([{ name: 'comprobante_pago', maxCount: 1  }]), async(req , res)=>{
+router.post("/updateTrasferencia", upload.fields([{ name: 'comprobante_pago', maxCount: 1 }]), async(req, res) => {
     console.log(req.files);
     console.log(req.body);
-        const  updateComprobante  =  await pool.query(`UPDATE pedidos SET comprobante_pago='${req.body.comprobante_pago}'  ,ruta_pdf_comprobante_pago='${req.files.comprobante_pago[0].filename}', estatus = 1 WHERE num_pedido = ?`,req.body.num_pedido); 
-        res.end(req.body.comprobante_pago);
-        
-    
-    
-}); 
-   
-router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { name: 'num_pedido', maxCount: 1 },{ name: 'comprobante_pago', maxCount: 1 }]),async(req, res) => {
+    const updateComprobante = await pool.query(`UPDATE pedidos SET comprobante_pago='${req.body.comprobante_pago}'  ,ruta_pdf_comprobante_pago='${req.files.comprobante_pago[0].filename}', estatus = 1 WHERE num_pedido = ?`, req.body.num_pedido);
+    res.end(req.body.comprobante_pago);
+
+
+
+});
+
+router.post("/add", upload.fields([{ name: 'orden_compra', maxCount: 1 }, { name: 'num_pedido', maxCount: 1 }, { name: 'comprobante_pago', maxCount: 1 }]), async(req, res) => {
     console.log(req.body);
-              
-    if (req.body.nombre != undefined && req.body.nombre != ' '  && req.files.num_pedido != undefined && req.body.observaciones.length < 250) {
+
+    if (req.body.nombre != undefined && req.body.nombre != ' ' && req.files.num_pedido != undefined && req.body.observaciones.length < 250) {
         const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre);
         let f = new Date();
         const insert = {
             id_pedido: null,
             id_empleado: cliente_id[0].id_empleados,
             idcliente: cliente_id[0].idcliente,
-            orden_de_compra: req.body.orden != undefined?req.body.orden:'' ,
+            orden_de_compra: req.body.orden != undefined ? req.body.orden : '',
             ruta: req.body.ruta,
-            estatus: (req.body.tipos_pago == 1  && req.body.comprobante_pago == '')? 7 : 1 ,
-            ruta_pdf_orden_compra: req.files.orden_compra != undefined? req.files.orden_compra[0].filename: '',
-            ruta_pdf_pedido: req.files.num_pedido != undefined? req.files.num_pedido[0].filename: '',
-            ruta_pdf_comprobante_pago: req.files.comprobante_pago != undefined? req.files.comprobante_pago[0].filename: '',
+            estatus: (req.body.tipos_pago == 1 && req.body.comprobante_pago == '') ? 7 : 1,
+            ruta_pdf_orden_compra: req.files.orden_compra != undefined ? req.files.orden_compra[0].filename : '',
+            ruta_pdf_pedido: req.files.num_pedido != undefined ? req.files.num_pedido[0].filename : '',
+            ruta_pdf_comprobante_pago: req.files.comprobante_pago != undefined ? req.files.comprobante_pago[0].filename : '',
             num_pedido: req.body.numeroPedido,
             observacion: req.body.observaciones,
             fecha_inicial: f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes(),
-            comprobante_pago: req.body.comprobante_pago != undefined && req.body.comprobante_pago ?req.body.comprobante_pago:'' ,
+            comprobante_pago: req.body.comprobante_pago != undefined && req.body.comprobante_pago ? req.body.comprobante_pago : '',
             importe: req.body.importe,
             prioridad: req.body.prioridad,
-            tipo_de_pago:req.body.tipos_pago
+            tipo_de_pago: req.body.tipos_pago
         };
-        
+
         await pool.query("INSERT INTO pedidos set ? ", [insert]);
 
-        const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
+        const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,prioridadE,observacion,DATE_FORMAT(fecha_inicial,'%y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
                                         FROM pedidos`);
         res.send(pedidos);
 
@@ -119,4 +165,3 @@ router.post('/cancel', async(req, res) => {
 });
 
 module.exports = router;
-
