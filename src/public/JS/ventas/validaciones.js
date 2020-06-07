@@ -20,24 +20,8 @@ $("#inputBusqueda").click(function(e) {
 let clientes = (words = '') => {
     let validacio = 1;
     if (words.length == 0 || words.length == 1) validacio = 2;
-    $.post("/ventas", { words: words, validaciones: validacio }, function(data) {
-        // <<<<<<< HEAD
-        // <<<<<<< HEAD
-        // <<<<<<< HEAD
+    $.post("/ventas", { words: words, validaciones: validacio }, function(data) {1
         console.log(data);
-        // if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de datos...<p>"; ===
-        // === =
-        // if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de dato...<p>"; >>>
-        // >>> > bfecd9566e1c0b057d0a57fc643948f622f20d82
-        //     ===
-        //     === =
-        //     if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de dato...<p>"; >>>
-        //     >>> > fd949e35a2d132065a7e315045a037fe660a265e
-        //     ===
-        //     === =
-        //     console.log(data);
-        // if (data.length == 0) return document.getElementById("clientes").innerHTML = "<br><p>No se encuentra en la base de datos...<p>"; >>>
-        // >>> > note8
         let table = '';
         data.forEach(data => {
             table += `
@@ -185,29 +169,6 @@ let cancelOrder = ( order ) =>{
 }; 
 
 
-function myFunction() {
-   console.log('hola');
-   
-  }
-let checkInput = () =>{
-
-    console.log('hola');
-    
-
-    // $("#orden").keypress(function (e) { 
-    //     console.log($("#orden").val() );
-    //     if($("#orden").val() != '' || $("#orden").val() !=' ' ){
-    //             document.getElementById("orden").required =  true; 
-    //             document.getElementById("orden_pdf").required = true; 
-    //     }else{
-    //         console.log('hoolal');
-            
-    //         document.getElementById("orden").required =  false; 
-    //         document.getElementById("orden_pdf").required = false;
-    //     }
-    // });
-
-};
 
 // socket -----------
 const pedidos = (data) => {
@@ -239,13 +200,18 @@ $("#prioridad").click(function(e) {
 
 let pdf_orden  =  document.getElementById('orden_pdf');
 let orden_compra =  document.getElementById('orden') ;
-
+let cancelarOrden =() =>{
+ 
+    
+    location.reload(true);
+};
  $(function () {  
     $("#imgct").submit(function (e) { 
         $('#Ventana_Modal').modal('hide'); 
         e.preventDefault();
         var formData = new FormData(document.getElementById("imgct"));
-        formData.append("dato", "valor");
+        formData.append("productosArray", excelInfo);
+        
         if((pdf_orden.value  !=  "" && orden_compra.value == "") || (pdf_orden.value  ==  "" && orden_compra.value != "")  ) return notifications("Ingrese el número de orden de compra y seleccione el archivo",'warning');
         $.ajax({
             url: "/ventas/add",
@@ -259,11 +225,26 @@ let orden_compra =  document.getElementById('orden') ;
                 $('button[type="button"]').attr('disabled', 'disabled');
                 $('select').attr('disabled', 'disabled');
                 $("#spinner").show(); // Le quito la clase que oculta mi animación 
+                alert("Este proceso puedo tardar un pooc tiempo");
 
             },
             success: function(response) {
+                
+                if(response == "null"){
+                    $('input[type="text"]').removeAttr('disabled');
+                    $('input[type="file"]').removeAttr('disabled');
+                    $('button[type="submit"]').removeAttr('disabled');
+                    $('button[type="button"]').removeAttr('disabled');
+                    $('select').removeAttr('disabled');
+                    $("#comprobante").hide();
+                    $("#input").hide();
+                    $("#spinner").hide();
+                    $("#imgct").hide();
+                    return  notifications("Esta orden ya esta en proceso ",'warning'); 
+                } 
 
                 if (response == 'false') {
+                    console.log('hola');
                     // alert('El pedido no ha sigo  guardado favor de revisar los campos ');
                     $('input[type="text"]').removeAttr('disabled');
                     $('input[type="file"]').removeAttr('disabled');
@@ -273,8 +254,11 @@ let orden_compra =  document.getElementById('orden') ;
                     $("#comprobante").hide();
                     $("#input").hide();
                     $("#spinner").hide();
+                    $("#imgct").hide();
                     notifications("No se pudo guardar su pedido favor de checar sus campos",'warning'); 
                 } else {
+               
+                    
                     pedidos(response);
                     pedidos_vendedores();
                     notifications("Su pedido se ha guardado con éxito",'success'); 
@@ -290,6 +274,7 @@ let orden_compra =  document.getElementById('orden') ;
                     $("#input").hide();
                     cliente(' ');
                     $("#inputCliente").hide();
+                    $("#imgct").hide();
                 }
             },
             cache: false,

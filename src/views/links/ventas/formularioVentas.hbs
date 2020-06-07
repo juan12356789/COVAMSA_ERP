@@ -106,14 +106,17 @@
       </div>
       <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
         <div class="card-body">
-
-                <input type="file" name="excel" id="excel">
-               <button onclick="uploadExcel()" > Importar </button>
-                      
+          <div  id="ocultar_excel">
+            <input type="file" name="excel" id="excel">
+            <button onclick="uploadExcel()" > Importar </button>
+            
+          </div>     
           <form enctype="multipart/form-data" method="post" id="imgct" class="columinput">
-
+          
             <div class="jumbotron">
               <div class="container">
+                  <button class="btn btn-primary" >Detalle</button>
+                    <button class="btn btn-danger" onclick="cancelarOrden()" >Cancela</button>
                 <div class="row ">
                   <label for="oc" class="col-sm-2 col-form-label">Orden de Compra:</label>
                   <div class="col-sm-4">
@@ -140,7 +143,7 @@
                     </div>
                     {{!-- <div id="inputCliente"></div> --}}
                        <div class="col-sm-14">
-                          <input type="text"  class="form-control valid border border-secondary" id="nombre"  name="nombre" require readonly >
+                          <input type="text"  class="form-control valid border border-secondary" id="nombre_cliente"  name="nombre_cliente" require readonly >
                       </div>
                     {{!-- <button type="button" class="btn btn-dark btn-lg btn-block " id="tusClientes" data-toggle="modal"
                       data-target="#staticBackdrop" href="/ventas/busquedaCliente" role="button" aria-expanded="false"
@@ -386,19 +389,7 @@
 {{!-- <script src="JS/ventas/importe2D.js"></script> --}}
 <script src="JS/emails/email.js"></script>
 
-{{!-- 
-<script>
-  var input = document.getElementById('input');
-  function carg(elemento) {
-    d = elemento.value;
 
-    if (d == "2" || d == "3") {
-      input.disabled = false;
-    } else {
-      input.disabled = false;
-    }
-  }
-</script> --}}
 
 <script>
   let intentos = 0;
