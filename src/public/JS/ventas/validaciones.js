@@ -100,8 +100,10 @@ $(document).ready(function() {
 
                                     }
                                 },
+                                { data: 'prioridadE' },
                                 { data: 'ruta' },
                                 { data: 'importe' },
+
                                 //  { data: 'nombre_estatus' },
                                 {
                                     sortable: false,

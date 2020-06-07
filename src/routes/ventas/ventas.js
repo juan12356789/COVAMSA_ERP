@@ -131,6 +131,7 @@ router.post("/add", upload.fields([{ name: 'orden_compra', maxCount: 1 }, { name
             comprobante_pago: req.body.comprobante_pago != undefined && req.body.comprobante_pago ? req.body.comprobante_pago : '',
             importe: req.body.importe,
             prioridad: req.body.prioridad,
+            prioridadE: req.body.prioridadE,
             tipo_de_pago: req.body.tipos_pago
         };
 

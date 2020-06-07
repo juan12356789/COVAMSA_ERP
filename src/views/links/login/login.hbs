@@ -48,7 +48,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-key"></i></span>
                     </div>
-                    <input type="password" id="campo"  onkeyup="validar()" name="password" class="form-control"  required class="inputFormu"  placeholder="Contraseña" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*" title="Debe tener al menos una mayúscula, una minúscula y un dígito">
+                    <input type="password" id="campo"  onkeyup="validar()" name="password" class="form-control"  required class="inputFormu"  placeholder="Contraseña" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*" title="El password es incorrecto, intente de nuevo">
                 </div>
 
             {{!-- ingresar- Comenzar --}}
@@ -104,6 +104,7 @@ return true;
 document.onmousedown = right; 
 </script>
 
+{{!-- segun bloques esto --}}
 <script>
     let intentos = 0;
 
@@ -114,7 +115,7 @@ document
       valido = document.getElementById('campoOK')
 
 
-    if (intentos >= 3) {
+    if (intentos >= 2) {
       return;
     }
 
@@ -126,7 +127,7 @@ document
       intentos++;
       valido.innerText = "intentos: " + intentos;
 
-      if (intentos >= 3) {
+      if (intentos >= 2) {
         valido.innerText = "Este usuario ha sido deshabilitado por intentos fallidos de acceso";
       }
     }

@@ -81,7 +81,7 @@ const io = SocketIO(server);
 
 io.on('connection', (socket) => {
     socket.on('data:pedidos', (data) => {
-        
+
         io.sockets.emit('data:pedidos', data)
     });
 });
