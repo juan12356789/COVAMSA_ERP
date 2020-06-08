@@ -115,7 +115,7 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
 
             let producto = await pool.query("SELECT idProducto from productos where clave = ?" , [partidas_info.Sheet1[i].C]); 
             if(partidas_info.Sheet1[i].C == "Clave") cont_partidas++; 
-            if(producto.length > 0 )  await pool.query(`INSERT INTO partidas_productos VALUES (null,${partidas_pedido[cont_partidas].idPartida},${producto[0].idProducto},${parseInt(partidas_info.Sheet1[i].B.replace(',',''))}) `);
+            if(producto.length > 0 )  await pool.query(`INSERT INTO partidas_productos VALUES (null,${partidas_pedido[cont_partidas].idPartida},${producto[0].idProducto},${parseInt(partidas_info.Sheet1[i].B.replace(',',''))},0) `);
 
         }
         const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
