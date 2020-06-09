@@ -9,11 +9,6 @@ router.get('/', (req, res) => {
     res.render('links/login/login');
 });
 
-router.get('/', (req, res) => {
-    if (req.name) return res.redirect('/menu');
-    res.render('links/login/login');
-});
-
 
 router.post('/', (req, res, next) => {
     passport.authenticate('local.signin', {
