@@ -33,10 +33,7 @@
         {{!-- <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a> --}}
       </li>
       
-      <li class="nav-item">
-        {{!-- <a class="nav-link" hrefLink</a> --}}
-        <a class="nav-link" href=""></a></a>
-      </li>
+     
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Mis Módulos
@@ -50,6 +47,16 @@
       <li class="nav-item">
         {{!-- <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> --}}
       </li>
+{{!-- que no se pierda y no se olvide su nombre al usuario xd --}}
+       <li class="nav-item">
+        <a class="nav-link" href="">Usuario:</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+           {{#each name}}
+             <a class="dropdown-item" href="{{this.direccion}}"></a>
+           {{/each }}
+        </div>
+      </li>
+
     </ul>
     <form class="form-inline my-2 my-lg-0">
     <a   id="cerrar" href="/logout"   class="btn btn-danger"> Cerrar Sesión </a>
@@ -70,5 +77,5 @@
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
 
- <script src="JS/ventas/validacionCerrar.js" ></script> 
+ {{!-- <script src="JS/ventas/validacionCerrar.js" ></script>  --}}
 

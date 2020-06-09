@@ -12,9 +12,15 @@ router.post('/id', async(req, res) => {
     res.send(user[0].tipo_usuario);
 });
 
+
 router.post('/', async(req, res) => {
     const profile = await pool.query("select * from  acceso inner join  empleados using(idacceso) where idacceso  = ?", req.user[0].idacceso);
     res.send(profile[0]);
+});
+
+router.post('/id', async(req, res) => {
+    const name = await pool.query("SELECT nombre,apellido_paterno,apellido_materno FROM empleados WHERE  idacceso = ? ", req.name[0].idacceso);
+    res.send(name[0].id_empleados);
 });
 
 router.post('/updatePassword', async(req, res) => {

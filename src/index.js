@@ -57,6 +57,7 @@ app.use((req, res, next) => { // se usa para ver que variable son accedidadas de
     app.locals.success = req.flash('success');
     app.locals.error = req.flash('error');
     app.locals.user = req.user;
+    app.locals.name = req.name;
     next(); // toma la infotmacion del usuario 
 });
 // routes 
