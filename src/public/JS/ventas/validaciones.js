@@ -71,12 +71,18 @@ $(document).ready(function() {
 
             dataTable = $("#orders").DataTable({
                         "order": [
-                            [9, "desc"]
+                            [10, "desc"]
                         ],
                         "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                             if (aData.estatus == 6) $('td', nRow).css('color', 'red');
                         },
-                        columns: [{
+                        columns: [
+                            {
+                                sortable: false,
+                                "render": function(data, type, full, meta) {
+                                    return `<i class="fas fa-file-invoice"  onclick="orderDatailMisPedidos('${full.num_pedido}')"  ></i>`;
+                                }
+                            },{
                                     sortable: false,
                                     "render": function(data, type, full, meta) {
                                         return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}"  style="a {color:#130705;} " >${full.orden_de_compra}</a>`;
@@ -184,7 +190,11 @@ socket.on('data:pedidos', function(data) {
 
 //---------------------------------------
 
+const orderDatai = () =>{
 
+
+
+}; 
 
 // componente guardar  
 var correoPrioridad = document.getElementById('prioridad');
@@ -225,7 +235,7 @@ let cancelarOrden =() =>{
                 $('button[type="button"]').attr('disabled', 'disabled');
                 $('select').attr('disabled', 'disabled');
                 $("#spinner").show(); // Le quito la clase que oculta mi animación 
-                alert("Este proceso puedo tardar un pooc tiempo");
+                notifications("Este proceso puede tardar un poco de tiempo",'success'); 
 
             },
             success: function(response) {
@@ -240,6 +250,7 @@ let cancelarOrden =() =>{
                     $("#input").hide();
                     $("#spinner").hide();
                     $("#imgct").hide();
+                    $("#ocultar_excel").show();
                     return  notifications("Esta orden ya esta en proceso ",'warning'); 
                 } 
 
@@ -275,6 +286,7 @@ let cancelarOrden =() =>{
                     cliente(' ');
                     $("#inputCliente").hide();
                     $("#imgct").hide();
+                    $("#ocultar_excel").show();
                 }
             },
             cache: false,

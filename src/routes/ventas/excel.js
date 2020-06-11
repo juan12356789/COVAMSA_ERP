@@ -54,8 +54,9 @@ router.post('/', (req , res) => {
             }
             
              infoPedidos.numero_partidas = numero_partidas;
- 
+             console.log(result);
              
+
              try {
 
                  const cliente  = await pool.query("SELECT nombre FROM clientes where numero_interno = ?",infoPedidos.cliente);
@@ -72,5 +73,18 @@ router.post('/', (req , res) => {
         }
     });
 }); 
+
+router.post('/excelDetail', async (req , res)=>{
+        
+    let productos    = await pool.query(`select clave,nombre,cantidad 
+                                        from pedidos inner join partidas using(id_pedido) 
+                                                     inner join partidas_productos using(idPartida)
+                                                     inner join productos using(idProducto)
+                                        WHERE num_pedido = ? `,req.body.pedido);
+    res.send(productos);
+    
+
+           
+});
 
 module.exports = router;
