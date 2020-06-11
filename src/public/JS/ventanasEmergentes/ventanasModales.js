@@ -185,12 +185,10 @@ const tabla_partidas  = (id_pedido , status) =>{
 }; 
 
 const cantidadProducto = (cantidad  , id_partidas_productos,numero ,id , status) =>{
-    console.log(id,status);
-    
+
     let checkbox =   document.getElementById("completo"+numero).checked;
     let cantidad_entrante = $("#numero"+numero).val();
     if(checkbox) cantidad_entrante =  cantidad; 
-
     if($("#numero"+numero).val() > cantidad || $("#numero"+numero).val() < 0   ) return alert("Esa cantidad no es valida, tiene que ser menor o igual a la cantidad que se pide");
     $.ajax({type: "POST",url: "/almacen/cantidad_pedido",data: {numero: cantidad_entrante,id:id_partidas_productos},success: function (response) {
         tabla_partidas(`${id}`,`${status}`);    
