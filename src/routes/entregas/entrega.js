@@ -9,3 +9,7 @@ router.get('/', async(req, res) => {
     res.render('links/entregas/entregas');
 
 });
+
+
+
+module.exports = router;
