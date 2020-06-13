@@ -54,13 +54,14 @@ router.post('/', (req , res) => {
             }
             
              infoPedidos.numero_partidas = numero_partidas;
-             console.log(result);
+            
              
 
              try {
 
-                 const cliente  = await pool.query("SELECT nombre FROM clientes where numero_interno = ?",infoPedidos.cliente);
+                 const cliente  = await pool.query("SELECT nombre , prioridadE FROM clientes inner join preferencias_cliente using(idcliente) where numero_interno = ?",infoPedidos.cliente);
                  infoPedidos.cliente = cliente[0].nombre;
+                 infoPedidos.tipoDeEntega  =  cliente[0].prioridadE;
                  result.Sheet1.push(infoPedidos);
                  res.send(result);  
                  

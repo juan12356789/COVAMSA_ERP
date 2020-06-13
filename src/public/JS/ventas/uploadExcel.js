@@ -33,6 +33,7 @@ const  uploadExcel  = () =>{
           $("#importe").val(info.Sheet1[info.Sheet1.length - 1 ].total.replace(',',''));
           $("#numero_partidas").val(info.Sheet1[info.Sheet1.length - 1 ].numero_partidas);
           $("#nombre_cliente").val(info.Sheet1[info.Sheet1.length - 1 ].cliente);
+          $("#tipo_entrega").val(info.Sheet1[info.Sheet1.length - 1 ].prioridadE == 0 ? "Entrega parcial" : "Entrega  completo" );
           cliente(info.cliente);
 
         });

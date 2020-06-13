@@ -168,6 +168,57 @@ let pedidos_urgentes_normales = (tipo_de_pedido, numero_pedido, tipo_prioridad) 
 
 };
 
+let info_tables = () =>{
+    info_table  = $("#data").DataTable({
+        columns: [
+            { data: 'clave' },
+            {data:'nombre'}
+
+        ]
+
+    });
+}; 
+
+let clientes = () =>{
+    info_clientes  = $("#clientes").DataTable({
+        columns: [
+            { data: 'nombre' },
+            {data:'numero_interno'}
+
+        ]
+
+    });
+}; 
+
+const info_admin = (  ) => {
+
+    $.ajax({type: "POST",url: "/admin/data",success: function (response) {
+    ;
+        
+    
+            info_table.rows().remove();
+            info_table.rows.add(response).draw();
+    
+            
+        }
+    });
+
+}; 
+const info_cliente = (  ) => {
+
+    $.ajax({type: "POST",url: "/admin/cliente",success: function (response) {
+        
+        
+        
+            info_clientes.rows().remove();
+            info_clientes.rows.add(response).draw();
+        
+            
+        }
+    });
+
+}; 
+
 let cancelOrder = (order) => {
 
     reson_to_cancel(order);

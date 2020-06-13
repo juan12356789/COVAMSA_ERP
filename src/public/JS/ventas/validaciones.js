@@ -174,8 +174,6 @@ let cancelOrder = ( order ) =>{
     
 }; 
 
-
-
 // socket -----------
 const pedidos = (data) => {
 
@@ -190,11 +188,10 @@ socket.on('data:pedidos', function(data) {
 
 //---------------------------------------
 
-const orderDatai = () =>{
-
-
-
-}; 
+const tipoEntrega  = () =>{
+    let  tipoEntrega =  document.getElementById("entrega").value;
+    $("#tipo_entrega").val( tipoEntrega == 0 ? "Entrega parcial" : "Entega completo" );
+};
 
 // componente guardar  
 var correoPrioridad = document.getElementById('prioridad');
@@ -221,7 +218,6 @@ let cancelarOrden =() =>{
         e.preventDefault();
         var formData = new FormData(document.getElementById("imgct"));
         formData.append("productosArray", excelInfo);
-        
         if((pdf_orden.value  !=  "" && orden_compra.value == "") || (pdf_orden.value  ==  "" && orden_compra.value != "")  ) return notifications("Ingrese el número de orden de compra y seleccione el archivo",'warning');
         $.ajax({
             url: "/ventas/add",
@@ -255,8 +251,6 @@ let cancelarOrden =() =>{
                 } 
 
                 if (response == 'false') {
-                    console.log('hola');
-                    // alert('El pedido no ha sigo  guardado favor de revisar los campos ');
                     $('input[type="text"]').removeAttr('disabled');
                     $('input[type="file"]').removeAttr('disabled');
                     $('button[type="submit"]').removeAttr('disabled');

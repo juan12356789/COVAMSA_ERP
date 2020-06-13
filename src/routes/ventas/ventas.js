@@ -56,8 +56,6 @@ router.post('/importe', async(req, res) => {
 });
 
 router.post("/updateTrasferencia",upload.fields([{ name: 'comprobante_pago', maxCount: 1  }]), async(req , res)=>{
-    console.log(req.files);
-    console.log(req.body);
         const  updateComprobante  =  await pool.query(`UPDATE pedidos SET comprobante_pago='${req.body.comprobante_pago}'  ,ruta_pdf_comprobante_pago='${req.files.comprobante_pago[0].filename}', estatus = 1 WHERE num_pedido = ?`,req.body.num_pedido); 
         res.end(req.body.comprobante_pago);
         
@@ -66,6 +64,7 @@ router.post("/updateTrasferencia",upload.fields([{ name: 'comprobante_pago', max
 }); 
    
 router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { name: 'num_pedido', maxCount: 1 },{ name: 'comprobante_pago', maxCount: 1 }]),async(req, res) => {
+   
    
    
     
@@ -115,7 +114,13 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
 
             let producto = await pool.query("SELECT idProducto from productos where clave = ?" , [partidas_info.Sheet1[i].C]); 
             if(partidas_info.Sheet1[i].C == "Clave") cont_partidas++; 
-            if(producto.length > 0 )  await pool.query(`INSERT INTO partidas_productos VALUES (null,${partidas_pedido[cont_partidas].idPartida},${producto[0].idProducto},${parseInt(partidas_info.Sheet1[i].B.replace(',',''))},0) `);
+            // console.log(producto);
+            
+            if( producto.length > 0 ){
+                    console.log(partidas_pedido[cont_partidas].idPartida,producto[0].idProducto,parseInt(partidas_info.Sheet1[i].B.replace(',','')));
+                    
+                await pool.query(`INSERT INTO partidas_productos VALUES (null , ${partidas_pedido[cont_partidas].idPartida} , ${producto[0].idProducto},${parseInt(partidas_info.Sheet1[i].B.replace(',',''))}  ,${0}) `);
+            }  
 
         }
         const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 

@@ -90,11 +90,11 @@
   <div class="accordion" id="accordionExample">
     <div class="card">
       <div class="card-header" id="headingOne">
-        <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseOne"
+        <button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" data-target="#collapseOne"
           aria-expanded="true" aria-controls="collapseOne">
           Agregar Pedidos
         </button>
-        <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseTwo"
+        <button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" data-target="#collapseTwo"
           aria-expanded="false" aria-controls="collapseTwo">
           Mis Pedidos
         </button>
@@ -238,7 +238,8 @@
                 
                Tipo de Entrega:
                 <div>
-                <select class="custom-select" id="prioridad" name="prioridad" >
+                  <input type="text" name="tipo_entrega" readonly  class="form-control" id="tipo_entrega">
+                <select class="custom-select" id="entrega"  onchange="tipoEntrega();"  name="entrega" >
                   <option value="0">Entrega Parcial</option>
                   <option value="1">Entrega Completa</option> 
                 </select>
@@ -354,9 +355,9 @@
            
               <tr >
                 <th>Partidas</th>
-                <th  class="bg-warning">Orden De Compra</th>
-                <th  class="bg-success">Número De Pedido</th>
-                <th  class="bg-primary">Comprabante De Pago</th>
+                <th  style="background-color: #A79F21;">Orden De Compra</th>
+                <th  style="background-color: #229954;">Número De Pedido</th>
+                <th  style="background-color: #1A5276;">Comprabante De Pago</th>
                 <th >Tipo De Pago</th>
                 <th >Ruta</th>
                 <th style="white-space:pre;">Importe</th>
@@ -392,30 +393,30 @@
 
 
 <script>
-  let intentos = 0;
-
-document
-  .getElementById('validar')
-  .addEventListener('click', function(evt) {
-    const campo = document.getElementById('campo'),
-      valido = document.getElementById('campoOK')
-
-
-    if (intentos >= 3) {
-      return;
-    }
-
-    if (/^\d+$/g.test(campo.value)) {
-      valido.innerText = "válido";
-      intentos = 0;
-
-    } else {
-      intentos++;
-      valido.innerText = "incorrecto, intentos: " + intentos;
-
-      if (intentos >= 3) {
-        valido.innerText = "Nunca mas vas a poder intentar";
-      }
-    }
-  });
+//   let intentos = 0;
+// 
+// document
+//   .getElementById('validar')
+//   .addEventListener('click', function(evt) {
+//     const campo = document.getElementById('campo'),
+//       valido = document.getElementById('campoOK')
+// 
+// 
+//     if (intentos >= 3) {
+//       return;
+//     }
+// 
+//     if (/^\d+$/g.test(campo.value)) {
+//       valido.innerText = "válido";
+//       intentos = 0;
+// 
+//     } else {
+//       intentos++;
+//       valido.innerText = "incorrecto, intentos: " + intentos;
+// 
+//       if (intentos >= 3) {
+//         valido.innerText = "Nunca mas vas a poder intentar";
+//       }
+//     }
+//   });
 </script>

@@ -29,7 +29,7 @@
         </div>
     
         <div class="card-body">
-            <form action="" method="post"S>
+            <form action=""  method="post" >
             
             {{!-- correo electronico --}}
                 <div class="input-group form-group">
@@ -47,7 +47,8 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-key"></i></span>
                     </div>
-                    <input type="password" id="campo"  onkeyup="validar()" name="password" class="form-control"  required class="inputFormu"  placeholder="Contraseña" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*" title="Debe tener al menos una mayúscula, una minúscula y un dígito">
+                    <input type="password" id="campo"  onkeyup="validar()" name="password" class="form-control"  required class="inputFormu"  placeholder="Contraseña" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*"
+                     title="El password es incorrecto, intente de nuevo">
                 </div>
 
             {{!-- ingresar- Comenzar --}}
@@ -80,7 +81,7 @@
   crossorigin="anonymous"></script>
 <script src="JS/buttonLogin.js"></script>
 
-
+<script src="JS/ventas/ventanasModales.js"></script>
 
 <!--hacer que usuario ponga sus datos en los input, porque no va a poder copiar y pegar --->
 <script language="JavaScript"> 
@@ -123,7 +124,11 @@ document
       valido.innerText = "intentos: " + intentos;
 
       if (intentos >= 3) {
-        valido.innerText = "Este usuario ha sido deshabilitado por intentos fallidos de acceso";
+          swal({
+           title: `Usuario bloqueado notifique al administrador`,
+            type: `warning`,
+           showConfirmButton: true
+         });
       }
     }
   });

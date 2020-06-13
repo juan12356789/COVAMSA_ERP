@@ -132,7 +132,6 @@ let cambios_status_pedidos = (current_status, order) => {
                           <th scope="col" >Cantidad </th>
                           <th scope="col" >Cantidad surtida</th>
                           <th scope="col" >  Estado</th>
-                          <th scope="col"> Completo</th>
                           <th scope="col"  >Guardar</th>
 
                       </tr>
@@ -166,14 +165,13 @@ const tabla_partidas  = (id_pedido , status) =>{
                 cont++; 
                 tabla_partidas+= `
                 <tr>
-                <th scope="col" >${response.clave}</th>
-                <th scope="col" >${response.nombre}</th>
-                <th scope="col"  >${response.cantidad}</th>
-                ${ status == "En Proceso" ? `<th scope='col'  ><input type='number' value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  maxlength="5"  min="1" max="5" name='numero${numero}' id='numero${numero}' ></th>`:`<th><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </th>` }
-                <th>${response.cantidad_surtida == response.cantidad?"Completo":"Incompleto" }</th>
-                ${ status == "En Proceso" ?`<th><input type="checkbox" name="completo${cont}" id="completo${cont}"></th>`:`<th><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></th>`}
-                ${ status == "En Proceso" ?`<th><button class="btn btn-success" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"  >Guardar</button></th>`:"<th><button  disabled class='btn btn-success' >Guardar</button></th>"}
-              </tr>`;
+                    <th scope="col" >${response.clave}</th>
+                    <th scope="col" >${response.nombre}</th>
+                    <th scope="col"  >${response.cantidad}</th>
+                    ${ status == "En Proceso" ? `<th scope='col'  ><input type='number' value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  maxlength="5"  min="1" max="5" name='numero${numero}' id='numero${numero}' ></th>`:`<th><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </th>` }
+                    ${ status == "En Proceso" ?`<th><input type="checkbox"  ${response.cantidad_surtida == response.cantidad?"checked":""} name="completo${cont}" id="completo${cont}"></th>`:`<th><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></th>`}
+                    ${ status == "En Proceso" ?`<th><button class="btn btn-success" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"  >Guardar</button></th>`:"<th><button  disabled class='btn btn-success' >Guardar</button></th>"}
+                </tr>`;
 
             });
             document.getElementById("numero_partidas").innerHTML = `Número de partidas: ${cont}`;
@@ -189,7 +187,8 @@ const cantidadProducto = (cantidad  , id_partidas_productos,numero ,id , status)
     let checkbox =   document.getElementById("completo"+numero).checked;
     let cantidad_entrante = $("#numero"+numero).val();
     if(checkbox) cantidad_entrante =  cantidad; 
-    if($("#numero"+numero).val() > cantidad || $("#numero"+numero).val() < 0   ) return alert("Esa cantidad no es valida, tiene que ser menor o igual a la cantidad que se pide");
+    if($("#numero"+numero).val() > cantidad  ) return notifications("La cantidad que introdujo es mayor a las piezas que se  solicitan ","warning"); 
+    if( $("#numero"+numero).val() < 0 )return notifications("No puede tener valores menores a 0 ","warning");
     $.ajax({type: "POST",url: "/almacen/cantidad_pedido",data: {numero: cantidad_entrante,id:id_partidas_productos},success: function (response) {
         tabla_partidas(`${id}`,`${status}`);    
         notifications("La cantidad ha sido guardada","success"); 
