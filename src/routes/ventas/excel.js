@@ -21,6 +21,7 @@ router.post('/', (req , res) => {
             console.log(err);
 
         }else{
+            const informacion_partida  = []; 
             let result = importExcel({
                 sourceFile: './excel/'+filename,
                 // header:{rows:15},
@@ -36,6 +37,7 @@ router.post('/', (req , res) => {
                 total:'',
                 numero_partidas : ''
             }; 
+
             let numero_partidas = 0 , contador  = 0; 
             for (let i = 0; i < result.Sheet1.length; i++) {
 
@@ -43,25 +45,25 @@ router.post('/', (req , res) => {
                     if(result.Sheet1[i].M == 'Fecha') infoPedidos.fecha =  result.Sheet1[i].O;
                     if(result.Sheet1[i].B == 'Cliente:')infoPedidos.cliente =  result.Sheet1[i].D;
                     if(result.Sheet1[i].B == 'Vendedor :'){
-                        
                         infoPedidos.vendedor =  result.Sheet1[i].C;
                         numero_partidas++; 
-
                     }
-                    if(numero_partidas >  contador ){
-                        contador = numero_partidas; 
-                    }
+                    if(numero_partidas >  contador ) contador = numero_partidas;
                     if(result.Sheet1[i].K == 'Total')infoPedidos.total =  result.Sheet1[i].O;
-
+                    
             }
-             infoPedidos.numero_partidas = numero_partidas; 
-             console.log(result);
+            
+             infoPedidos.numero_partidas = numero_partidas;
+            
              
+
              try {
 
-                 const cliente  = await pool.query("SELECT nombre FROM clientes where numero_interno = ?",infoPedidos.cliente);
+                 const cliente  = await pool.query("SELECT nombre , prioridadE FROM clientes inner join preferencias_cliente using(idcliente) where numero_interno = ?",infoPedidos.cliente);
                  infoPedidos.cliente = cliente[0].nombre;
-                 res.send(infoPedidos);  
+                 infoPedidos.tipoDeEntega  =  cliente[0].prioridadE;
+                 result.Sheet1.push(infoPedidos);
+                 res.send(result);  
                  
              } catch (error) {
                  
@@ -72,5 +74,18 @@ router.post('/', (req , res) => {
         }
     });
 }); 
+
+router.post('/excelDetail', async (req , res)=>{
+        
+    let productos    = await pool.query(`select clave,nombre,cantidad 
+                                        from pedidos inner join partidas using(id_pedido) 
+                                                     inner join partidas_productos using(idPartida)
+                                                     inner join productos using(idProducto)
+                                        WHERE num_pedido = ? `,req.body.pedido);
+    res.send(productos);
+    
+
+           
+});
 
 module.exports = router;

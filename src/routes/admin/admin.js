@@ -35,6 +35,17 @@ router.post('/urgentes' ,  async (req , res)=>{
        
 });
 
+router.post('/data' , async (req , res )=>{
+            const productos  = await pool.query("select clave , nombre from productos "); 
+            res.send(productos);
+
+}); 
+
+router.post('/cliente' , async (req , res )=>{
+    const clientes  = await pool.query("select nombre,numero_interno from clientes "); 
+    res.send(clientes);
+
+}); 
 
 
 

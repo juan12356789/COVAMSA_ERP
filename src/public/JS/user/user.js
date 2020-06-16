@@ -68,17 +68,17 @@ const userId = () => {
                 buttons = `
                 
                 
-                <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                   Mi perfil
                 </button>
-                <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" id="empleadosControl" data-target="#collapseExampletwo" aria-expanded="false" aria-controls="collapseExample">
+                <button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" id="empleadosControl" data-target="#collapseExampletwo" aria-expanded="false" aria-controls="collapseExample">
                   Empleados
                 </button>
                
                 `;
             } else {
                 buttons = `
-                <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                  Mi perfil
                 </button>`;
             }
@@ -101,6 +101,7 @@ const users = (option) => {
     });
 
 };
+
 
 
 
