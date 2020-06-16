@@ -2,7 +2,7 @@ module.exports = {
     database: {
         host: 'localhost',
         user: 'root',
-        // password: 'juan',
+        // password: 'hola',
         database: 'covamsa_desarrollo',
         port: 3306
     }

@@ -2,18 +2,14 @@
   html {
     font-size: 14px;
   }
-
-
   p.segunda {
     font-size: 1rem;
   }
-
   @media screen and (orientation:portrait) {
     p.primera {
       font-size: 1rem;
     }
   }
-
   @media screen and (orientation:landscape) {
     p.primera {
       font-size: 1rem;
@@ -29,7 +25,6 @@
     height: 200px;
     overflow: auto;
   }
-
   .line-clamp {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -41,20 +36,16 @@
     font-family: sans-serif;
     line-height: 1.4;
   }
-
   .line-clamp:hover {
     -webkit-line-clamp: 100;
     cursor: pointer;
   }
-
   input[type=checkbox] {
     transform: scale(1.5);
   }
-
   #body {
     display: none;
   }
-
   textarea {
     box-sizing: border-box;
     height: 200px;
@@ -62,43 +53,35 @@
     padding: 5px 2px;
     width: 100%;
   }
-
   .borderojo {
     outline: none;
     border: 1px solid #f00;
   }
-
   .bordegris {
     border: 1px solid #d4d4d;
   }
-
   input:placeholder-shown {
     border-color: silver;
   }
-
   input:placeholder-shown {
     border-color: silver;
   }
-.opacity{   
-opacity: 0.7;
-filter:  alpha(opacity=50);  
-}
-.container-fluid {
-  max-height: 200px;
+  .container-fluid {
+  
+  padding-left: 200px;
+  padding-right: 200px;
 }
  
 </style>
 <html  lang="en">
 <meta charset="utf-8"> 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 {{!-- el contenido se muestra en español --}}
 <meta http-equiv="Content-Language" content="es"/>
-<div class="container-fluid">
+<div class="container-fluid ">
   <div class="accordion" id="accordionExample">
     <div class="card">
       <div class="card-header" id="headingOne">
-        {{!-- <h5 class="mb-0"> --}}
-          
         <button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" data-target="#collapseOne"
           aria-expanded="true" aria-controls="collapseOne">
           Agregar Pedidos
@@ -113,14 +96,18 @@ filter:  alpha(opacity=50);
       </div>
       <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
         <div class="card-body">
-
-                <input type="file" name="excel" id="excel">
-               <button onclick="uploadExcel()" > Importar </button>
-                      
+          <div  id="ocultar_excel">
+            <input type="file" name="excel" id="excel">
+            <button onclick="uploadExcel()" > Importar </button>
+            
+          </div>     
           <form enctype="multipart/form-data" method="post" id="imgct" class="columinput">
-
+          
             <div class="jumbotron">
               <div class="container">
+                  <button   type="button"class="btn btn-primary"  onclick="orderDetail()" >Detalle</button>
+                   <button  type="button" class="btn btn-danger" onclick="cancelarOrden()" >Cancela</button>
+                   <div  id="detallesPedido" ></div>
                 <div class="row ">
                   <label for="oc" class="col-sm-2 col-form-label">Orden de Compra:</label>
                   <div class="col-sm-4">
@@ -135,7 +122,7 @@ filter:  alpha(opacity=50);
                   <div class="col-sm-4">
                     
                     {{#each cliente }}
-                    
+                    <input type="text" class="form-control border border-secondary" value="{{nombre}}" name="cliente">
                     {{/each}}
                     
                     <div id="spinner">
@@ -147,7 +134,7 @@ filter:  alpha(opacity=50);
                     </div>
                     {{!-- <div id="inputCliente"></div> --}}
                        <div class="col-sm-14">
-                          <input type="text"  class="form-control valid border border-secondary" id="nombre"  name="nombre" require readonly >
+                          <input type="text"  class="form-control valid border border-secondary" id="nombre_cliente"  name="nombre_cliente" require readonly >
                       </div>
                     {{!-- <button type="button" class="btn btn-dark btn-lg btn-block " id="tusClientes" data-toggle="modal"
                       data-target="#staticBackdrop" href="/ventas/busquedaCliente" role="button" aria-expanded="false"
@@ -243,7 +230,8 @@ filter:  alpha(opacity=50);
                 
                Tipo de Entrega:
                 <div>
-                <select class="custom-select" id="prioridadE" name="prioridadE" >
+                  <input type="text" name="tipo_entrega" readonly  class="form-control" id="tipo_entrega">
+                <select class="custom-select" id="entrega"  onchange="tipoEntrega();"  name="entrega" >
                   <option value="0">Entrega Parcial</option>
                   <option value="1">Entrega Completa</option> 
                 </select>
@@ -351,22 +339,22 @@ filter:  alpha(opacity=50);
               </div>
             </div>
           </div>
-{{!-- <div class="opacity"> --}}
+          <div id="detalle_mis_pedidos" ></div>
           <div class="table-responsive">
           <table id="orders" class="table table-striped table-bordered " >
             
             <thead class="thead-dark">
            
-              <tr>
-                <th  style="background-color:#A79F21 ">Orden De Compra</th>
-                <th  style="background-color:#229954 ">Número De Pedido</th>
-                <th  style="background-color:#1A5276 ">Comprabante De Pago</th>
+              <tr >
+                <th>Partidas</th>
+                <th  style="background-color: #A79F21;">Orden De Compra</th>
+                <th  style="background-color: #229954;">Número De Pedido</th>
+                <th  style="background-color: #1A5276;">Comprabante De Pago</th>
                 <th >Tipo De Pago</th>
                 <th >Ruta</th>
-                <th >Importe</th>
+                <th style="white-space:pre;">Importe</th>
                 <th >Estatus</th>
                 <th >Prioridad</th>
-                <th> Tipo de Entrega</th>
                 <th >Observaciones</th>
                 <th ><pre><code>CÓDIGO CONVERTIDO A TEXT</code></pre>Fecha</th>
                 <th >Cancelar</th>
@@ -375,7 +363,6 @@ filter:  alpha(opacity=50);
 
           </table>
           </div>
-{{!-- </div> --}}
         </div>
       </div>
     </div>
@@ -395,45 +382,33 @@ filter:  alpha(opacity=50);
 {{!-- <script src="JS/ventas/importe2D.js"></script> --}}
 <script src="JS/emails/email.js"></script>
 
-{{!-- 
-<script>
-  var input = document.getElementById('input');
-  function carg(elemento) {
-    d = elemento.value;
 
-    if (d == "2" || d == "3") {
-      input.disabled = false;
-    } else {
-      input.disabled = false;
-    }
-  }
-</script> --}}
 
 <script>
-  let intentos = 0;
-
-document
-  .getElementById('validar')
-  .addEventListener('click', function(evt) {
-    const campo = document.getElementById('campo'),
-      valido = document.getElementById('campoOK')
-
-
-    if (intentos >= 3) {
-      return;
-    }
-
-    if (/^\d+$/g.test(campo.value)) {
-      valido.innerText = "válido";
-      intentos = 0;
-
-    } else {
-      intentos++;
-      valido.innerText = "incorrecto, intentos: " + intentos;
-
-      if (intentos >= 3) {
-        valido.innerText = "Nunca mas vas a poder intentar";
-      }
-    }
-  });
+//   let intentos = 0;
+// 
+// document
+//   .getElementById('validar')
+//   .addEventListener('click', function(evt) {
+//     const campo = document.getElementById('campo'),
+//       valido = document.getElementById('campoOK')
+// 
+// 
+//     if (intentos >= 3) {
+//       return;
+//     }
+// 
+//     if (/^\d+$/g.test(campo.value)) {
+//       valido.innerText = "válido";
+//       intentos = 0;
+// 
+//     } else {
+//       intentos++;
+//       valido.innerText = "incorrecto, intentos: " + intentos;
+// 
+//       if (intentos >= 3) {
+//         valido.innerText = "Nunca mas vas a poder intentar";
+//       }
+//     }
+//   });
 </script>

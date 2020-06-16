@@ -58,9 +58,10 @@ let reson_to_cancel = (order) => {
 };
 
 let cambios_status_pedidos = (current_status, order) => {
+    console.log(current_status);
+    
 
-
-    if (current_status == "CANCELADO") return notifications("Este pedido ha sido cancelado no es posible cambiar  el status", 'warning');
+    if (current_status == "Cancelado") return notifications("Este pedido ha sido cancelado no es posible cambiar  el status", 'warning');
     let opciones_pago = '';
     switch (current_status) {
         case "Nuevo":
@@ -81,10 +82,11 @@ let cambios_status_pedidos = (current_status, order) => {
 
     }
     $('#change_status').modal('show');
+    
     let nuevo_estatus = document.getElementById('estado_nuevo');
     let elementsHTML = `
         <div class="modal-header">
-            <h5 class="modal-title">Cambio de Status</h5>
+            <h5 class="modal-title">Cambio de Estado</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -92,6 +94,7 @@ let cambios_status_pedidos = (current_status, order) => {
         <div class="modal-body">
         <div class="row" >
             <div  class="col">
+            
                 <label>Estado actual: </label>
                 <input type="text" name="" id=""  class="form-control"  value="${current_status}" disabled >
              
@@ -102,23 +105,98 @@ let cambios_status_pedidos = (current_status, order) => {
             </div>
             <div class="col"  >
             
-                <label>Nuevo Estado:</label>
+            <label>Nuevo Estado:</label>
                         <select  id="estado_nuevo"   class="form-control">
                         ${opciones_pago}
                         </select>
-                 </div>       
+            </div>       
+                 
         </div>
+        <div class="row">
+            <div class="col">
+                <button value="0"  class="btn btn-primary"  onclick="chanche_estatus_almacen('${order}' )" >Aceptar</button>
+                <button value="1" type="button" class="btn btn-secondary"  id="cancelar"  data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+        <br><br>
+        <div class="row" >
+            <div class="col" >
+            <div id="numero_partidas" ></div>
+            <div class="table table-responsive">
+            <table class="table table-striped table-bordered">
+                  <thead class="thead-dark" >
+                      <tr>
+                          
+                          <th scope="col" >Clave </th>
+                          <th scope="col" >Nombre</th>
+                          <th scope="col" >Cantidad </th>
+                          <th scope="col" >Cantidad surtida</th>
+                          <th scope="col" >  Estado</th>
+                          <th scope="col"  >Guardar</th>
+
+                      </tr>
+                  </thead>
+
+                  <tbody id="partidas"></tbody>
+
+              </table>
+            </div>
+        </diV>
         </div>
         <div class="modal-footer">
-          <button value="0"  class="btn btn-primary"  onclick="chanche_estatus_almacen('${order}' )" >Aceptar</button>
-          <button value="1" type="button" class="btn btn-secondary"  id="cancelar"  data-dismiss="modal">Cancelar</button>
+         
         </div>
     `;
-
+    tabla_partidas(order,current_status);
     document.getElementById('status').innerHTML = elementsHTML;
 
 };
 
+const tabla_partidas  = (id_pedido , status) =>{
+ 
+    
+    $.ajax({type: "POST",url: "/almacen/partidas",data: {pedido:id_pedido},success: function (response) {
+            console.log(response);
+            let   partidasOp  = 0,cont = 0,numero = 0; 
+            let   tabla_partidas   = ``;
+            response.forEach(response => {
+                numero++; 
+                if(partidasOp < response.idPartida)partidasOp = response.idPartida;
+                cont++; 
+                tabla_partidas+= `
+                <tr>
+                    <th scope="col" >${response.clave}</th>
+                    <th scope="col" >${response.nombre}</th>
+                    <th scope="col"  >${response.cantidad}</th>
+                    ${ status == "En Proceso" ? `<th scope='col'  ><input type='number' value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  maxlength="5"  min="1" max="5" name='numero${numero}' id='numero${numero}' ></th>`:`<th><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </th>` }
+                    ${ status == "En Proceso" ?`<th><input type="checkbox"  ${response.cantidad_surtida == response.cantidad?"checked":""} name="completo${cont}" id="completo${cont}"></th>`:`<th><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></th>`}
+                    ${ status == "En Proceso" ?`<th><button class="btn btn-success" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"  >Guardar</button></th>`:"<th><button  disabled class='btn btn-success' >Guardar</button></th>"}
+                </tr>`;
+
+            });
+            document.getElementById("numero_partidas").innerHTML = `Número de partidas: ${cont}`;
+            document.getElementById('partidas').innerHTML = tabla_partidas;
+            
+        }
+    });
+    
+}; 
+
+const cantidadProducto = (cantidad  , id_partidas_productos,numero ,id , status) =>{
+
+    let checkbox =   document.getElementById("completo"+numero).checked;
+    let cantidad_entrante = $("#numero"+numero).val();
+    if(checkbox) cantidad_entrante =  cantidad; 
+    if($("#numero"+numero).val() > cantidad  ) return notifications("La cantidad que introdujo es mayor a las piezas que se  solicitan ","warning"); 
+    if( $("#numero"+numero).val() < 0 )return notifications("No puede tener valores menores a 0 ","warning");
+    $.ajax({type: "POST",url: "/almacen/cantidad_pedido",data: {numero: cantidad_entrante,id:id_partidas_productos},success: function (response) {
+        tabla_partidas(`${id}`,`${status}`);    
+        notifications("La cantidad ha sido guardada","success"); 
+        }
+    });
+    
+
+}
 const notifications = (texto_notificacion, tipo_notificacion) => {
 
     swal({
@@ -152,8 +230,8 @@ const uploadFileTransferencia = (num_pedido) => {
                  <label for="" class=" col-form-label">&squf;Comprobante de Pago:</label>
                  <input type="text" class="form-control valid border border-secondary" minlength="2"  required  id="comp" maxlength="30" minlength="2" name="comp" pattern="[A-Za-z0-9]+" title="Solo se permite letras(mayúsculas y/o minúsculas) y números. Maximo 30 caracteres">
                  <input type="file" class="form-control-file "  required id="comprobante_pago" name="comprobante_pago" style="color: black;">
-             </div>
-           
+            </div>
+            
         </div>
         <br>
         <div class="modal-footer">  
@@ -167,6 +245,7 @@ const uploadFileTransferencia = (num_pedido) => {
     `;
 
     document.getElementById('send_trasferencia').innerHTML = elementsHTML;
+    
 
     let cancel_almacen = (order) => {
 

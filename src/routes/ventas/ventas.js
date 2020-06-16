@@ -41,50 +41,6 @@ router.post('/', async(req, res) => {
 });
 
 
-router.post('/excel', (req, res) => {
-    let file = req.files.excel;
-    let filename = file.name;
-
-    file.mv('./excel/' + filename, async(err) => {
-
-        if (err) {
-
-            console.log(err);
-
-        } else {
-            let result = importExcel({
-                sourceFile: './excel/' + filename,
-                // header:{rows:15},
-                // columnTokey:{B:'cantidad',C:'Clave',F:'Descripción',O:'Importe'},
-                sheets: ['Sheet1']
-            });
-
-            const infoPedidos = {
-                cotizacion: '',
-                fecha: '',
-                cliente: '',
-                vendedor: '',
-                total: ''
-            };
-
-            for (let i = 0; i < result.Sheet1.length; i++) {
-
-                if (result.Sheet1[i].M == 'COTIZACIÓN No. :') infoPedidos.cotizacion = result.Sheet1[i].O;
-                if (result.Sheet1[i].M == 'Fecha') infoPedidos.fecha = result.Sheet1[i].O;
-                if (result.Sheet1[i].B == 'Cliente:') infoPedidos.cliente = result.Sheet1[i].D;
-                if (result.Sheet1[i].B == 'Vendedor :') infoPedidos.vendedor = result.Sheet1[i].C;
-                if (result.Sheet1[i].K == 'Total') infoPedidos.total = result.Sheet1[i].O;
-
-            }
-            console.log(infoPedidos);
-            const cliente = await pool.query("SELECT nombre FROM clientes where numero_interno = ?", infoPedidos.cliente);
-
-            infoPedidos.cliente = cliente[0].nombre;
-            res.send(infoPedidos);
-        }
-    });
-});
-
 router.post('/pagos', async(req, res) => {
     const pagos = await pool.query(`SELECT tipo_pago FROM clientes INNER JOIN   preferencias_cliente  USING(idcliente) inner join preferencias_pagos using(idpreferencia) WHERE nombre = ? `, req.body.cliente);
     const all_kind_pagos = await pool.query(`SELECT tipo_pago FROM clientes INNER JOIN   preferencias_cliente  USING(idcliente) inner join preferencias_pagos using(idpreferencia)`);
@@ -100,8 +56,6 @@ router.post('/importe', async(req, res) => {
 });
 
 router.post("/updateTrasferencia", upload.fields([{ name: 'comprobante_pago', maxCount: 1 }]), async(req, res) => {
-    console.log(req.files);
-    console.log(req.body);
     const updateComprobante = await pool.query(`UPDATE pedidos SET comprobante_pago='${req.body.comprobante_pago}'  ,ruta_pdf_comprobante_pago='${req.files.comprobante_pago[0].filename}', estatus = 1 WHERE num_pedido = ?`, req.body.num_pedido);
     res.end(req.body.comprobante_pago);
 
@@ -110,10 +64,19 @@ router.post("/updateTrasferencia", upload.fields([{ name: 'comprobante_pago', ma
 });
 
 router.post("/add", upload.fields([{ name: 'orden_compra', maxCount: 1 }, { name: 'num_pedido', maxCount: 1 }, { name: 'comprobante_pago', maxCount: 1 }]), async(req, res) => {
-    console.log(req.body);
 
-    if (req.body.nombre != undefined && req.body.nombre != ' ' && req.files.num_pedido != undefined && req.body.observaciones.length < 250) {
-        const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre);
+
+
+
+    console.log("comienza enviar ", Date.now());
+    const validacion_pedido_existente = await pool.query("select id_pedido from pedidos where num_pedido = ?", req.body.numeroPedido);
+    if (validacion_pedido_existente.length != 0) return res.send("null");
+
+    const partidas_info = JSON.parse(req.body.productosArray);
+    if (req.body.nombre_cliente != undefined && req.body.nombre != ' ' && req.body.observaciones.length < 250) {
+        const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre_cliente);
+
+
         let f = new Date();
         const insert = {
             id_pedido: null,
@@ -130,14 +93,37 @@ router.post("/add", upload.fields([{ name: 'orden_compra', maxCount: 1 }, { name
             fecha_inicial: f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes(),
             comprobante_pago: req.body.comprobante_pago != undefined && req.body.comprobante_pago ? req.body.comprobante_pago : '',
             importe: req.body.importe,
-            prioridad: req.body.prioridad,
-            prioridadE: req.body.prioridadE,
-            tipo_de_pago: req.body.tipos_pago
+            prioridad: req.body.prioridad[0],
+            tipo_de_pago: req.body.tipos_pago,
+            numero_partidas: partidas_info.Sheet1[partidas_info.Sheet1.length - 1].numero_partidas
         };
 
         await pool.query("INSERT INTO pedidos set ? ", [insert]);
 
-        const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,prioridadE,observacion,DATE_FORMAT(fecha_inicial,'%y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
+
+
+        for (let i = 0; i < partidas_info.Sheet1[partidas_info.Sheet1.length - 1].numero_partidas; i++) {
+
+            await pool.query(`INSERT INTO  partidas VALUES (null,(select id_pedido from pedidos where num_pedido = "${req.body.numeroPedido}" ),1)`);
+
+        }
+        const partidas_pedido = await pool.query("SELECT a.id_pedido, idPartida FROM  pedidos a inner join partidas  using(id_pedido) where num_pedido = ?", req.body.numeroPedido);
+        let cont_partidas = -1;
+
+        for (let i = 0; i < partidas_info.Sheet1.length; i++) {
+
+            let producto = await pool.query("SELECT idProducto from productos where clave = ?", [partidas_info.Sheet1[i].C]);
+            if (partidas_info.Sheet1[i].C == "Clave") cont_partidas++;
+            // console.log(producto);
+
+            if (producto.length > 0) {
+                console.log(partidas_pedido[cont_partidas].idPartida, producto[0].idProducto, parseInt(partidas_info.Sheet1[i].B.replace(',', '')));
+
+                await pool.query(`INSERT INTO partidas_productos VALUES (null , ${partidas_pedido[cont_partidas].idPartida} , ${producto[0].idProducto},${parseInt(partidas_info.Sheet1[i].B.replace(',',''))}  ,${0}) `);
+            }
+
+        }
+        const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
                                         FROM pedidos`);
         res.send(pedidos);
 

@@ -19,6 +19,16 @@ router.get('/pedidos', async(req, res) => {
     res.send(pedidos);
 });
 
+router.post('/partidas', async (req , res)=>{   
+  const partidas  = await pool.query("select  id_partidas_productos,cantidad_surtida,idPartida, b.status, clave , nombre, cantidad from pedidos inner  join   partidas b using(id_pedido) inner join partidas_productos using(idPartida) inner join  productos using(idProducto) where num_pedido =?",req.body.pedido);
+  res.send(partidas);
+   
+});
+router.post('/cantidad_pedido',async(req , res)=>{
+    await pool.query(`UPDATE partidas_productos SET cantidad_surtida = ${req.body.numero}  WHERE id_partidas_productos = ${req.body.id}`);
+    res.send('guardado'); 
+    
+});
 
 router.post('/cambio_estado', async(req, res) => {
     const status = await pool.query(`UPDATE pedidos SET estatus = ${req.body.estado_nuevo} WHERE num_pedido = ?`, req.body.order);
