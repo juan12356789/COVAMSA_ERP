@@ -40,7 +40,6 @@
               <input type="text" name="email" class="form-control" onkeyup="validar()" required placeholder="Usuario"
                 pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}"
                 title="El correo electrónico que ingreses debe coincidir con una cuenta">
-              {{!-- <input type="text" name="email" class="form-control"  placeholder="Username" title="Utiliza una cuenta asosiada con el Usuario">  --}}
 
             </div>
 
@@ -56,26 +55,25 @@
 
             {{!-- ingresar- Comenzar --}}
             <div class="form-group row justify-content-center">
-            <input type="submit" name="btn" value="Comenzar" class="btn btn-success" class="inputFormu" id="validar">
+              <input type="submit" name="btn" value="Comenzar" class="btn btn-success" class="inputFormu" id="validar">
 
             </div>
             <div id="campoOK"></div>
-            {{!-- <input id="campo" type="text"><button id="validar">validar</button> --}}
-            
 
         </div>
         {{!-- fin del form --}}
 
         </form>
         <form action="https://mail.google.com/mail/u/0/?tab=mm#inbox" target="_blank">
-    {{!-- <input type="email" placeholder="email" name="email"/> --}}
-    <input type="checkbox" name="rgpd" id="rgpd" value="Enviar" name="enviar">
-    <label for="rgpd">Este Usuario ha sido bloqueado por fallar mas de 3 intentos de Iniciar Sesión </label>
-    <label for="rgpd">Favor de avisar a su administrador para posibles cambios </label>
-    <br>
-    <input type="submit" class="btn btn-danger"value="Confirmar" name="enviar"/>
-    <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTnDn14TsBqYkbBjy6Z7f48VBnWD4V1J10XmOOyBVD_rKm8c9WT&usqp=CAUs"></a>
-</form>
+
+          <input type="checkbox" name="rgpd" id="rgpd" value="Enviar" name="enviar">
+          <label for="rgpd">Este Usuario ha sido bloqueado por fallar mas de 3 intentos de Iniciar Sesión </label>
+          <label for="rgpd">Favor de avisar a su administrador para posibles cambios </label>
+          <br>
+          <input type="submit" class="btn btn-danger" value="Confirmar" name="enviar" />
+          <a
+            href="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTnDn14TsBqYkbBjy6Z7f48VBnWD4V1J10XmOOyBVD_rKm8c9WT&usqp=CAUs"></a>
+        </form>
       </div>
       {{!-- fin del form --}}
 
@@ -87,28 +85,29 @@
   </div>
 
 </body>
+
 </html>
 
 {{!-- mensaje de que si el usuario esta bloqueado mande correo al adminiatrados --}}
 {{!-- falta llamarlo nada cuando sea necesario y no aparesca todo el tiempo --}}
 
 {{!-- <script>
-  $(document).ready(function(){
-        $("form").submit(function(e){
-            var condicion = $("#rgpd").is(":checked");
-            if(!condicion){
-                e.preventDefault();
-            }else{
-                $("[name='enviar']").click(function(){
-                    $(this).attr("disabled","disabled");
-                });
-            };  
+  $(document).ready(function () {
+    $("form").submit(function (e) {
+      var condicion = $("#rgpd").is(":checked");
+      if (!condicion) {
+        e.preventDefault();
+      } else {
+        $("[name='enviar']").click(function () {
+          $(this).attr("disabled", "disabled");
         });
-        $("input").blur(function(){
-            $("[name='enviar']").removeAttr("disabled");
-        })
-        
+      };
     });
+    $("input").blur(function () {
+      $("[name='enviar']").removeAttr("disabled");
+    })
+
+  });
 </script> --}}
 
 
@@ -162,8 +161,10 @@
 
         if (intentos >= 2) {
           valido.innerText = "Este usuario ha sido deshabilitado por intentos fallidos de acceso";
+          valido.innerText = "<label for="rgpd">Este Usuario ha sido bloqueado por fallar mas de 3 intentos de Iniciar Sesión </label>
+            < label for= "rgpd" > Favor de avisar a su administrador para posibles cambios </label > "
         }
       }
     });
-    
+
 </script>
