@@ -1,4 +1,15 @@
 <html>
+<head>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Last-Modified" content="0">
+<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta charset="utf-8">
+<title>Covamsa|Menu</title>
+{{!-- el contenido se muestra en español --}}
+<meta http-equiv="Content-Language" content="es" />
+</head> 
+
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -9,13 +20,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.29.0/sweetalert2.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-<meta http-equiv="Expires" content="0" />
-<meta http-equiv='cache-control' content='no-cache'> 
-<meta http-equiv='expires' content='0'> 
-<meta http-equiv='pragma' content='no-cache'> 
-<meta charset="utf-8">
-{{!-- el contenido se muestra en español --}}
-<meta http-equiv="Content-Language" content="es" />
+
+
 
 
 <!------ inicio de login echo con bootstrap y css ---------->
@@ -23,8 +29,9 @@
 
 <body background="https://covamsa.com/inicio/wp-content/uploads/2019/07/slider_fondo_02_covamsa.jpg">
   <div class="container-lg">
+    <div class="card-block">
     <div class="row text-center login-page">
-      <div class="card card-login mx-auto text-center bg-light" style="width: 50rem;">
+      <div class="card card-login mx-auto text-center bg-light" style="width: 60rem;">
         <div class="card-header mx-auto bg-light">
           <span>
             <img src="images/logo.jpeg" class="rounded mx-auto d-block" width="50%" height="">
@@ -65,16 +72,7 @@
         {{!-- fin del form --}}
 
         </form>
-        <form action="https://mail.google.com/mail/u/0/?tab=mm#inbox" target="_blank">
-
-          <input type="checkbox" name="rgpd" id="rgpd" value="Enviar" name="enviar">
-          <label for="rgpd">Este Usuario ha sido bloqueado por fallar mas de 3 intentos de Iniciar Sesión </label>
-          <label for="rgpd">Favor de avisar a su administrador para posibles cambios </label>
-          <br>
-          <input type="submit" class="btn btn-danger" value="Confirmar" name="enviar" />
-          <a
-            href="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTnDn14TsBqYkbBjy6Z7f48VBnWD4V1J10XmOOyBVD_rKm8c9WT&usqp=CAUs"></a>
-        </form>
+        
       </div>
       {{!-- fin del form --}}
 
@@ -112,7 +110,7 @@
 </script> --}}
 
 
-
+<script type="text/javascript" src="/src/public/JS/cssrefresh.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
 <script src="JS/buttonLogin.js"></script>
@@ -120,7 +118,7 @@
 <script src="JS/ventas/ventanasModales.js"></script>
 
 <!--hacer que usuario ponga sus datos en los input, porque no va a poder copiar y pegar --->
-<script language="JavaScript">
+{{!-- <script language="JavaScript">
   function right(e) {
     var msg = " ¡ No permitido ! Por favor ingresa tu nombre de USUARIO y tu CONTRASEÑA. ";
     if (navigator.appName == 'Netscape' && e.which == 3) {
@@ -135,7 +133,7 @@
     return true;
   }
   document.onmousedown = right; 
-</script>
+</script> --}}
 
 {{!-- segun bloques esto --}}
 <script>
@@ -170,3 +168,6 @@
     });
 
 </script>
+
+
+

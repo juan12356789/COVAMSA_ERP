@@ -1,0 +1,4 @@
+usuario de facturacion
+usuario de entregas
+usuario de compras
+en la tabla de pedidos en el campo de prioridadE (Entregas Comercial/Entregas Parcial)

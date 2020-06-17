@@ -66,19 +66,21 @@
   input:placeholder-shown {
     border-color: silver;
   }
-  .container-fluid {
-  
-  padding-left: 200px;
-  padding-right: 200px;
-}
+ 
  
 </style>
 <html  lang="en">
-<meta charset="utf-8"> 
-
+  <head>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Last-Modified" content="0">
+<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta charset="utf-8">
 {{!-- el contenido se muestra en español --}}
-<meta http-equiv="Content-Language" content="es"/>
-<div class="container-fluid ">
+<meta http-equiv="Content-Language" content="es" />
+</head>
+
+<div class="container">
   <div class="accordion" id="accordionExample">
     <div class="card">
       <div class="card-header" id="headingOne">
@@ -95,19 +97,20 @@
         <br>
       </div>
       <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-        <div class="card-body">
+        <div class="card-body" >
           <div  id="ocultar_excel">
             <input type="file" name="excel" id="excel">
-            <button onclick="uploadExcel()" > Importar </button>
+            <button class="btn btn-dark btn-lg"  onclick="uploadExcel()" > Importar </button>
+            <button   type="button"class="btn btn-primary btn-lg"  onclick="orderDetail()" >Detalles</button>
+            <button  type="button" class="btn btn-danger btn-lg" onclick="cancelarOrden()" >Cancelar</button>
+            <div  id="detallesPedido" ></div>
             
           </div>     
           <form enctype="multipart/form-data" method="post" id="imgct" class="columinput">
           
             <div class="jumbotron">
               <div class="container">
-                  <button   type="button"class="btn btn-primary"  onclick="orderDetail()" >Detalle</button>
-                   <button  type="button" class="btn btn-danger" onclick="cancelarOrden()" >Cancela</button>
-                   <div  id="detallesPedido" ></div>
+                  
                 <div class="row ">
                   <label for="oc" class="col-sm-2 col-form-label">Orden de Compra:</label>
                   <div class="col-sm-4">
@@ -142,6 +145,8 @@
                       Clientes
                     </button> --}}
                   </div>
+                  <br>
+                  
                 </div>
                 <br>
                 <div class=" row ">
@@ -149,17 +154,18 @@
                   <div class="col-sm-4">
                     <input type="text" class="form-control valid border border-secondary" readonly name="numeroPedido" required
                       maxlength="30" minlength="2" id="infoPedido"
-                      title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Máximo 30 caracteres">
+                      title="Solo se permite letras(mayúsculas y/o minúsculas) y números.Máximo 30 caracteres"><br>
                     {{!-- <input type="file" class="form-control-file " required name="num_pedido" id="no_pedido"
                       style="color: black;"> --}}
 
-                  <label for="" >Fecha del Pedido: </label>
-                  <input type="date" name="fecha_pedido"  id="fecha_pedido" class="form-control valid border border-secondary" readonly >
+                  {{!-- <label for="" >Fecha del Pedido: </label>
+                  <input type="date" name="fecha_pedido"  id="fecha_pedido" class="form-control valid border border-secondary" readonly > --}}
                   
-                  <label for="">No. partidas</label>
-                  <input type="number"  readonly class="form-control valid border border-secondary"  name="numero_partidas" id="numero_partidas">
+                  {{!-- <label for="">No. partidas</label>
+                  <input type="number"  readonly class="form-control valid border border-secondary"  name="numero_partidas" id="numero_partidas"> --}}
 
                   </div>
+                  
                   <label for="" class="col-sm-2 col-form-label ">Ruta:</label>
                   {{!-- <div class="row"> --}}
                   <div class="col-sm-4">
@@ -170,8 +176,18 @@
                   </div>
                   {{!-- </div> --}}
                   
+                  <label for="" class="col-sm-2 col-form-label ">Fecha del Pedido:</label>
+                  <div class="col-sm-4">
+                    <input type="date" name="fecha_pedido"  id="fecha_pedido" class="form-control valid border border-secondary" readonly >
+                 
+                  </div>
+                 
+                   <label for="" class="col-sm-2 col-form-label ">No. partidas:</label>
+                   <div class="col-sm-4">
+                     <input type="number"  readonly class="form-control valid border border-secondary"  name="numero_partidas" id="numero_partidas"><br>
+                   </div>
                 </div>
-                <br>
+                
                 <div class="row ">
                   <label for="" class="col-sm-2 col-form-label">Selecciona el Tipo de Pago:</label>
                   
@@ -184,7 +200,7 @@
                     <input type="file" class="form-control-file " name="comprobante_pago" id="comprobante"
                       style="color: black;">
                       
-                      
+                     
                     <label for=""></label>
                     <select class="form-control" name="tipos_pago" id="pagos_transferencia">
                       <option value="2">Anticipado</option>
@@ -193,7 +209,7 @@
                       <option value="4">Crédito</option>
                     </select>
                     
-                    <br>
+                    {{!-- <br> --}}
                   
 
 
@@ -319,6 +335,7 @@
       </div>
 
       <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+       <div class="card mb-3">
         <div class="card-body">
 
           <div class="modal fade bd-example-modal-lg" id="Ventana_Modal_order" tabindex="-1" role="dialog"
@@ -378,37 +395,10 @@
 <script src="JS/ventas/uploadExcel.js"></script>
 <script src="JS/ventas/validaciones.js"></script>
 <script src="dataTables/datatables.min.js"></script>
-{{!-- <script src="JS/ventas/observacionesC.js"></script> --}}
-{{!-- <script src="JS/ventas/importe2D.js"></script> --}}
 <script src="JS/emails/email.js"></script>
 
 
 
 <script>
-//   let intentos = 0;
-// 
-// document
-//   .getElementById('validar')
-//   .addEventListener('click', function(evt) {
-//     const campo = document.getElementById('campo'),
-//       valido = document.getElementById('campoOK')
-// 
-// 
-//     if (intentos >= 3) {
-//       return;
-//     }
-// 
-//     if (/^\d+$/g.test(campo.value)) {
-//       valido.innerText = "válido";
-//       intentos = 0;
-// 
-//     } else {
-//       intentos++;
-//       valido.innerText = "incorrecto, intentos: " + intentos;
-// 
-//       if (intentos >= 3) {
-//         valido.innerText = "Nunca mas vas a poder intentar";
-//       }
-//     }
-//   });
+
 </script>
