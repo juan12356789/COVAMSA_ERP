@@ -66,7 +66,14 @@
   input:placeholder-shown {
     border-color: silver;
   }
- 
+  
+ .container-fluid {
+  position: relative;
+  width: 1500px;
+  height: auto;
+  overflow: hidden;
+
+}
  
 </style>
 <html  lang="en">
@@ -78,9 +85,10 @@
 <meta charset="utf-8">
 {{!-- el contenido se muestra en español --}}
 <meta http-equiv="Content-Language" content="es" />
+<title>Covamsa | Pedidos</title>
 </head>
 
-<div class="container">
+<div class="container-fluid">
   <div class="accordion" id="accordionExample">
     <div class="card">
       <div class="card-header" id="headingOne">
@@ -92,6 +100,7 @@
           aria-expanded="false" aria-controls="collapseTwo">
           Mis Pedidos
         </button>
+        
         <button type="button" class="close"><a href="/menu"><img
               src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></a> </button><br>
         <br>
@@ -375,6 +384,7 @@
                 <th >Observaciones</th>
                 <th ><pre><code>CÓDIGO CONVERTIDO A TEXT</code></pre>Fecha</th>
                 <th >Cancelar</th>
+                <th></th>
               </tr>
             </thead>
 

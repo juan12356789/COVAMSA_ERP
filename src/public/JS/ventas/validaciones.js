@@ -105,7 +105,7 @@ $(document).ready(function() {
 
                                     }
                                 },
-                                { data: 'prioridadE' },
+                                // { data: 'prioridadE' },
                                 { data: 'ruta' },
                                 { data: 'importe' },
 
@@ -148,11 +148,11 @@ let pedidos_vendedores = () => {
             let ruta = ['Norte', 'Sur'];
             let estatus = ['Nuevo', 'En Proceso', 'Parcial', 'Completo', 'Ruta', 'Cancelado', 'Detenido'];
             let prioridad_info = ["Normal", "Normal", "Urgente"];
-            let prioridadE= ["Entrega Parcial", "Entrega Completa"];
+            // let prioridadE= ["Entrega Parcial", "Entrega Completa"];
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
             response.filter(n => n.nombre_estatus = estatus[n.estatus - 1]);
             response.filter(n => n.prioridad = prioridad_info[n.prioridad]);
-            response.filter(n => n.prioridadE = prioridadE[n.prioridadE]);
+            // response.filter(n => n.prioridadE = prioridadE[n.prioridadE]);
             dataTable.rows().remove();
             dataTable.rows.add(response).draw();
             

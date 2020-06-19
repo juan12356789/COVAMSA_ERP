@@ -81,10 +81,12 @@
   input:placeholder-shown {
     border-color: silver;
   }
-    .container-fluid {
-  
-  padding-left: 200px;
-  padding-right: 200px;
+   .container-fluid {
+  position: relative;
+  width: 1500px;
+  height: auto;
+  overflow: hidden;
+
 }
  
   </style>
@@ -101,10 +103,11 @@
 <meta charset="utf-8">
 {{!-- el contenido se muestra en español --}}
 <meta http-equiv="Content-Language" content="es" />
+<title>Covamsa | Usuarios</title>
 </head>
 <body>
 
-<div class="container ">
+<div class="container-fluid">
  <div class="accordion" id="accordionExample">
     <div class="card">
       <div class="card-header" id="headingOne"> 

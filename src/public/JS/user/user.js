@@ -160,7 +160,8 @@ const selectUserc = id => {
                         <label>Tipo de usuario:</label>
                         <input type="text"  value="${response[0].tipo_usuario}"  name="tipo_usuario" id="tipo_usuario" class="form-control"  required    style=" border: 0;" readonly  >
                         <br>
-                        <select name="usuario" id="usuario"  onchange="option();" class="form-control" >
+                        <select name="usuario" id="usuario"  onchange="option();" class="form-control" requ>
+                            <option value="" ></option>
                             <option value="Ventas" >Ventas</option>
                             <option value="Almacen" >Almacén</option>
                             <option value="Administrador" >Administrador</option>
@@ -233,6 +234,7 @@ const insertUser = () => {
             <div class="col-6">
                 <label>Tipo de usuario:</label>
                 <select name="tipo_usuario" id="tipo_usuario" class="form-control" >
+                    <option value="" ></option>
                     <option value="Ventas" >Ventas</option>
                     <option value="Almacen" >Almacén</option>
                     <option value="Administrador" >Administrador</option>

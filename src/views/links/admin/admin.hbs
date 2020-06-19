@@ -37,8 +37,10 @@
   }
 .container-fluid {
   
-  padding-left: 200px;
-  padding-right: 200px;
+  position: relative;
+  width: 1500px;
+  height: auto;
+  overflow: hidden;
 }
   
 
@@ -57,14 +59,14 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Covamsa | Administracion</title>
 </head>
 <meta charset="utf-8">
 {{!-- el contenido se muestra en español --}}
 <meta http-equiv="Content-Language" content="es" />
 
 <body>
-  <div class="container">
+  <div class="container-fluid">
     <div class="accordion" id="accordionExample">
       <div class="card ">
         <div class="card-header" id="headingOne">
@@ -130,6 +132,7 @@
                       <th>
                         <pre><code>CÓDIGO CONVERTIDO A TEXT</code></pre>Fecha</th>
                       <th scope="col">Cancelar</th>
+                      <th></th>
                     </tr>
                   </thead>
 
@@ -167,6 +170,7 @@
                     <th>
                       <pre><code>CÓDIGO CONVERTIDO A TEXT</code></pre>Fecha</th>
                     <th scope="col">Prioridad</th>
+                    <th></th>
                   </tr>
                 </thead>
 
