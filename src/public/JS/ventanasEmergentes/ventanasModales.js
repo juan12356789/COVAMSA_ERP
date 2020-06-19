@@ -58,29 +58,28 @@ let reson_to_cancel = (order) => {
 };
 
 let cambios_status_pedidos = (current_status, order) => {
-    console.log(current_status);
-    
 
     if (current_status == "Cancelado") return notifications("Este pedido ha sido cancelado no es posible cambiar  el status", 'warning');
     let opciones_pago = '';
-    switch (current_status) {
-        case "Nuevo":
-            opciones_pago = `<option value="2">En Proceso</option>`;
-            break;
-        case "En Proceso":
-            opciones_pago = `<option value="3">Parcial</option>
-                                <option value="4">Completo</option>`;
-            break;
-        case "Parcial":
-            opciones_pago = `<option value="2">EN PROGRESO</option>
-                               <option value="5">RUTA</option>`;
-            break;
-        case "Completo":
-            opciones_pago = `<option value="2">EN PROGRESO</option>
-                                <option value="5">RUTA</option>`;
-            break;
+    // switch (current_status) {
+    //     case "Nuevo":
+    //         opciones_pago = `<option value="2">Surtiendo</option>`;
+    //     break;
+    //     case "Surtiendo":
+    //         opciones_pago = `<option value="3">Parcial</option>
+    //                          <option value="4">Facturable </option>`;
+    //     break;
+    //     case "Parcial":
+    //         opciones_pago = `<option value="2">Surtiendo</option>
+    //                            <option value="5">RUTA</option>`;
+    //     break;
+    //     case "Completo":
+    //         opciones_pago = `<option value="2">EN PROGRESO</option>
+    //                             <option value="5">RUTA</option>`;
+    //     break;
 
-    }
+    // }
+
     $('#change_status').modal('show');
     
     let nuevo_estatus = document.getElementById('estado_nuevo');
@@ -106,9 +105,7 @@ let cambios_status_pedidos = (current_status, order) => {
             <div class="col"  >
             
             <label>Nuevo Estado:</label>
-                        <select  id="estado_nuevo"   class="form-control">
-                        ${opciones_pago}
-                        </select>
+            <select  id="estado_nuevo"   class="form-control"></select>
             </div>       
                  
         </div>
@@ -126,12 +123,12 @@ let cambios_status_pedidos = (current_status, order) => {
             <table class="table table-striped table-bordered">
                   <thead class="thead-dark" >
                       <tr>
-                          
+                          <th scope="col" >#</th>
                           <th scope="col" >Clave </th>
                           <th scope="col" >Nombre</th>
                           <th scope="col" >Cantidad </th>
                           <th scope="col" >Cantidad surtida</th>
-                          <th scope="col" >  Estado</th>
+                          <th scope="col" >  Encontrado</th>
                           <th scope="col"  >Guardar</th>
 
                       </tr>
@@ -149,6 +146,7 @@ let cambios_status_pedidos = (current_status, order) => {
     `;
     tabla_partidas(order,current_status);
     document.getElementById('status').innerHTML = elementsHTML;
+    
 
 };
 
@@ -156,26 +154,59 @@ const tabla_partidas  = (id_pedido , status) =>{
  
     
     $.ajax({type: "POST",url: "/almacen/partidas",data: {pedido:id_pedido},success: function (response) {
-            console.log(response);
-            let   partidasOp  = 0,cont = 0,numero = 0; 
-            let   tabla_partidas   = ``;
+        
+            let   partidasOp  = 0,cont = 0,numero = 0 ,tipo_status = `` ;   
+            let   tabla_partidas   = ``, numero_partidas = 0;
             response.forEach(response => {
                 numero++; 
                 if(partidasOp < response.idPartida)partidasOp = response.idPartida;
                 cont++; 
                 tabla_partidas+= `
                 <tr>
+                    <th scope="col" >${cont}</th>
                     <th scope="col" >${response.clave}</th>
                     <th scope="col" >${response.nombre}</th>
                     <th scope="col"  >${response.cantidad}</th>
-                    ${ status == "En Proceso" ? `<th scope='col'  ><input type='number' value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  maxlength="5"  min="1" max="5" name='numero${numero}' id='numero${numero}' ></th>`:`<th><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </th>` }
-                    ${ status == "En Proceso" ?`<th><input type="checkbox"  ${response.cantidad_surtida == response.cantidad?"checked":""} name="completo${cont}" id="completo${cont}"></th>`:`<th><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></th>`}
-                    ${ status == "En Proceso" ?`<th><button class="btn btn-success" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"  >Guardar</button></th>`:"<th><button  disabled class='btn btn-success' >Guardar</button></th>"}
+                    ${ status == "Surtiendo" ? `<th scope='col'  ><input type='number' value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  maxlength="5"  min="1" max="5" name='numero${numero}' id='numero${numero}' ></th>`:`<th><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </th>` }
+                    ${ status == "Surtiendo" ?`<th><input type="checkbox"  ${response.cantidad_surtida == response.cantidad?"checked":" "} name="completo${cont}" id="completo${cont}"></th>`:`<th><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></th>`}
+                    ${ status == "Surtiendo" ?`<th><button class="btn btn-success" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"  >Guardar</button></th>`:"<th><button  disabled class='btn btn-success' >Guardar</button></th>"}
                 </tr>`;
+                if(response.cantidad_surtida == response.cantidad)  numero_partidas++; 
 
             });
-            document.getElementById("numero_partidas").innerHTML = `Número de partidas: ${cont}`;
+            
+            document.getElementById("numero_partidas").innerHTML = `
+            
+                <div class="row" >
+                     <div class="col" >
+                        Número de partidas: ${cont}
+                     </div>
+                     <div class="col" >
+                        Tipo de entrega: ${response[0].prioridadE == 0 ? " Parcial " : " Completa "  }
+                     </div>
+                     <div class="col" >
+                        Estado del pedido: ${response.length == numero_partidas?'Partidas completas':'Hay partidas incompletas' }
+                     </div>
+                     <div class="col" >   
+                        Pedidos completo:   <input type="checkbox" ${status == 'Surtiendo'?'':'disabled'}   id="partida_completa" onclick="prueba('${id_pedido}','${status}')"  > 
+                    </div>
+                </div>
+             `;
             document.getElementById('partidas').innerHTML = tabla_partidas;
+            console.log(status);
+            
+            if(status == "Nuevo") document.getElementById('estado_nuevo').innerHTML = `<option value="2" > Surtiendo </option>`;  
+            if(status == "Surtiendo" && response[0].prioridadE == 0  ){ document.getElementById('estado_nuevo').innerHTML = `
+                <option value="3">Facturable </option>
+                <option value="4" >Requerir y facturar  </option>
+            `;
+            }
+            if(status == "Surtiendo" && response[0].prioridadE == 1){
+                document.getElementById('estado_nuevo').innerHTML = `
+                <option value="3" >Facturable </option>
+                <option value="5" >Requerir  </option>
+            `;
+            }
             
         }
     });
@@ -197,6 +228,20 @@ const cantidadProducto = (cantidad  , id_partidas_productos,numero ,id , status)
     
 
 }
+
+// este onckick nos sirve paea saber si todos los productos se han encontrado 
+const prueba  = ( id ,status ) => {
+    let checkbox =   document.getElementById("partida_completa").checked;
+    if(checkbox == true ){
+        $.ajax({type: "POST",url: "/almacen/pedidos_check",data: {num_pedido:id},success: function (response) {
+            tabla_partidas(id , status);
+                console.log(response);
+                
+            }
+        });
+    }  
+}
+
 const notifications = (texto_notificacion, tipo_notificacion) => {
 
     swal({
@@ -278,6 +323,37 @@ const uploadFileTransferencia = (num_pedido) => {
     };
 
 };
+
+const cargar_pedido = () =>{
+    let modal  = `
+       <div class="modal fade" id="spinnerUpload" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+         <div class="modal-dialog">
+             <div class="modal-content">
+                <div class="modal-header">
+                     <h5 class="modal-title" id="staticBackdropLabel">Cargar pedido </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                             <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                         <div class="modal-body">
+                            <h5>La orden se esta procesando, esta operación puede tomar unos minutos.</h5>
+                            <div class="text-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                         </div>
+                        <div class="modal-footer">
+                     </div>
+            </div>
+        </div>
+     </div>
+        
+    `;
+    
+    document.getElementById('spinnerOrder').innerHTML = modal;
+    $('#spinnerUpload').modal('show');
+} 
 
 function ValidaLongitud(campo, longitudMaxima) {
     try {

@@ -68,7 +68,7 @@ app.use('/admin', require('./routes/admin/admin'));
 app.use('/user', require('./routes/user/user'));
 app.use('/excel', require('./routes/ventas/excel'));
 app.use('/nadvar', require('./routes/nadvar/nadvar'));
-
+app.use('/facturas',require('./routes/facturas/facturas'));
 // Public 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -81,8 +81,13 @@ const SocketIO = require('socket.io');
 const io = SocketIO(server);
 
 io.on('connection', (socket) => {
+
     socket.on('data:pedidos', (data) => {
         
-        io.sockets.emit('data:pedidos', data)
+        io.sockets.emit('data:pedidos', data); 
+
     });
+
+    socket.on('data:facturas', data =>  io.sockets.emit('data:facturas',data)    ); 
+
 });

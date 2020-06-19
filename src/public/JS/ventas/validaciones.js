@@ -225,55 +225,37 @@ let cancelarOrden =() =>{
             dataType: "html",
             data: formData,
             beforeSend: function() {
-                $('input[type="text"]').attr('disabled', 'disabled');
-                $('input[type="file"]').attr('disabled', 'disabled');
-                $('button[type="submit"]').attr('disabled', 'disabled');
-                $('button[type="button"]').attr('disabled', 'disabled');
-                $('select').attr('disabled', 'disabled');
-                $("#spinner").show(); // Le quito la clase que oculta mi animación 
-                notifications("Este proceso puede tardar un poco de tiempo",'success'); 
+                cargar_pedido(); 
 
             },
             success: function(response) {
-                
+                $('#spinnerUpload').modal('hide');
                 if(response == "null"){
-                    $('input[type="text"]').removeAttr('disabled');
-                    $('input[type="file"]').removeAttr('disabled');
-                    $('button[type="submit"]').removeAttr('disabled');
-                    $('button[type="button"]').removeAttr('disabled');
-                    $('select').removeAttr('disabled');
-                    $("#comprobante").hide();
+                    
+                    $('#spinnerUpload').modal('hide');
+                    notifications("Esta orden ya esta en proceso ",'warning'); 
                     $("#input").hide();
-                    $("#spinner").hide();
                     $("#imgct").hide();
                     $("#ocultar_excel").show();
-                    return  notifications("Esta orden ya esta en proceso ",'warning'); 
+                    $("#comprobante").hide();
+                    $("#cargarOrden").hide();
                 } 
 
                 if (response == 'false') {
-                    $('input[type="text"]').removeAttr('disabled');
-                    $('input[type="file"]').removeAttr('disabled');
-                    $('button[type="submit"]').removeAttr('disabled');
-                    $('button[type="button"]').removeAttr('disabled');
-                    $('select').removeAttr('disabled');
+                    $('#spinnerUpload').modal('hide');
+                    notifications("No se pudo guardar su pedido favor de checar sus campos",'warning'); 
                     $("#comprobante").hide();
                     $("#input").hide();
-                    $("#spinner").hide();
                     $("#imgct").hide();
-                    notifications("No se pudo guardar su pedido favor de checar sus campos",'warning'); 
-                } else {
-               
-                    
+                    $("#ocultar_excel").show();
+                }
+
+                if(response  != 'false' && response != "null"){
+                    $('#spinnerUpload').modal('hide');
                     pedidos(response);
                     pedidos_vendedores();
                     notifications("Su pedido se ha guardado con éxito",'success'); 
                     document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`;
-                    $("#spinner").hide();
-                    $('input[type="text"]').removeAttr('disabled');
-                    $('input[type="file"]').removeAttr('disabled');
-                    $('button[type="submit"]').removeAttr('disabled');
-                    $('button[type="button"]').removeAttr('disabled');
-                    $('select').removeAttr('disabled');
                     $('#imgct').trigger("reset");
                     $("#comprobante").hide();
                     $("#input").hide();
@@ -281,7 +263,10 @@ let cancelarOrden =() =>{
                     $("#inputCliente").hide();
                     $("#imgct").hide();
                     $("#ocultar_excel").show();
+
                 }
+               
+                
             },
             cache: false,
             contentType: false,
