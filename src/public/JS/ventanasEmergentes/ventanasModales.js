@@ -179,16 +179,16 @@ const tabla_partidas  = (id_pedido , status) =>{
             
                 <div class="row" >
                      <div class="col" >
-                        Número de partidas: ${cont}
+                     <strong> Número de partidas:</strong> ${cont}
                      </div>
                      <div class="col" >
-                        Tipo de entrega: ${response[0].prioridadE == 0 ? " Parcial " : " Completa "  }
+                     <strong>Entregas parcial: </strong>${response[0].prioridadE == 0 ? " Sí " : "No"  }
                      </div>
                      <div class="col" >
-                        Estado del pedido: ${response.length == numero_partidas?'Partidas completas':'Hay partidas incompletas' }
+                        <strong>Estado del pedido:</strong> ${response.length == numero_partidas?'Partidas completas':'Hay partidas incompletas' }
                      </div>
                      <div class="col" >   
-                        Pedidos completo:   <input type="checkbox" ${status == 'Surtiendo'?'':'disabled'}   id="partida_completa" onclick="prueba('${id_pedido}','${status}')"  > 
+                        <strong>Pedidos completo:</strong>   <input type="checkbox" ${status == 'Surtiendo'?'':'disabled'}   id="partida_completa" onclick="prueba('${id_pedido}','${status}')"  > 
                     </div>
                 </div>
              `;
