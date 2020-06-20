@@ -76,8 +76,11 @@ router.post('/updateInfoUsers', async(req, res) => {
 
         case "Administrador":
             await pool.query(`DELETE FROM empleados_departamentos where id_empleados = ? `, idEmpleado[0].id_empleados);
-            for (let i = 1; i <= 4; i++) {
-                await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , ${i} ) `);
+            const usuarios  = await pool.query("SELECT id_departamento  FROM departamentos"); 
+            console.log(usuarios);
+            
+            for (let i = 0; i < usuarios.length; i++) {
+                await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , ${usuarios[i].id_departamento} ) `);
             }
         break;
     }
@@ -98,21 +101,21 @@ router.post('/insert', async(req, res) => {
 
         case "Ventas":
 
-            await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , 1 ) `);
-            await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , 4 ) `);
+            await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , (select id_departamento from departamentos  where nombre = "ventas") ) `);
+            await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , (select id_departamento from departamentos  where nombre = "user")) `);
             break;
 
         case "Almacen":
-            await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , 2 ) `);
-            await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , 4 ) `);
+            await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , (select id_departamento from departamentos  where nombre = "almacen") ) `);
+            await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , (select id_departamento from departamentos  where nombre = "user") ) `);
             break;
 
         case "Administrador":
-            await pool.query(`DELETE FROM empleados_departamentos where id_empleados = ? `, idEmpleado[0].id_empleados);
-            for (let i = 1; i <= 4; i++) {
-                await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , ${i} ) `);
+            const usuarios  = await pool.query("SELECT id_departamento  FROM departamentos"); 
+            for (let i = 0; i < usuarios.length; i++) {
+                await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , ${usuarios[i].id_departamento} ) `);
             }
-            break;
+        break;
     }
     res.send('hola');
 
