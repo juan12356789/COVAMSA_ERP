@@ -110,7 +110,7 @@
             
           </div>     
           <form enctype="multipart/form-data" method="post" id="imgct" class="columinput">
-          
+            
             <div class="jumbotron">
               <div class="container">
                   <button   type="button"class="btn btn-primary"  onclick="orderDetail()" >Detalle</button>
@@ -202,7 +202,8 @@
                     </select>
                     
                     <br>
-                  
+                  {{!-- VENTANA MODAL CARGAR PEDIDO --}}
+                  <div id="spinnerOrder" ></div>
 
 
                   </div>
@@ -261,7 +262,7 @@
                   </div>
                   <br>
                 </div>
-
+                {{!-- cargar el pedido  --}}
 
               <!-- Modal -->
               <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog"
@@ -296,7 +297,8 @@
                 </div>
               </div>
               </div>
-
+              {{!-- ventanas modales  --}}
+            
               
             <div class="modal fade bd-example-modal-lg" id="Ventana_Modal" tabindex="-1" role="dialog"
               aria-labelledby="myLargeModalLabel" aria-hidden="true">

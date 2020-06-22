@@ -67,8 +67,7 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
    
    
    
-    
-    console.log("comienza enviar ",Date.now());
+
     const validacion_pedido_existente  = await pool.query("select id_pedido from pedidos where num_pedido = ?", req.body.numeroPedido); 
     if(validacion_pedido_existente.length != 0)  return res.send("null") ; 
 
@@ -95,31 +94,25 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
             importe: req.body.importe,
             prioridad: req.body.prioridad[0],
             tipo_de_pago:req.body.tipos_pago,
-            numero_partidas : partidas_info.Sheet1[partidas_info.Sheet1.length - 1].numero_partidas
+            numero_partidas : partidas_info.Sheet1[partidas_info.Sheet1.length - 1].numero_partidas,
+            prioridadE: req.body.tipo_entrega == "Entrega completo" ? 1 : 0 
         };
         
         await pool.query("INSERT INTO pedidos set ? ", [insert]);
-
-        
-
-        for (let i = 0; i < partidas_info.Sheet1[partidas_info.Sheet1.length - 1].numero_partidas; i++) {
+        await pool.query(`INSERT INTO  partidas VALUES (null,(select id_pedido from pedidos where num_pedido = "${req.body.numeroPedido}" ),1)`); 
             
-            await pool.query(`INSERT INTO  partidas VALUES (null,(select id_pedido from pedidos where num_pedido = "${req.body.numeroPedido}" ),1)`); 
-            
-        }
+   
         const partidas_pedido  = await pool.query("SELECT a.id_pedido, idPartida FROM  pedidos a inner join partidas  using(id_pedido) where num_pedido = ?",req.body.numeroPedido); 
+        console.log(partidas_pedido);
+        
         let cont_partidas = -1; 
         
         for (let i = 0; i < partidas_info.Sheet1.length; i++) {
 
             let producto = await pool.query("SELECT idProducto from productos where clave = ?" , [partidas_info.Sheet1[i].C]); 
-            if(partidas_info.Sheet1[i].C == "Clave") cont_partidas++; 
-            // console.log(producto);
-            
             if( producto.length > 0 ){
-                    console.log(partidas_pedido[cont_partidas].idPartida,producto[0].idProducto,parseInt(partidas_info.Sheet1[i].B.replace(',','')));
-                    
-                await pool.query(`INSERT INTO partidas_productos VALUES (null , ${partidas_pedido[cont_partidas].idPartida} , ${producto[0].idProducto},${parseInt(partidas_info.Sheet1[i].B.replace(',',''))}  ,${0}) `);
+                    // console.log(partidas_pedido[0].idPartida,producto[0].idProducto,parseInt(partidas_info.Sheet1[i].B.replace(',','')));
+                    await pool.query(`INSERT INTO partidas_productos VALUES (null , ${partidas_pedido[0].idPartida} , ${producto[0].idProducto},${parseInt(partidas_info.Sheet1[i].B.replace(',',''))}  ,${0}) `);
             }  
 
         }
