@@ -1,20 +1,23 @@
 const express = require("express");
 const router = express.Router();
-const path = require("path");
 const pool = require('../../database');
 const { isLoggedIn } = require('../../lib/auth');
 const upload = require('express-fileupload');
 const importExcel  =  require('convert-excel-to-json');
+const path = require("path");
+const rutimage = path.join(__dirname, "../../../excel");
 const fs = require('fs');
 router.use(upload());
+
 
 
 
 router.post('/', (req , res) => {
     let file = req.files.excel;
     let filename = file.name;
+    console.log(rutimage);
     
-    file.mv(  './excel/'+filename ,async (err)=>{
+    file.mv(  rutimage+filename ,async (err)=>{
 
         if(err){
 
@@ -23,7 +26,7 @@ router.post('/', (req , res) => {
         }else{
             const informacion_partida  = []; 
             let result = importExcel({
-                sourceFile: './excel/'+filename,
+                sourceFile: rutimage + filename,
                 // header:{rows:15},
                 // columnTokey:{B:'cantidad',C:'Clave',F:'Descripción',O:'Importe'},
                 sheets:['Sheet1']
