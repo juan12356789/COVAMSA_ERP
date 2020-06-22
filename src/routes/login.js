@@ -17,22 +17,17 @@ router.post('/', (req, res, next) => {
     })(req, res, next);
 });
 
-router.post('/usuarios', (req) => {
+// router.get('/profile', isLoggedIn, async(req, res) => {
 
+//     const clientes = await pool.query("SELECT * FROM clientes");
+//     res.render('links/ventas/formularioVentas', { clientes });
 
-});
-
-router.get('/profile', isLoggedIn, async(req, res) => {
-
-    const clientes = await pool.query("SELECT * FROM clientes");
-    res.render('links/ventas/formularioVentas', { clientes });
-
-});
-router.post('/profile', async(req, res) => {
-    console.log(req.body.clientes);
-    const clientes = await pool.query("SELECT * FROM clientes  where  nombre like ?", '%' + [req.body.clientes] + '%');
-    res.send(clientes)
-});
+// });
+// router.post('/profile', async(req, res) => {
+//     console.log(req.body.clientes);
+//     const clientes = await pool.query("SELECT * FROM clientes  where  nombre like ?", '%' + [req.body.clientes] + '%');
+//     res.send(clientes)
+// });
 router.get('/logout', (req, res) => {
     req.logOut();
     res.redirect('/');

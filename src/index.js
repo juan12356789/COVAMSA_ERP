@@ -21,7 +21,6 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 
-
 app.set('views', path.join(__dirname, 'views'));
 // middlewars 
 
@@ -58,7 +57,6 @@ app.use((req, res, next) => { // se usa para ver que variable son accedidadas de
     app.locals.success = req.flash('success');
     app.locals.error = req.flash('error');
     app.locals.user = req.user;
-    app.locals.name = req.name;
     next(); // toma la infotmacion del usuario 
 });
 // routes 
@@ -70,11 +68,11 @@ app.use('/admin', require('./routes/admin/admin'));
 app.use('/user', require('./routes/user/user'));
 app.use('/excel', require('./routes/ventas/excel'));
 app.use('/nadvar', require('./routes/nadvar/nadvar'));
-// app.use('/compras', require('./routes/compras/compras'));
-
+app.use('/facturas', require('./routes/facturas/facturas'));
+app.use('/compras', require('./routes/compras/compras'));
 // Public 
 app.use(express.static(path.join(__dirname, 'public')));
-// app.use(express.static(path.join(__dirname, '/public/images/favicon.ico')));
+
 
 const server = app.listen(app.get('port'), () => {
     console.log('server on port ', app.get('port'));
@@ -84,8 +82,13 @@ const SocketIO = require('socket.io');
 const io = SocketIO(server);
 
 io.on('connection', (socket) => {
+
     socket.on('data:pedidos', (data) => {
 
-        io.sockets.emit('data:pedidos', data)
+        io.sockets.emit('data:pedidos', data);
+
     });
+
+    socket.on('data:facturas', data => io.sockets.emit('data:facturas', data));
+
 });

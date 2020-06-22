@@ -41,17 +41,17 @@ const actualizar = (data) => {
 
 };
 
+// soket para mandar facturas 
+const actualizarFacturas =  data =>  socket.emit('data:facturas', data); 
 
 let sendData = (data) => {
     let table = '';
     ruta = ["Norte", "Sur"];
-    let estatus = ['Nuevo', 'En Proceso', 'Parcial', 'Completo', 'Ruta', 'Cancelado', 'Detenido'];
+    let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido'];
     prioridad_info = ["Normal", "Normal", "Urgente"];
     prioridadE = ["Entrega Parcial", "Entrega Completa"];
     colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E"];
-    let numeracion_pedidos = 0,
-        numero_de_pedidos_urgentes = 0;
-    console.log(data.length);
+    let numeracion_pedidos = 1 , numero_de_pedidos_urgentes = 0;
     data.forEach(data => {
         if (data.prioridad == 2) numero_de_pedidos_urgentes++;
         table += `<tr>
@@ -73,7 +73,8 @@ let sendData = (data) => {
                
                 </tr>`;
     });
-    document.getElementById('numero_pedidos').innerHTML = `Total De Pedidos: <input type="text"  value="${numeracion_pedidos}" disabled>  Pedidos Urgentes: <input type="text"  value="${numero_de_pedidos_urgentes}" disabled>`;
+    
+    document.getElementById('numero_pedidos').innerHTML = `Total De Pedidos: <input type="text"  value="${numeracion_pedidos - 1}" disabled>  Pedidos Urgentes: <input type="text"  value="${numero_de_pedidos_urgentes}" disabled>`;
 
     document.getElementById('pedidos').innerHTML = table;
 }
@@ -82,11 +83,11 @@ let sendData = (data) => {
 const chanche_estatus_almacen = (order) => {
     $('#change_status').modal('hide');
     let estado_nuevo = document.getElementById('estado_nuevo').value;
-    $.ajax({
-        type: "POST",
-        url: "/almacen/cambio_estado",
-        data: { estado_nuevo, order },
-        success: function(response) {
+    console.log(estado_nuevo);
+    
+    $.ajax({type: "POST",url: "/almacen/cambio_estado",data: { estado_nuevo, order }, success: function(response) {
+            if(response == false )  return notifications(`No se puede cambiar el status a facturación ya que hay partidas incompletas`, 'warning');
+            if(estado_nuevo != "Nuevo" && estado_nuevo != "Surtiendo" )    actualizarFacturas(`${order}`);
             notifications(`El estado del pedido ${order} ha sido cambiado `, 'success');
             pedidos();
             actualizar();

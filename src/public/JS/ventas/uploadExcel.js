@@ -46,14 +46,16 @@ const orderDetail = () => {
 
     let info = JSON.parse(excelInfo),
         n = false,
-        pedido = ``;
-    console.log(info);
+        pedido = ``,
+        cont = 1;
+
 
     info.Sheet1.forEach(element => {
         if (element.K == "Subtotal") n = false;
         if (n) {
             pedido += `
               <tr>
+               <td>${cont++}</td>
                <td>${element.C}</td>
                <td>${element.F}</td>
                <td>${element.O}</td>
@@ -76,6 +78,7 @@ const orderDetail = () => {
              <div class="modal-body">
                   <table  class="table" >
                   <thead  class="thead-dark" >
+                      <th></th>
                       <th>Clave</th>
                       <th>Nombre</th>
                       <th>Cantidad</th>
@@ -86,8 +89,7 @@ const orderDetail = () => {
                 </table>
              </div>
              <div class="modal-footer">
-               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-               <button type="button" class="btn btn-primary">Understood</button>
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
              </div>
            </div>
          </div>
@@ -105,11 +107,13 @@ const orderDatailMisPedidos = id => {
         url: "/excel/excelDetail",
         data: { pedido: id },
         success: function(response) {
-            let pedido = ``;
+            let pedido = ``,
+                cont = 1;
             response.forEach(element => {
 
                 pedido += `
               <tr>
+               <td>${cont++}</td>  
                <td>${element.clave}</td>
                <td>${element.cantidad}</td>
                <td>${element.nombre}</td>
@@ -132,6 +136,7 @@ const orderDatailMisPedidos = id => {
               <div class="container" >
                   <table  class="table" >
                   <thead  class="thead-dark" >
+                      <th>#</th>
                       <th>Clave</th>
                       <th>Nombre</th>
                       <th>Cantidad</th>

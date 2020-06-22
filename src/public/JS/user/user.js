@@ -160,14 +160,10 @@ const selectUserc = id => {
                         <label>Tipo de usuario:</label>
                         <input type="text"  value="${response[0].tipo_usuario}"  name="tipo_usuario" id="tipo_usuario" class="form-control"  required    style=" border: 0;" readonly  >
                         <br>
-                        <select name="usuario" id="usuario"  onchange="option();" class="form-control" requ>
-                            <option value="" ></option>
-                            <option value="Ventas" >Ventas</option>
-                            <option value="Almacen" >Almacén</option>
-                            <option value="Administrador" >Administrador</option>
-                            <option value="Compras" >Compras</option>
-                            <option value="Facturación" >Facturación</option>
-                            <option value="Entregar" >Entregas</option>
+                        <select name="usuario" id="usuarios"  onchange="option();" class="form-control" >
+                            <option  value="Ventas" >Ventas</option>
+                            <option  value="Almacen" >Almacén</option>
+                            <option  value="Administrador" >Administrador</option>
                         </select>
                     </div>
                     <div class="col-2">
@@ -191,11 +187,8 @@ const selectUserc = id => {
 
 };
 
-let option = () => {
-    var cod = document.getElementById("usuario").value;
-    $("#tipo_usuario").val(cod);
+let option = () => $("#tipo_usuario").val($("#usuarios").val());
 
-};
 
 const insertUser = () => {
     let form_usuario = `

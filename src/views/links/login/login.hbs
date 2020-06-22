@@ -70,6 +70,10 @@
             </div>
             <div id="campoOK"></div>
 
+            </div>
+            {{!-- fin del form --}}
+            
+            </form>
         </div>
         {{!-- fin del form --}}
 
@@ -139,37 +143,34 @@
 
 {{!-- segun bloques esto --}}
 <script>
-  let intentos = 0;
+  //  let intentos = 0;
 
-  document
-    .getElementById('validar')
-    .addEventListener('click', function (evt) {
-      const campo = document.getElementById('campo'),
-        valido = document.getElementById('campoOK')
-
-
-      if (intentos >= 2) {
-        return;
-      }
-
-      if (/^\d+$/g.test(campo.value)) {
-        valido.innerText = "válido";
-        intentos = 0;
-
-      } else {
-        intentos++;
-        valido.innerText = "intentos: " + intentos;
-
-      if (intentos >= 3) {
-          swal({
-           title: `Usuario bloqueado notifique al administrador`,
-            type: `warning`,
-           showConfirmButton: true
-         });
-      }
-    });
-
+// document
+ // .getElementById('validar')
+ // .addEventListener('click', function(evt) {
+ //   const campo = document.getElementById('campo'),
+ //     valido = document.getElementById('campoOK')
+//
+//
+ //   if (intentos >= 3) {
+ //     return;
+ //   }
+//
+ //   if (/^\d+$/g.test(campo.value)) {
+ //     valido.innerText = "válido";
+ //     intentos = 0;
+//
+ //   } else {
+ //     intentos++;
+ //     valido.innerText = "intentos: " + intentos;
+//
+ //     if (intentos >= 3) {
+ //         swal({
+ //          title: `Usuario bloqueado notifique al administrador`,
+ //           type: `warning`,
+ //          showConfirmButton: true
+ //        });
+ //     }
+ //   }
+ // });
 </script>
-
-
-

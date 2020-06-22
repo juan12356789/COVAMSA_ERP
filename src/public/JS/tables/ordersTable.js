@@ -34,6 +34,7 @@ let orderTable = () => {
                                 }
                             },
                             { data: 'ruta' },
+
                             { data: 'importe' },
                             {
                                 sortable: false,
@@ -56,7 +57,18 @@ let orderTable = () => {
                     <br>`;
                     return ' '; 
                 }
+            },
+
+            { data: 'detalles' }, {
+                sortable: false,
+                "render": function(data, type, full, meta) {
+                    if(full.estatus <= 3 || full.estatus == 7  )return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close"    ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button>
+                    <br>`;
+                    return ' '; 
+                }
             }
+
+        
             
 
         ]
