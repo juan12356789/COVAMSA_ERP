@@ -352,7 +352,7 @@ const cargar_pedido = () =>{
     `;
     
     document.getElementById('spinnerOrder').innerHTML = modal;
-    $('#spinnerUpload').modal('show');
+   
 } 
 
 function ValidaLongitud(campo, longitudMaxima) {

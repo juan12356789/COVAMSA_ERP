@@ -5,7 +5,7 @@ const  uploadExcel  = () =>{
     var csvFile = $('#excel')[0].files[0];
     if( csvFile == undefined ) return notifications(`Seleccione algún archivo `,'warning');
     if(csvFile.name.substring(csvFile.name.lastIndexOf("."))  != ".xlsx" )   return notifications(`Sólo se adminten archivos .xlsx`,'warning'); 
-    $("#ocultar_excel").hide();
+   
     
     var data = new FormData(); 
     data.append('excel', csvFile);
@@ -22,8 +22,9 @@ const  uploadExcel  = () =>{
 
         request.done(function( msg )
         {
-          
-          if(msg == "null")  return  notifications(`No se en cuentra ese cliente en la base de datos`,'warning');
+          if(msg == "false" ) return notifications(`Este cliente pertenece a  otro vendedor, favor de notificarlo con en administrador`,'warning');
+          if(msg == "null") return notifications(`No se en cuentra ese cliente en la base de datos`,'warning');
+          $("#ocultar_excel").hide();
           let info = JSON.parse(msg);
           excelInfo.push(msg);
           notifications("Ha sido importado de manera correcta",'success'); 
