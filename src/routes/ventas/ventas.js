@@ -89,7 +89,7 @@ router.post("/add", upload.fields([{ name: 'orden_compra', maxCount: 1 }, { name
             ruta_pdf_comprobante_pago: req.files.comprobante_pago != undefined ? req.files.comprobante_pago[0].filename : '',
             num_pedido: req.body.numeroPedido,
             observacion: req.body.observaciones,
-            detalles: req.body.detalles,
+
             fecha_inicial: f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes(),
             comprobante_pago: req.body.comprobante_pago != undefined && req.body.comprobante_pago ? req.body.comprobante_pago : '',
             importe: req.body.importe,

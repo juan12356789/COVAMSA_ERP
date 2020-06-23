@@ -68,7 +68,7 @@ $("#pagos_transferencia").click(function(e) {
 $(document).ready(function() {
 
 
-            document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`;
+            document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block">Enviar</button>`;
 
             dataTable = $("#orders").DataTable({
                         "order": [
@@ -133,7 +133,7 @@ $(document).ready(function() {
                    } ,
                    
                  },
-                 {data: 'detalles'}
+                
 
                 ]
 
