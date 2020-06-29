@@ -243,16 +243,18 @@
                     {{!-- VENTANA MODAL CARGAR PEDIDO --}}
                     <div id="spinnerOrder"></div>
 
+{{!-- sólo lectura = reandonly --}}
 
                   </div>
                   <label for="" class="col-sm-2 col-form-label">Importe:</label>
                   <div class="col-sm-4">
                     <div class="input-group-prepend">
                       <span class="input-group-text border border-secondary">$</span>
-                      <input type="text" class="form-control border border-secondary" readonly id="importe"
-                        name="importe" required
-                        {{!-- maxLength="12" minlength="1" onkeypress="return filterFloat(event,this);" --}}
-                        {{!-- maxLength="12" minlength="1"  --}}
+                      <input type="text" class="form-control border border-secondary" id="importe"
+                      {{!-- <input type="text" class="form-control border border-secondary" readonly id="importe" --}}
+
+                        name="importe" pattern=" ^[1-9]\d*$  " required
+                        
                         title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales">
                       <br>
                     </div>
@@ -388,11 +390,12 @@
 </div>
 
 <div class="card">
+   <div class="container-fluid">
   <div class="card-header" id="headingTwo">
     <h5 class="mb-0">
     </h5>
   </div>
-  {{!-- <div class="container-fluid"> --}}
+ 
   <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
     <div class="card mb-3">
       <div class="card-body">
@@ -462,6 +465,3 @@
 
 
 
-<script>
-
-</script>

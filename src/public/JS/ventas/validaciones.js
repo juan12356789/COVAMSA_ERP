@@ -2,7 +2,7 @@ const socket = io();
 const dot_obervaciones = document.querySelector("#observaciones");
 
 $("#spinner").hide();
-// $("#imgct").hide();
+
 
 let clickClientes = () => {
     $('.col-sm-8').val("");
@@ -38,15 +38,6 @@ let clientes = (words = '') => {
 };
 
 let cliente = (nombre) => {
-    // let mandar = `
-
-    //    <div class="col-sm-14">
-    //      <input type="text"  class="form-control valid border border-secondary" value="${nombre}" id="nombre"  name="nombre" require readonly >
-    //    </div>
-
-    // `;
-    // $("#inputCliente").show();
-    // document.getElementById('inputCliente').innerHTML = mandar;
     $("#nombre").val(nombre);
 
 };
@@ -68,7 +59,7 @@ $("#pagos_transferencia").click(function(e) {
 $(document).ready(function() {
 
 
-            document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block">Enviar</button>`;
+            document.getElementById('button_send').innerHTML = `<button  type="submit" class="btn btn-success btn-lg btn-block">Enviar</button>`;
 
             dataTable = $("#orders").DataTable({
                         "order": [
