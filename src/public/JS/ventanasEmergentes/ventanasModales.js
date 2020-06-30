@@ -58,31 +58,13 @@ let reson_to_cancel = (order) => {
 };
 
 let cambios_status_pedidos = (current_status, order) => {
-
+    console.log(current_status);
+    
     if (current_status == "Cancelado") return notifications("Este pedido ha sido cancelado no es posible cambiar  el status", 'warning');
     let opciones_pago = '';
-    // switch (current_status) {
-    //     case "Nuevo":
-    //         opciones_pago = `<option value="2">Surtiendo</option>`;
-    //     break;
-    //     case "Surtiendo":
-    //         opciones_pago = `<option value="3">Parcial</option>
-    //                          <option value="4">Facturable </option>`;
-    //     break;
-    //     case "Parcial":
-    //         opciones_pago = `<option value="2">Surtiendo</option>
-    //                            <option value="5">RUTA</option>`;
-    //     break;
-    //     case "Completo":
-    //         opciones_pago = `<option value="2">EN PROGRESO</option>
-    //                             <option value="5">RUTA</option>`;
-    //     break;
-
-    // }
-
     $('#change_status').modal('show');
-    
     let nuevo_estatus = document.getElementById('estado_nuevo');
+    
     let elementsHTML = `
         <div class="modal-header">
             <h5 class="modal-title">Cambio de Estado</h5>
@@ -129,7 +111,6 @@ let cambios_status_pedidos = (current_status, order) => {
                           <th scope="col" >Cantidad </th>
                           <th scope="col" >Cantidad surtida</th>
                           <th scope="col" >  Encontrado</th>
-                          <th scope="col"  >Guardar</th>
 
                       </tr>
                   </thead>
@@ -168,8 +149,8 @@ const tabla_partidas  = (id_pedido , status) =>{
                     <th scope="col" >${response.nombre}</th>
                     <th scope="col"  >${response.cantidad}</th>
                     ${ status == "Surtiendo" ? `<th scope='col'  ><input type='number' value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  maxlength="5"  min="1" max="5" name='numero${numero}' id='numero${numero}' ></th>`:`<th><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </th>` }
-                    ${ status == "Surtiendo" ?`<th><input type="checkbox"  ${response.cantidad_surtida == response.cantidad?"checked":" "} name="completo${cont}" id="completo${cont}"></th>`:`<th><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></th>`}
-                    ${ status == "Surtiendo" ?`<th><button class="btn btn-success" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"  >Guardar</button></th>`:"<th><button  disabled class='btn btn-success' >Guardar</button></th>"}
+                    ${ status == "Surtiendo" ?`<th><input type="checkbox" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"   ${response.cantidad_surtida == response.cantidad?"checked":" "} name="completo${cont}" id="completo${cont}"></th>`:`<th><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></th>`}
+                   
                 </tr>`;
                 if(response.cantidad_surtida == response.cantidad)  numero_partidas++; 
 
@@ -188,7 +169,7 @@ const tabla_partidas  = (id_pedido , status) =>{
                         <strong>Estado del pedido:</strong> ${response.length == numero_partidas?'Partidas completas':'Hay partidas incompletas' }
                      </div>
                      <div class="col" >   
-                        <strong>Pedidos completo:</strong>   <input type="checkbox" ${status == 'Surtiendo'?'':'disabled'}   id="partida_completa" onclick="prueba('${id_pedido}','${status}')"  > 
+                        <strong>Pedidos completo:</strong>   <input type="checkbox" ${status == 'Surtiendo'?'':'disabled'}   id="partida_completa" onclick="completarListga('${id_pedido}','${status}')"  > 
                     </div>
                 </div>
              `;
@@ -215,14 +196,14 @@ const tabla_partidas  = (id_pedido , status) =>{
 
 const cantidadProducto = (cantidad  , id_partidas_productos,numero ,id , status) =>{
 
+  
     let checkbox =   document.getElementById("completo"+numero).checked;
     let cantidad_entrante = $("#numero"+numero).val();
     if(checkbox) cantidad_entrante =  cantidad; 
     if($("#numero"+numero).val() > cantidad  ) return notifications("La cantidad que introdujo es mayor a las piezas que se  solicitan ","warning"); 
     if( $("#numero"+numero).val() < 0 )return notifications("No puede tener valores menores a 0 ","warning");
-    $.ajax({type: "POST",url: "/almacen/cantidad_pedido",data: {numero: cantidad_entrante,id:id_partidas_productos},success: function (response) {
+    $.ajax({type: "POST",url: "/almacen/cantidad_pedido",data: {op:checkbox,numero: cantidad_entrante,id:id_partidas_productos},success: function (response) {
         tabla_partidas(`${id}`,`${status}`);    
-        notifications("La cantidad ha sido guardada","success"); 
         }
     });
     
@@ -230,11 +211,15 @@ const cantidadProducto = (cantidad  , id_partidas_productos,numero ,id , status)
 }
 
 // este onckick nos sirve paea saber si todos los productos se han encontrado 
-const prueba  = ( id ,status ) => {
+const completarListga  = ( id ,status ) => {
     let checkbox =   document.getElementById("partida_completa").checked;
+    $("#partida_completa").val(checkbox);
+    console.log(checkbox);
+    
     if(checkbox == true ){
         $.ajax({type: "POST",url: "/almacen/pedidos_check",data: {num_pedido:id},success: function (response) {
-            tabla_partidas(id , status);
+            // tabla_partidas(id , status);
+            $("#partida_completa").prop("checked", checkbox);  
                 console.log(response);
                 
             }
@@ -290,6 +275,7 @@ const uploadFileTransferencia = (num_pedido) => {
     `;
 
     document.getElementById('send_trasferencia').innerHTML = elementsHTML;
+}; 
     
 
     let cancel_almacen = (order) => {
@@ -322,7 +308,6 @@ const uploadFileTransferencia = (num_pedido) => {
 
     };
 
-};
 
 const cargar_pedido = () =>{
     let modal  = `

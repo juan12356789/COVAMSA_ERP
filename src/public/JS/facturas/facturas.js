@@ -7,6 +7,11 @@ socket.on('data:facturas', function(data) {
     
 
 });
+const actualizar = () => {
+
+  socket.emit('data:facturas');
+
+};
 
 const facturas  = () =>{
     
@@ -22,7 +27,7 @@ const facturas  = () =>{
             table += `<tr>
     
                       <th scope="row">${numeracion_pedidos++}</th>
-                      <td> ${estatus[data.estatus - 1] != "Facturando"?`<button  type="button"  class="btn btn-secondary"  onclick="procesando('${data.num_pedido}')"   > Procesar </button>`:`<button  type="button"  class="btn btn-success"  onclick="procesando('${data.num_pedido}')"   > Completo</button>`} </td>
+                      <td> ${estatus[data.estatus - 1] != "Facturando"?`<button  type="button"  class="btn btn-secondary"  onclick="procesando('${data.num_pedido}','${estatus[data.estatus - 1]}')"   > Procesar </button>`:`<button  type="button"  class="btn btn-success"  onclick="procesando('${data.num_pedido}','${estatus[data.estatus - 1]}')"   > Completo</button>`} </td>
                       <td><button   class="btn btn-primary" onclick="partidas('${data.num_pedido}')" > Partidas </button></td>
                       <td><a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
                       <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
@@ -98,19 +103,21 @@ const partidas = id =>{
         }
     });
 }
-const change_status =  id  =>{
-    $.ajax({type: "POST",url: "/facturas/status",data: {id:id},success: function (response) {
+const change_status =  (id , status)  =>{
+  
+    $.ajax({type: "POST",url: "/facturas/status",data: {id:id ,status:status},success: function (response) {
 
             $("#modalProcess").modal('hide');
             notifications(`Se ha cambiado el satatus de la orden ${id}`,"success"); 
             facturas();
+            actualizar(); 
             
         }
     });
     
 }
-const procesando = id  =>{
-    
+const procesando = (id , status)  =>{
+
     let table =`
               <div class="modal fade" id="modalProcess" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog">
@@ -125,12 +132,12 @@ const procesando = id  =>{
                     <div id="container" >
                         <div class="row" >
                             <div class="col-12" >
-                                <center><h3>¿Está listo para generar la factura de este pedido?</h3></center>
+                                <center> ${status != "Facturando"? `<h3>¿Está listo para generar la factura de este pedido?</h3> `:`<h3>¿Su factura ya fue generada?</h3> `} </center>
                             </div>
                         </div>
                         <div class="row" >
                             <div class="col">
-                              <center><button  class="btn btn-success" onclick="change_status('${id}')" >Sí</button></center>
+                              <center><button  class="btn btn-success" onclick="change_status('${id}','${status}')" >Sí</button></center>
                             </div>
                             <div class="col">
                             <center><button data-dismiss="modal" class="btn btn-danger">No</button></center>

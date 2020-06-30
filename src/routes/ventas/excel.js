@@ -5,7 +5,9 @@ const { isLoggedIn } = require('../../lib/auth');
 const upload = require('express-fileupload');
 const importExcel  =  require('convert-excel-to-json');
 const path = require("path");
-const rutimage = path.join(__dirname, "../../../excel");
+const rutimage = path.join(__dirname, "../../files/");
+console.log(rutimage);
+
 const fs = require('fs');
 router.use(upload());
 
@@ -41,25 +43,25 @@ router.post('/', (req , res) => {
                 numero_partidas : ''
             }; 
 
-            let numero_partidas = 0 , contador  = 0; 
+            let numero_partidas = 0 , contador  = 0 ,clave = -1; 
             for (let i = 0; i < result.Sheet1.length; i++) {
-
+                    if(clave != -1) clave++; 
                     if(result.Sheet1[i].M == 'COTIZACIÓN No. :') infoPedidos.cotizacion =  result.Sheet1[i].O;
                     if(result.Sheet1[i].M == 'Fecha') infoPedidos.fecha =  result.Sheet1[i].O;
                     if(result.Sheet1[i].B == 'Cliente:')infoPedidos.cliente =  result.Sheet1[i].D;
-                    if(result.Sheet1[i].B == 'Vendedor :'){
-                        infoPedidos.vendedor =  result.Sheet1[i].C;
-                        numero_partidas++; 
-                    }
+                    if(result.Sheet1[i].B == 'Vendedor :') infoPedidos.vendedor =  result.Sheet1[i].C;
                     if(numero_partidas >  contador ) contador = numero_partidas;
                     if(result.Sheet1[i].K == 'Total')infoPedidos.total =  result.Sheet1[i].O;
+                    if(result.Sheet1[i].C == 'Clave')  clave = 0;
+                     
+                    
                     
             }
+            console.log(clave);
             
              infoPedidos.numero_partidas = numero_partidas;
             
-             
-
+            
              try {
                  const cliente  = await pool.query("SELECT nombre , prioridadE FROM clientes inner join preferencias_cliente using(idcliente) where numero_interno = ?",infoPedidos.cliente);
                  const clientes_verndedor =  await pool.query(`select * from acceso inner join empleados using(idacceso) 
