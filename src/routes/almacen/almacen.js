@@ -35,7 +35,7 @@ router.post('/cantidad_pedido',async(req , res)=>{
 });
 
 router.post("/pedidos_check",  async ( req , res )=>{
-
+      
       let productos_cantidad =  await  pool.query(`select id_partidas_productos,cantidad  
                                              from  pedidos inner join partidas using(id_pedido) 
                                                            inner join partidas_productos using(idPartida) 

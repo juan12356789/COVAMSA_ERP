@@ -51,9 +51,9 @@ socket.on('data:facturas', function(data) {
 let sendData = (data) => {
     let table = '';
     ruta = ["Norte", "Sur"];
-    let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado'];
+    let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida'];
     prioridad_info = ["Normal", "Normal", "Urgente"];
-    colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8"];
+    colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078"];
     let numeracion_pedidos = 1 , numero_de_pedidos_urgentes = 0;
     data.forEach(data => {
         if (data.prioridad == 2) numero_de_pedidos_urgentes++;
@@ -69,7 +69,7 @@ let sendData = (data) => {
                   <td id="userinput" >${data.importe}</td> 
                   <td style="background-color:${colores[data.estatus - 1]}" >${estatus[data.estatus - 1]}</td>
                   <td >${prioridad_info[data.prioridad]}</td>
-                  <td >  <p class="line-clamp" >${data.observacion}</p></td>
+                  <td >  <p class="line-clamp" >  ${data.observacion} </p> </td>
                   <td>${data.fecha_inicial}</td>
                
                 </tr>`;
@@ -217,6 +217,8 @@ const chanche_estatus_almacen = (order) => {
     });
 
 };
+
+
 
 /*  preguntarle a rosa para que es esto 
 document.getElementById("userinput").onblur = function() {

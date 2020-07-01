@@ -7,6 +7,7 @@ const path = require("path");
 const rutimage = path.join(__dirname, "../../files/");
 console.log(rutimage);
 const fs = require('fs');
+const { json } = require("express");
 router.use(upload());
 
 
@@ -18,7 +19,7 @@ router.get('/', isLoggedIn ,( req , res )=>{
 router.post('/informacion_envios',  async (req , res)=>{
        
     const pedidos = await pool.query(`SELECT DATE_FORMAT(fecha_facturacion,'%d-%m-%Y %H:%i %p') fecha_facturas,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad
-    FROM  pedidos inner join facturas using(id_pedido) WHERE estatus = 10 or estatus = 11 
+    FROM  pedidos inner join facturas using(id_pedido) WHERE estatus = 10 or estatus = 11  or estatus =12
     order by prioridad desc,fecha_inicial asc`);
     
     res.send(pedidos);
@@ -59,6 +60,16 @@ router.post('/', async (req , res) => {
         res.send(true); 
     });
 
-}); 
+});
 
+router.post('/cancelar_entrega', async (req , res )=>{
+
+    let idPedidos = JSON.parse(req.body.id);
+    for (let i = 0; i < idPedidos.length; i++) {
+      await  pool.query(`UPDATE pedidos SET estatus = 12 where num_pedido =  "${idPedidos[i]}"`);
+    }
+    res.send(true); 
+    
+
+}); 
 module.exports =  router; 

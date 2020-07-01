@@ -1,5 +1,7 @@
+const socket = io();
 
 let tablaRepartidor = () =>{
+
     $.ajax({type: "POST",url: "/entregas/informacion_envios",success: function (response) {
 
              sendData(response); 
@@ -7,7 +9,16 @@ let tablaRepartidor = () =>{
 
         }
     });
+
 }; 
+
+const pedidos = (data) => socket.emit('data:pedidos', data);
+
+socket.on('data:pedidos', function(data) {
+
+    tablaRepartidor();
+
+});
 
 tablaRepartidor(); 
 
@@ -16,15 +27,16 @@ let sendData = (data) => {
     
     let table = '';
     ruta = ["Norte", "Sur"];
-    let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado'];
+    let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida'];
     prioridad_info = ["Normal", "Normal", "Urgente"];
-    colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8"];
+    colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078"];
     let numeracion_pedidos = 1 , numero_de_pedidos_urgentes = 0;
     data.forEach(data => {
         if (data.prioridad == 2) numero_de_pedidos_urgentes++;
         table += `<tr>
 
                   <th scope="row">${numeracion_pedidos++}</th>
+                  <td> ${estatus[data.estatus - 1] == "Ruta"?`<input type="checkbox" id="${data.num_pedido}" onclick="suspenderEntregas('${data.num_pedido}')" name="" id="suspenderPedido">`:'' }</td>
                   <td> <button  class="btn btn-primary" onclick="cambioStatus('${data.num_pedido}')" >Entregado</button> </td>
                   <td> <i class="fas fa-file-invoice" onclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.num_pedido}')"></i> </td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
@@ -47,6 +59,9 @@ let sendData = (data) => {
         <div class="col" >
         Pedidos Urgentes: <input type="text"  value="${numero_de_pedidos_urgentes}" disabled>
         </diV>
+        <div class="col" >
+          <button  id="suspenderPedido" class="btn btn-secondary" onclick="idSuspender()" disabled > Suspender pedidos </button>
+        </div>
     </div>`;
 
 };
@@ -134,6 +149,7 @@ const  uploadExcel  = id =>{
 
         if(msg) notifications("El  comprobante  ha sido guardado",'success'); 
         tablaRepartidor(); 
+        pedidos(); 
         $("#entregasPedidos").modal('hide');
 
         });
@@ -145,15 +161,42 @@ const  uploadExcel  = id =>{
 
       }; 
 
+// se elimina el archivo    
 const deleteFile = id =>{
 
     $.ajax({type: "POST",url: "/entregas/eliminarArchivo",data:{id:id},success: function (response) {
-                
+
         if(response == true ) notifications("El  comprobante ha sido eliminado",'success'); 
         tablaRepartidor(); 
+        pedidos(); 
         $("#entregasPedidos").modal('hide');
 
         }
     });
    
 }; 
+
+//  se va seleccionando el  pedido que se va a cancelar 
+let  idPedidosAEntregar   = [] ; 
+const suspenderEntregas   = id =>{
+
+    $('#suspenderPedido').prop('disabled', false);
+    if(document.getElementById(`${id}`).checked == false){
+        idPedidosAEntregar.splice(idPedidosAEntregar.indexOf(id) , 1 );
+        return idPedidosAEntregar.length == 0 ?  $('#suspenderPedido').prop('disabled', true):$('#suspenderPedido').prop('disabled', false);
+    }  
+    idPedidosAEntregar.push(id); 
+    
+};
+
+// se manda el id en el cual se  suspenderá la entrega 
+const idSuspender  = () =>{
+    
+    $.ajax({ type: "POST",url: "/entregas/cancelar_entrega",data: {id : JSON.stringify(idPedidosAEntregar)} ,success: function (response) {
+        tablaRepartidor(); 
+        pedidos(); 
+            
+        }
+    });
+    
+}

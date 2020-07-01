@@ -155,7 +155,8 @@ const tabla_partidas  = (id_pedido , status) =>{
                 if(response.cantidad_surtida == response.cantidad)  numero_partidas++; 
 
             });
-            
+                // console.log(numero_partidas, response.length);
+                
             document.getElementById("numero_partidas").innerHTML = `
             
                 <div class="row" >
@@ -196,7 +197,6 @@ const tabla_partidas  = (id_pedido , status) =>{
 
 const cantidadProducto = (cantidad  , id_partidas_productos,numero ,id , status) =>{
 
-  
     let checkbox =   document.getElementById("completo"+numero).checked;
     let cantidad_entrante = $("#numero"+numero).val();
     if(checkbox) cantidad_entrante =  cantidad; 
@@ -207,21 +207,19 @@ const cantidadProducto = (cantidad  , id_partidas_productos,numero ,id , status)
         }
     });
     
-
 }
 
 // este onckick nos sirve paea saber si todos los productos se han encontrado 
+
+
 const completarListga  = ( id ,status ) => {
     let checkbox =   document.getElementById("partida_completa").checked;
-    $("#partida_completa").val(checkbox);
-    console.log(checkbox);
-    
     if(checkbox == true ){
-        $.ajax({type: "POST",url: "/almacen/pedidos_check",data: {num_pedido:id},success: function (response) {
-            // tabla_partidas(id , status);
-            $("#partida_completa").prop("checked", checkbox);  
-                console.log(response);
-                
+        $.ajax({type: "POST",url: "/almacen/pedidos_check",data: {num_pedido : id ,check : checkbox},success: function (response) {
+            
+            tabla_partidas(id , status);
+            document.getElementById("partida_completa").checked = true;
+
             }
         });
     }  
