@@ -1,11 +1,13 @@
-const excelInfo = [];
+let excelInfo = [];
 
 const uploadExcel = () => {
 
     var csvFile = $('#excel')[0].files[0];
-    if (csvFile == undefined) return notifications(`Seleccione algún archivo `, 'warning');
-    if (csvFile.name.substring(csvFile.name.lastIndexOf(".")) != ".xlsx") return notifications(`Sólo se adminten archivos .xlsx`, 'warning');
-    $("#ocultar_excel").hide();
+    if (csvFile == undefined) return notifications(`
+                        Seleccione algún archivo `, 'warning');
+    if (csvFile.name.substring(csvFile.name.lastIndexOf(".")) != ".xlsx") return notifications(`
+                        Sólo se adminten archivos.xlsx `, 'warning');
+
 
     var data = new FormData();
     data.append('excel', csvFile);
@@ -21,7 +23,12 @@ const uploadExcel = () => {
 
     request.done(function(msg) {
 
-        if (msg == "null") return notifications(`No se en cuentra ese cliente en la base de datos`, 'warning');
+        if (msg == "false") return notifications(`
+                        Este cliente pertenece a otro vendedor, favor de notificarlo con en administrador `, 'warning');
+        if (msg == "null") return notifications(`
+                        No se en cuentra ese cliente en la base de datos `, 'warning');
+        $("#ocultar_excel").hide();
+        excelInfo = []; // se vacia la info para la siguinte orden 
         let info = JSON.parse(msg);
         excelInfo.push(msg);
         notifications("Ha sido importado de manera correcta", 'success');
@@ -46,55 +53,80 @@ const orderDetail = () => {
 
     let info = JSON.parse(excelInfo),
         n = false,
-        pedido = ``,
+        pedido = `
+                        `,
         cont = 1;
-
 
     info.Sheet1.forEach(element => {
         if (element.K == "Subtotal") n = false;
         if (n) {
-            pedido += `
-              <tr>
-               <td>${cont++}</td>
-               <td>${element.C}</td>
-               <td>${element.F}</td>
-               <td>${element.O}</td>
-              </tr>
-            `;
+            pedido += ` >>>
+                        >>> > note8
+                            <
+                            tr >
+                            <
+                            td > $ { cont++ } < /td> <
+                            td > $ { element.C } < /td> <
+                            td > $ { element.F } < /td> <
+                            td > $ { element.O } < /td> <
+                            /tr>
+                        `;
         }
         if (element.C == "Clave") n = true;
 
     });
-    let ventana = `
-         <div class="modal fade" id="orden" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-         <div class="modal-dialog  modal-dialog-scrollable modal-lg"  >
-           <div class="modal-content">
-             <div class="modal-header">
-               <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                 <span aria-hidden="true">&times;</span>
-               </button>
-             </div>
-             <div class="modal-body">
-                  <table  class="table" >
-                  <thead  class="thead-dark" >
-                      <th></th>
-                      <th>Clave</th>
-                      <th>Nombre</th>
-                      <th>Cantidad</th>
-                  </thead>
-                  <tbody id="cuerpo" >
-                   ${pedido}
-                  </tbody>
-                </table>
-             </div>
-             <div class="modal-footer">
-               <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
-             </div>
-           </div>
-         </div>
-       </div>
-      `;
+    let ventana = ` <
+                        div class = "modal fade"
+                        id = "orden"
+                        data - backdrop = "static"
+                        data - keyboard = "false"
+                        tabindex = "-1"
+                        role = "dialog"
+                        aria - labelledby = "staticBackdropLabel"
+                        aria - hidden = "true" >
+                            <
+                            div class = "modal-dialog  modal-dialog-scrollable modal-lg" >
+                            <
+                            div class = "modal-content" >
+                            <
+                            div class = "modal-header" >
+                            <
+                            h5 class = "modal-title"
+                        id = "staticBackdropLabel" > Modal title < /h5> <
+                            button type = "button"
+                        class = "close"
+                        data - dismiss = "modal"
+                        aria - label = "Close" >
+                            <
+                            span aria - hidden = "true" > & times; < /span> <
+                        /button> <
+                        /div> <
+                        div class = "modal-body" >
+                            <
+                            table class = "table" >
+                            <
+                            thead class = "thead-dark" >
+                            <
+                            th > < /th> <
+                            th > Clave < /th> <
+                            th > Nombre < /th> <
+                            th > Cantidad < /th> <
+                            /thead> <
+                            tbody id = "cuerpo" >
+                            $ { pedido } <
+                            /tbody> <
+                            /table> <
+                            /div> <
+                            div class = "modal-footer" >
+                            <
+                            button type = "button"
+                        class = "btn btn-secondary"
+                        data - dismiss = "modal" > Aceptar < /button> <
+                            /div> <
+                            /div> <
+                            /div> <
+                            /div>
+                        `;
     document.getElementById('detallesPedido').innerHTML = ventana;
     $('#orden').modal('show');
 
@@ -107,53 +139,78 @@ const orderDatailMisPedidos = id => {
         url: "/excel/excelDetail",
         data: { pedido: id },
         success: function(response) {
-            let pedido = ``,
+            let pedido = `
+                        `,
                 cont = 1;
             response.forEach(element => {
 
-                pedido += `
-              <tr>
-               <td>${cont++}</td>  
-               <td>${element.clave}</td>
-               <td>${element.cantidad}</td>
-               <td>${element.nombre}</td>
-              </tr>
-            `;
+                pedido += ` <
+                        tr >
+                            <
+                            td > $ { cont++ } < /td>   <
+                            td > $ { element.clave } < /td> <
+                            td > $ { element.cantidad } < /td> <
+                            td > $ { element.nombre } < /td> <
+                            /tr>
+                        `;
 
 
             });
-            let ventana = `
-         <div class="modal fade" id="detalleMisPpedidos" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-         <div class="modal-dialog  modal-dialog-scrollable modal-lg"  >
-           <div class="modal-content">
-             <div class="modal-header">
-               <h5 class="modal-title" id="staticBackdropLabel">Partidas</h5>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                 <span aria-hidden="true">&times;</span>
-               </button>
-             </div>
-             <div class="modal-body">
-              <div class="container" >
-                  <table  class="table" >
-                  <thead  class="thead-dark" >
-                      <th>#</th>
-                      <th>Clave</th>
-                      <th>Nombre</th>
-                      <th>Cantidad</th>
-                  </thead>
-                  <tbody id="cuerpo" >
-                   ${pedido}
-                  </tbody>
-                </table>
-              </div>
-             </div>
-             <div class="modal-footer">
-               <button type="button" class="btn btn-success" data-dismiss="modal">Aceptar</button>
-             </div>
-           </div>
-         </div>
-       </div>
-      `;
+            let ventana = ` <
+                        div class = "modal fade"
+                        id = "detalleMisPpedidos"
+                        data - backdrop = "static"
+                        data - keyboard = "false"
+                        tabindex = "-1"
+                        role = "dialog"
+                        aria - labelledby = "staticBackdropLabel"
+                        aria - hidden = "true" >
+                            <
+                            div class = "modal-dialog  modal-dialog-scrollable modal-lg" >
+                            <
+                            div class = "modal-content" >
+                            <
+                            div class = "modal-header" >
+                            <
+                            h5 class = "modal-title"
+                        id = "staticBackdropLabel" > Partidas < /h5> <
+                            button type = "button"
+                        class = "close"
+                        data - dismiss = "modal"
+                        aria - label = "Close" >
+                            <
+                            span aria - hidden = "true" > & times; < /span> <
+                        /button> <
+                        /div> <
+                        div class = "modal-body" >
+                            <
+                            div class = "container" >
+                            <
+                            table class = "table" >
+                            <
+                            thead class = "thead-dark" >
+                            <
+                            th > # < /th> <
+                            th > Clave < /th> <
+                            th > Nombre < /th> <
+                            th > Cantidad < /th> <
+                            /thead> <
+                            tbody id = "cuerpo" >
+                            $ { pedido } <
+                            /tbody> <
+                            /table> <
+                            /div> <
+                            /div> <
+                            div class = "modal-footer" >
+                            <
+                            button type = "button"
+                        class = "btn btn-success"
+                        data - dismiss = "modal" > Aceptar < /button> <
+                            /div> <
+                            /div> <
+                            /div> <
+                            /div>
+                        `;
             document.getElementById('detalle_mis_pedidos').innerHTML = ventana;
             $('#detalleMisPpedidos').modal('show');
 

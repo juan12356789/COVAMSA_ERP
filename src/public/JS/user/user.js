@@ -66,8 +66,6 @@ const userId = () => {
             let buttons = '';
             if (response == "Administrador") {
                 buttons = `
-                
-                
                 <button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                   Mi perfil
                 </button>
@@ -161,9 +159,11 @@ const selectUserc = id => {
                         <input type="text"  value="${response[0].tipo_usuario}"  name="tipo_usuario" id="tipo_usuario" class="form-control"  required    style=" border: 0;" readonly  >
                         <br>
                         <select name="usuario" id="usuarios"  onchange="option();" class="form-control" >
-                            <option  value="Ventas" >Ventas</option>
-                            <option  value="Almacen" >Almacén</option>
                             <option  value="Administrador" >Administrador</option>
+                            <option  value="Almacen" >Almacén</option>
+                            <option  value="Entregas" >Entregas</option>
+                            <option  value="Facturas" > Facturas </option>
+                            <option  value="Ventas" >Ventas</option>
                         </select>
                     </div>
                     <div class="col-2">
@@ -227,13 +227,11 @@ const insertUser = () => {
             <div class="col-6">
                 <label>Tipo de usuario:</label>
                 <select name="tipo_usuario" id="tipo_usuario" class="form-control" >
-                    <option value="" ></option>
-                    <option value="Ventas" >Ventas</option>
-                    <option value="Almacen" >Almacén</option>
-                    <option value="Administrador" >Administrador</option>
-                    <option value="Compras" >Compras</option>
-                    <option value="Facturación" >Facturación</option>
-                    <option value="Entregar" >Entregas</option>
+                    <option  value="Administrador" >Administrador</option>
+                    <option  value="Almacen" >Almacén</option>
+                    <option  value="Entregas" >Entregas</option>
+                    <option  value="Facturas" > Facturas </option>
+                    <option  value="Ventas" >Ventas</option>
                 </select>
             </div>
             <div class="col-2">

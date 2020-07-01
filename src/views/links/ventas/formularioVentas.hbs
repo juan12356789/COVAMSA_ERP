@@ -94,7 +94,7 @@
 
     max-height: 800px;
     overflow: auto;
-    
+
   }
 </style>
 
@@ -250,7 +250,7 @@
                     {{!-- VENTANA MODAL CARGAR PEDIDO --}}
                     <div id="spinnerOrder"></div>
 
-{{!-- sólo lectura = reandonly --}}
+                    {{!-- sólo lectura = reandonly --}}
 
                   </div>
                   <label for="" class="col-sm-2 col-form-label">Importe:</label>
@@ -258,10 +258,8 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text border border-secondary">$</span>
                       <input type="text" class="form-control border border-secondary" id="importe"
-                      {{!-- <input type="text" class="form-control border border-secondary" readonly id="importe" --}}
-
+                        {{!-- <input type="text" class="form-control border border-secondary" readonly id="importe" --}}
                         name="importe" pattern=" ^[1-9]\d*$  " required
-                        
                         title="Solo se permite un punto decimal y/o el monto con 9 digitos y 2 decimales">
                       <br>
                     </div>
@@ -296,166 +294,175 @@
                 <div>
 
                   <br>
+
+
                   Observaciones:
                   <textarea class="form-control border border-secondary" name="observaciones"
                     {{!-- title="En caso de ques sea necesario poner observaciones" --}}
                     placeholder="Escribe aquí tus observaciones (como máximo 250 caracteres)"
                     {{!-- maxlength="250" > --}}></textarea>
-                  <br>
-                  <div class="form-group row justify-content-center ">
+                  <div class="form-group row justify-content-center">
                     
-                    <div class="col-sm-3" id="button_send"> </div>
-
                     <div class="col-sm-3">
-                      <button type="button" class="btn btn-danger btn-lg btn-block"
-                        onclick="cancelarOrden()">Cancelar</button>
+                      <div id="button_send"></div>
                     </div>
-
                     <div class="col-sm-3">
                       <button type="button" class="btn btn-primary btn-lg btn-block"
                         onclick="orderDetail()">Partidas</button>
                     </div>
-                  </div>
+                    <div class="col-sm-3">
+                      <button type="button" class="btn btn-danger btn-lg btn-block"
+                        onclick="cancelarOrden()">Cancelar</button>
+                    </div>
+                    
+                    <div class="form-group row ">
 
+                      <div class="col-sm-3" id="button_send"> </div>
+
+
+
+
+                    </div>
+
+                  </div>
                 </div>
+                {{!-- </div> --}}
+                <br>
+
               </div>
-              {{!-- </div> --}}
-              <br>
+              {{!-- cargar el pedido  --}}
 
-            </div>
-            {{!-- cargar el pedido  --}}
+              <!-- Modal -->
+              <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="staticBackdropLabel">Clientes:</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-bodyss">
+                      <center>Búsqueda Cliente: <input type="text" id="inputBusqueda" class="col-sm-8"></center>
 
-            <!-- Modal -->
-            <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog"
-              aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Clientes:</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-bodyss">
-                    <center>Búsqueda Cliente: <input type="text" id="inputBusqueda" class="col-sm-8"></center>
+                      <div class="table-wrapper-scroll-y my-custom-scrollbar">
 
-                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
-
-                      <table class="table table-bordered-responsive-sm justify-content-center">
-                        <thead class="thead-light">
-                          <tr>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Id</th>
-                            <th scope="col">Buscar</th>
-                          </tr>
-                        </thead>
-                        <tbody id="clientes">
-                        </tbody>
-                      </table>
+                        <table class="table table-bordered-responsive-sm justify-content-center">
+                          <thead class="thead-light">
+                            <tr>
+                              <th scope="col">Nombre</th>
+                              <th scope="col">Id</th>
+                              <th scope="col">Buscar</th>
+                            </tr>
+                          </thead>
+                          <tbody id="clientes">
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>
+
+              </div>
+
+            </div>
+            {{!-- ventanas modales  --}}
+
+
+            <div class="modal fade bd-example-modal-lg" id="Ventana_Modal" tabindex="-1" role="dialog"
+              aria-labelledby="myLargeModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div id="elements_of_modal"></div>
+                </div>
               </div>
 
             </div>
 
-        </div>
-        {{!-- ventanas modales  --}}
+
+            <div class="form-group  justify-content">
+              {{!-- <div class="row"> --}}
+
+              <div id="button_send"> </div>
+              {{!-- <div> --}}
 
 
-        <div class="modal fade bd-example-modal-lg" id="Ventana_Modal" tabindex="-1" role="dialog"
-          aria-labelledby="myLargeModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div id="elements_of_modal"></div>
+              {{!-- </div> --}}
+
+
+
+
+              {{!-- </div> --}}
+
             </div>
-          </div>
-
         </div>
-
-
-        <div class="form-group  justify-content">
-          {{!-- <div class="row"> --}}
-
-          <div id="button_send"> </div>
-          {{!-- <div> --}}
-
-
-          {{!-- </div> --}}
-
-
-
-
-          {{!-- </div> --}}
-
-        </div>
+        </form>
       </div>
-      </form>
     </div>
   </div>
-</div>
 </div>
 
 <div class="card">
-   <div class="container-fluid">
-  <div class="card-header" id="headingTwo">
-    <h5 class="mb-0">
-    </h5>
-  </div>
- 
-  <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-    <div class="card mb-3">
-      <div class="card-body">
+  <div class="container-fluid">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+      </h5>
+    </div>
 
-        <div class="modal fade bd-example-modal-lg" id="Ventana_Modal_order" tabindex="-1" role="dialog"
-          aria-labelledby="myLargeModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div id="cancel_order"></div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+      <div class="card mb-3">
+        <div class="card-body">
+
+          <div class="modal fade bd-example-modal-lg" id="Ventana_Modal_order" tabindex="-1" role="dialog"
+            aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div id="cancel_order"></div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="modal fade bd-example-modal-lg" id="transferencia" tabindex="-1" role="dialog"
-          aria-labelledby="myLargeModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div id="send_trasferencia"></div>
+          <div class="modal fade bd-example-modal-lg" id="transferencia" tabindex="-1" role="dialog"
+            aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div id="send_trasferencia"></div>
 
+              </div>
             </div>
           </div>
-        </div>
-        <div id="detalle_mis_pedidos"></div>
-        {{!-- <div class="table-responsive"> --}}
-         <div class='table-cont' id='table-cont'>
-          <table id="orders" class="table table-striped">
+          <div id="detalle_mis_pedidos"></div>
+          {{!-- <div class="table-responsive"> --}}
+          <div class='table-cont' id='table-cont'>
+            <table id="orders" class="table table-striped">
 
-            <thead class="thead-dark">
+              <thead class="thead-dark">
 
-              <tr>
-                <th>Partidas</th>
-                <th style="background-color: #A79F21;">Orden De Compra</th>
-                <th style="background-color: #229954;">Número De Pedido</th>
-                <th style="background-color: #1A5276;">Comprabante De Pago</th>
-                <th>Tipo De Pago</th>
-                <th>Ruta</th>
-                <th style="white-space:pre;">Importe</th>
-                <th>Estatus</th>
-                <th>Prioridad</th>
-                <th>Observaciones</th>
-                <th>
-                  <pre><code>CÓDIGO CONVERTIDO A TEXT</code></pre>Fecha</th>
-                <th>Cancelar</th>
+                <tr>
+                  <th>Partidas</th>
+                  <th style="background-color: #A79F21;">Orden De Compra</th>
+                  <th style="background-color: #229954;">Número De Pedido</th>
+                  <th style="background-color: #1A5276;">Comprabante De Pago</th>
+                  <th>Tipo De Pago</th>
+                  <th>Ruta</th>
+                  <th style="white-space:pre;">Importe</th>
+                  <th>Estatus</th>
+                  <th>Prioridad</th>
+                  <th>Observaciones</th>
+                  <th>
+                    <pre><code>CÓDIGO CONVERTIDO A TEXT</code></pre>Fecha</th>
+                  <th>Cancelar</th>
 
-              </tr>
-            </thead>
+                </tr>
+              </thead>
 
-          </table>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 </div>
 
@@ -488,4 +495,3 @@
     tableCont.addEventListener('scroll', scrollHandle)
   }
 </script>
-

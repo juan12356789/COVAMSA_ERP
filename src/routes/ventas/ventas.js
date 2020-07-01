@@ -70,8 +70,8 @@ router.post("/add", upload.fields([{ name: 'orden_compra', maxCount: 1 }, { name
 
     const validacion_pedido_existente = await pool.query("select id_pedido from pedidos where num_pedido = ?", req.body.numeroPedido);
     if (validacion_pedido_existente.length != 0) return res.send("null");
-
     const partidas_info = JSON.parse(req.body.productosArray);
+
     if (req.body.nombre_cliente != undefined && req.body.nombre != ' ' && req.body.observaciones.length < 250) {
         const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre_cliente);
 
