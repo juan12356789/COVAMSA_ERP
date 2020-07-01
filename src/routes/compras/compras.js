@@ -5,7 +5,7 @@ const multer = require("multer");
 const pool = require('../../database');
 const { isLoggedIn } = require('../../lib/auth');
 
-router.get('', (req , res )=>{
+router.get('/',isLoggedIn, (req , res )=>{
     res.render('links/compras/compras');
 });
 

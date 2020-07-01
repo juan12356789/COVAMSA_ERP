@@ -1,0 +1,70 @@
+<style>
+      html{font-size:14px;} p.segunda{font-size:1rem;} @media screen and (orientation:portrait){ p.primera{font-size:1rem;} } @media screen and (orientation:landscape){ p.primera{font-size:1rem;} }
+
+ .line-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    width: 100%;
+    margin: auto;
+    border: 1px solid transparent;
+    font-family: sans-serif;
+    line-height: 1.4;
+  }
+
+  .line-clamp:hover {
+    -webkit-line-clamp: 100;
+    cursor: pointer;
+  }
+.table td.text span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
+}
+
+</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <br>
+        <div id="entregas" ></div>
+        <div id="numero_pedidos" ></div>
+        <br>
+        <div class="table table-responsive">
+                 <table class="table table-striped table-bordered">
+                       <thead class="thead-dark" >
+                           <tr>
+                               <th scope="col"  >#</div></th>
+                               <th>Suspender</th>
+                               <th scope="col" style="background-color: #229954;">Entrega</th>
+                               <th scope="col" style="background-color: #1A5276;">Entregado</th>
+                               <th scope="col" style="background-color: #A79F21;" > Numero de pedido </th>
+                               <th   >Ruta</th>
+                               <th  >Importe</th>
+                               <th  >Status</th>
+                               <th>Prioridad</th>
+                               <th scope="col" >Fecha de facturación </th>
+
+                           </tr>
+                       </thead>
+    
+                       <tbody id="pedidos"></tbody>
+
+                   </table>
+
+    <script src="librerias/jquery.js"></script>
+    <script src="dataTables/datatables.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="librerias/bootstrap.js"></script> 
+    <script src="JS/ventanasEmergentes/ventanasModales.js"></script> 
+    <script src="JS/entregas/entregas.js"></script>
+</body>
+</html>

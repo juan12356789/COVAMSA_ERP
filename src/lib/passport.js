@@ -17,17 +17,22 @@ passport.use('local.signin', new Strategy({
         done(null, user);
     } else { 
         
-        const validacionUsuarios = await pool.query("SELECT * FROM  acceso WHERE  correo = ? ", [email]);
-        if(validacionUsuarios[0].intentos_login >= 3  ){
-            await pool.query(`UPDATE acceso SET  estado = 0  WHERE idacceso = ?`,validacionUsuarios[0].idacceso);   
-            req.flash('error', 'Su usuario ha sido bloquieado, contacte al administrador.');
-            return done(null, false);
+        try {
+            const validacionUsuarios = await pool.query("SELECT * FROM  acceso WHERE  correo = ? ", [email]);
+            if(validacionUsuarios[0].intentos_login >= 3  ){
+                await pool.query(`UPDATE acceso SET  estado = 0  WHERE idacceso = ?`,validacionUsuarios[0].idacceso);   
+                req.flash('error', 'Su usuario ha sido bloquieado, contacte al administrador.');
+                return done(null, false);
+            }
+    
+            if( validacionUsuarios.length > 0 ){
+                let intentos =  validacionUsuarios[0].intentos_login == null? 0:validacionUsuarios[0].intentos_login ;
+                await pool.query(`UPDATE acceso SET  intentos_login = ${intentos + 1} WHERE idacceso = ?`,validacionUsuarios[0].idacceso);
+            }
+        } catch (error) {
+            
         }
-
-        if( validacionUsuarios.length > 0 ){
-            let intentos =  validacionUsuarios[0].intentos_login == null? 0:validacionUsuarios[0].intentos_login ;
-            await pool.query(`UPDATE acceso SET  intentos_login = ${intentos + 1} WHERE idacceso = ?`,validacionUsuarios[0].idacceso);
-        }
+       
         
         if (rows.length > 0 && rows[0].estado  == 0 ) {
             req.flash('error', 'Su correo está bloqueado reportese con el administrador.');
