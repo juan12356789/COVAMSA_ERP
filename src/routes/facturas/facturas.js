@@ -18,12 +18,18 @@ router.post('/', async (req , res) =>{
 }); 
 
 router.post('/status', async (req , res)=>{
-    console.log(req.body.status);
     let f = new Date();
     let fecha = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes();
-    if(req.body.status  != "Facturando")   await pool.query(`UPDATE pedidos SET estatus= 8  where num_pedido = '${req.body.id}'` );
-    else  await pool.query(`UPDATE pedidos SET estatus= 9  where num_pedido = '${req.body.id}'` );
-    if(req.body.status != 'Facturando' ) await pool.query(`INSERT INTO facturas VALUES (null ,(select id_pedido from pedidos where num_pedido ="${req.body.id}"),'${fecha}')`);
+    if(req.body.status  != "Facturando")  {
+
+        await pool.query(`UPDATE pedidos SET estatus= 8  where num_pedido = '${req.body.id}'` );
+
+    } else{
+
+        await pool.query(`UPDATE pedidos SET estatus= 9  where num_pedido = '${req.body.id}'` );
+        await pool.query(`UPDATE facturas SET numero_factura = "${req.body.factura}"  where id_pedido = (select  id_pedido from pedidos where num_pedido = '${req.body.id}') ` );
+    }  
+    if(req.body.status != 'Facturando' ) await pool.query(`INSERT INTO facturas VALUES (null ,(select id_pedido from pedidos where num_pedido ="${req.body.id}"),'${fecha}','')`);
     res.send(true);
     
 });
