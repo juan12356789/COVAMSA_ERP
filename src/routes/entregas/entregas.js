@@ -65,8 +65,11 @@ router.post('/', async (req , res) => {
 router.post('/cancelar_entrega', async (req , res )=>{
 
     let idPedidos = JSON.parse(req.body.id);
+    console.log(req.body.observacion);
+    
     for (let i = 0; i < idPedidos.length; i++) {
-      await  pool.query(`UPDATE pedidos SET estatus = 12 where num_pedido =  "${idPedidos[i]}"`);
+      await  pool.query(`UPDATE pedidos SET estatus = 12  where num_pedido =  "${idPedidos[i]}"`);
+      await  pool.query(`UPDATE entregas SET motivo_detencion  = "${req.body.observacion}"  where num_pedido =  "${idPedidos[i]}"`);
     }
     res.send(true); 
     

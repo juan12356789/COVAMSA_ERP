@@ -60,7 +60,7 @@ let sendData = (data) => {
         Pedidos Urgentes: <input type="text"  value="${numero_de_pedidos_urgentes}" disabled>
         </diV>
         <div class="col" >
-          <button  id="suspenderPedido" class="btn btn-secondary" onclick="idSuspender()" disabled > Suspender pedidos </button>
+          <button  id="suspenderPedido" class="btn btn-secondary" onclick="modalSuspender()" disabled > Suspender pedidos </button>
         </div>
     </div>`;
 
@@ -70,8 +70,7 @@ let sendData = (data) => {
 // Se cambia el status y se sube  una foto del comprobante 
 const cambioStatus  = id  =>{
     $.ajax({type: "POST",url: "/entregas/archivo",data: {id:id}, success: function (response) {
-            console.log(response);
-            
+
         let tabla_entregas = `
         <div class="modal fade" id="entregasPedidos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -190,13 +189,47 @@ const suspenderEntregas   = id =>{
 };
 
 // se manda el id en el cual se  suspenderá la entrega 
+const modalSuspender  = () =>{
+
+    let td = `
+        <div class="modal fade" id="cancelar_entrega" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Motivo de suspencion</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                 <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Example textarea</label>
+                     <textarea class="form-control" id="motivoCancelacion" rows="3"></textarea>
+                 </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" onclick="idSuspender()" >Aceptar</button>
+            </div>
+          </div>
+        </div>
+     </div>
+    `;
+    document.getElementById('cancelar').innerHTML = td; 
+    $("#cancelar_entrega").modal('show');
+
+};
+
 const idSuspender  = () =>{
-    
-    $.ajax({ type: "POST",url: "/entregas/cancelar_entrega",data: {id : JSON.stringify(idPedidosAEntregar)} ,success: function (response) {
+
+    $.ajax({ type: "POST",url: "/entregas/cancelar_entrega",data: {id : JSON.stringify(idPedidosAEntregar),observacion:$("#motivoCancelacion").val()} ,success: function (response) {
         tablaRepartidor(); 
         pedidos(); 
+        notifications("El  estado ha sido cambiado a detenido ",'success'); 
+        $("#cancelar_entrega").modal('hide');
             
         }
     });
     
-}
+}; 

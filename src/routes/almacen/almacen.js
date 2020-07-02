@@ -82,7 +82,7 @@ router.post('/envioEntregas', async (req , res )=>{
   const pedidos = JSON.parse(req.body.partidas);
   for (let i = 0; i < pedidos.length; i++) {
     await pool.query(`UPDATE pedidos SET estatus = 10 WHERE num_pedido = ? `, pedidos[i]);
-    await pool.query(`INSERT INTO entregas VALUES (?,?,?,?,?,?)`,[null,req.body.descripcion,req.body.empleado,pedidos[i],'','']); 
+    await pool.query(`INSERT INTO entregas VALUES (?,?,?,?,?,?,?)`,[null,req.body.descripcion,req.body.empleado,pedidos[i],'','','']); 
     
   }
 

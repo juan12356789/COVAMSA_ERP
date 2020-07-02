@@ -104,8 +104,8 @@ const partidas = id =>{
     });
 }
 const change_status =  (id , status)  =>{
-  
-    $.ajax({type: "POST",url: "/facturas/status",data: {id:id ,status:status},success: function (response) {
+     
+    $.ajax({type: "POST",url: "/facturas/status",data: {id:id ,status:status,factura:$("#num_factura").val()},success: function (response) {
 
             $("#modalProcess").modal('hide');
             notifications(`Se ha cambiado el satatus de la orden ${id}`,"success"); 
@@ -117,13 +117,13 @@ const change_status =  (id , status)  =>{
     
 }
 const procesando = (id , status)  =>{
-
+    
     let table =`
               <div class="modal fade" id="modalProcess" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Facturas</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -132,16 +132,16 @@ const procesando = (id , status)  =>{
                     <div id="container" >
                         <div class="row" >
                             <div class="col-12" >
-                                <center> ${status != "Facturando"? `<h3>¿Está listo para generar la factura de este pedido?</h3> `:`<h3>¿Su factura ya fue generada?</h3> `} </center>
+                                <center> ${status != "Facturando"? `<h3>¿Está listo para generar la factura de este pedido?</h3> `:``} </center>
+                                 ${status == "Facturando"?`<label>Número de factura: </label> <input type="text" maxlength="29" class="form-control" id="num_factura">`:''} 
                             </div>
                         </div>
-                        <div class="row" >
-                            <div class="col">
-                              <center><button  class="btn btn-success" onclick="change_status('${id}','${status}')" >Sí</button></center>
+          
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="button" onclick="change_status('${id}','${status}')"  class="btn btn-primary">Aceptar</button>
                             </div>
-                            <div class="col">
-                            <center><button data-dismiss="modal" class="btn btn-danger">No</button></center>
-                            </div>
+
                         <div>
                     </div>
                   </div>
