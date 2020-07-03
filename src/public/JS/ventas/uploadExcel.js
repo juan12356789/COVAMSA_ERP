@@ -24,9 +24,9 @@ const uploadExcel = () => {
     request.done(function(msg) {
 
         if (msg == "false") return notifications(`
-                        Este cliente pertenece a otro vendedor, favor de notificarlo con en administrador `, 'warning');
+                        Este cliente pertenece a otro vendedor, favor de notificarlo con el Administrador `, 'warning');
         if (msg == "null") return notifications(`
-                        No se en cuentra ese cliente en la base de datos `, 'warning');
+                        No se encuentra ese cliente en la base de datos `, 'warning');
         $("#ocultar_excel").hide();
         excelInfo = []; // se vacia la info para la siguinte orden 
         let info = JSON.parse(msg);

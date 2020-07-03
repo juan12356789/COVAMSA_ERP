@@ -92,7 +92,7 @@
 
   .table-cont {
 
-    max-height: 800px;
+    max-height: 600px;
     overflow: auto;
 
   }
@@ -109,9 +109,9 @@
   <title>Covamsa | Pedidos</title>
 </head>
 <html lang="en">
-{{!-- <h1> --}}
-  <FONT COLOR="black" SIZE="16"><B>Pedidos</B></FONT>
-{{!-- </h1> --}}
+
+  <font color="black" size="16"><B>Pedidos</B></font>
+
 <div class="container">
 
   <div class="accordion" id="accordionExample">
@@ -435,6 +435,7 @@
           <div id="detalle_mis_pedidos"></div>
           {{!-- <div class="table-responsive"> --}}
           <div class='table-cont' id='table-cont'>
+        
             <table id="orders" class="table table-striped">
 
               <thead class="thead-dark">
@@ -494,4 +495,15 @@
 
     tableCont.addEventListener('scroll', scrollHandle)
   }
+</script>
+
+<script>
+  $(document).ready(function() {
+    var table = $('#example').DataTable( {
+        fixedHeader: {
+            header: true,
+            footer: true
+        }
+    } );
+} );
 </script>

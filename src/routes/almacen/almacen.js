@@ -14,7 +14,7 @@ router.get('/', async(req, res) => {
 
 router.get('/pedidos', async(req, res) => {
 
-    const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,prioridadE,concat( "$",FORMAT(importe, 2)) importe,prioridad
+    const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad
                                       FROM pedidos WHERE estatus != 7
                                       order by prioridad desc,fecha_inicial asc`);
 
@@ -82,7 +82,7 @@ router.post('/envioEntregas', async(req, res) => {
     const pedidos = JSON.parse(req.body.partidas);
     for (let i = 0; i < pedidos.length; i++) {
         await pool.query(`UPDATE pedidos SET estatus = 10 WHERE num_pedido = ? `, pedidos[i]);
-        await pool.query(`INSERT INTO entregas VALUES (?,?,?,?,?,?)`, [null, req.body.descripcion, req.body.empleado, pedidos[i], '', '']);
+        await pool.query(`INSERT INTO entregas VALUES (?,?,?,?,?,?,?)`, [null, req.body.descripcion, req.body.empleado, pedidos[i], '', '', '']);
 
     }
 
