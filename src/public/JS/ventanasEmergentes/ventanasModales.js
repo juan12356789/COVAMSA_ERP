@@ -58,8 +58,7 @@ let reson_to_cancel = (order) => {
 };
 
 let cambios_status_pedidos = (current_status, order) => {
-    console.log(current_status);
-    
+
     if (current_status == "Cancelado") return notifications("Este pedido ha sido cancelado no es posible cambiar  el status", 'warning');
     let opciones_pago = '';
     $('#change_status').modal('show');
@@ -125,14 +124,14 @@ let cambios_status_pedidos = (current_status, order) => {
          
         </div>
     `;
+
     tabla_partidas(order,current_status);
     document.getElementById('status').innerHTML = elementsHTML;
     
 
 };
 
-const tabla_partidas  = (id_pedido , status) =>{
- 
+const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
     
     $.ajax({type: "POST",url: "/almacen/partidas",data: {pedido:id_pedido},success: function (response) {
         
@@ -155,8 +154,6 @@ const tabla_partidas  = (id_pedido , status) =>{
                 if(response.cantidad_surtida == response.cantidad)  numero_partidas++; 
 
             });
-                // console.log(numero_partidas, response.length);
-                
             document.getElementById("numero_partidas").innerHTML = `
             
                 <div class="row" >
@@ -170,12 +167,11 @@ const tabla_partidas  = (id_pedido , status) =>{
                         <strong>Estado del pedido:</strong> ${response.length == numero_partidas?'Partidas completas':'Hay partidas incompletas' }
                      </div>
                      <div class="col" >   
-                        <strong>Pedidos completo:</strong>   <input type="checkbox" ${status == 'Surtiendo'?'':'disabled'}   id="partida_completa" onclick="completarListga('${id_pedido}','${status}')"  > 
+                        <strong>Pedidos completo:</strong>   <input type="checkbox" ${status == 'Surtiendo'?'':'disabled'}   ${checkbox || response.length == numero_partidas ?"checked":''}  id="partida_completa" onclick="completarListga('${id_pedido}','${status}')"  > 
                     </div>
                 </div>
              `;
             document.getElementById('partidas').innerHTML = tabla_partidas;
-            console.log(status);
             
             if(status == "Nuevo") document.getElementById('estado_nuevo').innerHTML = `<option value="2" > Surtiendo </option>`;  
             if(status == "Surtiendo" && response[0].prioridadE == 0  ){ document.getElementById('estado_nuevo').innerHTML = `
@@ -186,6 +182,17 @@ const tabla_partidas  = (id_pedido , status) =>{
             if(status == "Surtiendo" && response[0].prioridadE == 1){
                 document.getElementById('estado_nuevo').innerHTML = `
                 <option value="3" >Facturable </option>
+                <option value="5" >Requerir  </option>
+            `;
+            }
+            console.log(status);
+            
+            if(status == "Suspendida" ){
+                document.getElementById('estado_nuevo').innerHTML = `
+                <option value="1" > Nuevo </option>
+                <option value="2" > Surtiendo </option>
+                <option value="3" >Facturable </option>
+                <option value="4" >Requerir y facturar  </option>
                 <option value="5" >Requerir  </option>
             `;
             }
@@ -213,16 +220,14 @@ const cantidadProducto = (cantidad  , id_partidas_productos,numero ,id , status)
 
 
 const completarListga  = ( id ,status ) => {
+    
     let checkbox =   document.getElementById("partida_completa").checked;
-    if(checkbox == true ){
         $.ajax({type: "POST",url: "/almacen/pedidos_check",data: {num_pedido : id ,check : checkbox},success: function (response) {
-            
-            tabla_partidas(id , status);
-            document.getElementById("partida_completa").checked = true;
+
+            tabla_partidas(id , status, checkbox);
 
             }
         });
-    }  
 }
 
 const notifications = (texto_notificacion, tipo_notificacion) => {

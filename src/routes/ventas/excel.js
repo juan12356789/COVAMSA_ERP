@@ -6,7 +6,6 @@ const upload = require('express-fileupload');
 const importExcel  =  require('convert-excel-to-json');
 const path = require("path");
 const rutimage = path.join(__dirname, "../../files/");
-console.log(rutimage);
 
 const fs = require('fs');
 router.use(upload());
@@ -17,7 +16,6 @@ router.use(upload());
 router.post('/', (req , res) => {
     let file = req.files.excel;
     let filename = file.name;
-    console.log(rutimage);
     
     file.mv(  rutimage+filename ,async (err)=>{
 
@@ -26,7 +24,7 @@ router.post('/', (req , res) => {
             console.log(err);
 
         }else{
-            const informacion_partida  = []; 
+            const informacion_partida  = [];
             let result = importExcel({
                 sourceFile: rutimage + filename,
                 // header:{rows:15},
@@ -52,13 +50,9 @@ router.post('/', (req , res) => {
                     if(result.Sheet1[i].B == 'Vendedor :') infoPedidos.vendedor =  result.Sheet1[i].C;
                     if(numero_partidas >  contador ) contador = numero_partidas;
                     if(result.Sheet1[i].K == 'Total')infoPedidos.total =  result.Sheet1[i].O;
-                    if(result.Sheet1[i].C == 'Clave')  clave = 0;
-                     
-                    
-                    
+                    if(result.Sheet1[i].C == 'Clave')  clave = 0;       
             }
-            console.log(clave);
-            
+
              infoPedidos.numero_partidas = numero_partidas;
             
             
@@ -75,7 +69,8 @@ router.post('/', (req , res) => {
 
                  infoPedidos.cliente = cliente[0].nombre;
                  infoPedidos.tipoDeEntega  =  cliente[0].prioridadE;
-                 result.Sheet1.push(infoPedidos);
+                 result.Sheet1.push(infoPedidos); 
+                 result.ruta  = filename ; 
                  res.send(result);  
                 }
              } catch (error) {

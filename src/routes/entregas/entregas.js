@@ -19,7 +19,7 @@ router.get('/', isLoggedIn ,( req , res )=>{
 router.post('/informacion_envios',  async (req , res)=>{
        
     const pedidos = await pool.query(`SELECT DATE_FORMAT(fecha_facturacion,'%d-%m-%Y %H:%i %p') fecha_facturas,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad
-    FROM  pedidos inner join facturas using(id_pedido) WHERE estatus = 10 or estatus = 11  or estatus =12
+    FROM  pedidos inner join facturas using(id_pedido) WHERE estatus >= 10 
     order by prioridad desc,fecha_inicial asc`);
     
     res.send(pedidos);
@@ -41,7 +41,6 @@ router.post('/eliminarArchivo',async (req , res )=>{
     await pool.query(`UPDATE   pedidos SET  estatus   = 10 WHERE num_pedido =  "${req.body.id}" `);
     fs.unlink(rutimage+archivo[0].comprobante_ruta,(err)=>{
         if(err) console.log(err);
-        
     }); 
     res.send(true); 
     
@@ -65,7 +64,6 @@ router.post('/', async (req , res) => {
 router.post('/cancelar_entrega', async (req , res )=>{
 
     let idPedidos = JSON.parse(req.body.id);
-    console.log(req.body.observacion);
     
     for (let i = 0; i < idPedidos.length; i++) {
       await  pool.query(`UPDATE pedidos SET estatus = 12  where num_pedido =  "${idPedidos[i]}"`);

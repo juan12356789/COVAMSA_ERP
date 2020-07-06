@@ -66,12 +66,11 @@ router.post("/updateTrasferencia",upload.fields([{ name: 'comprobante_pago', max
 router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { name: 'num_pedido', maxCount: 1 },{ name: 'comprobante_pago', maxCount: 1 }]),async(req, res) => {
    
    
-   
-
     const validacion_pedido_existente  = await pool.query("select id_pedido from pedidos where num_pedido = ?", req.body.numeroPedido); 
     if(validacion_pedido_existente.length != 0)  return res.send("null") ; 
     const partidas_info   =  JSON.parse(req.body.productosArray);
     
+     
     if (req.body.nombre_cliente != undefined && req.body.nombre != ' '  && req.body.observaciones.length < 250) {
         const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre_cliente);
        
@@ -85,7 +84,7 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
             ruta: req.body.ruta,
             estatus: (req.body.tipos_pago == 1  && req.body.comprobante_pago == '')? 7 : 1 ,
             ruta_pdf_orden_compra: req.files.orden_compra != undefined? req.files.orden_compra[0].filename: '',
-            ruta_pdf_pedido: req.files.num_pedido != undefined? req.files.num_pedido[0].filename: '',
+            ruta_pdf_pedido: partidas_info.ruta  ,
             ruta_pdf_comprobante_pago: req.files.comprobante_pago != undefined? req.files.comprobante_pago[0].filename: '',
             num_pedido: req.body.numeroPedido,
             observacion: req.body.observaciones,
@@ -103,7 +102,6 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
             
    
         const partidas_pedido  = await pool.query("SELECT a.id_pedido, idPartida FROM  pedidos a inner join partidas  using(id_pedido) where num_pedido = ?",req.body.numeroPedido); 
-        console.log(partidas_pedido);
         
         let cont_partidas = -1; 
         
@@ -118,7 +116,11 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
         }
         const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
                                         FROM pedidos`);
-        res.send(pedidos);
+
+        const numeroRastreo = await pool.query(`SELECT id_pedido from pedidos where num_pedido = ?`,req.body.numeroPedido);
+        
+        res.send(numeroRastreo); 
+        // res.send(pedidos);
 
     } else {
 

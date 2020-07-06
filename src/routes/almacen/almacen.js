@@ -35,16 +35,29 @@ router.post('/cantidad_pedido',async(req , res)=>{
 });
 
 router.post("/pedidos_check",  async ( req , res )=>{
+  
       
       let productos_cantidad =  await  pool.query(`select id_partidas_productos,cantidad  
                                              from  pedidos inner join partidas using(id_pedido) 
                                                            inner join partidas_productos using(idPartida) 
                                             where num_pedido = ?`,req.body.num_pedido);
-      productos_cantidad.forEach( async element => {
-           
-        await pool.query(`UPDATE partidas_productos SET cantidad_surtida= ${element.cantidad} where id_partidas_productos = ${element.id_partidas_productos}  `); 
-           
-      });
+      if(req.body.check == "true"){
+
+        productos_cantidad.forEach( async element => {
+             
+          await pool.query(`UPDATE partidas_productos SET cantidad_surtida= ${element.cantidad} where id_partidas_productos = ${element.id_partidas_productos}  `); 
+             
+        });
+
+      }else{
+
+        productos_cantidad.forEach( async element => {
+             
+          await pool.query(`UPDATE partidas_productos SET cantidad_surtida= 0 where id_partidas_productos = ${element.id_partidas_productos}  `); 
+             
+        });
+
+      }
       res.send(true);
         // console.log(productos_cantidad);
         

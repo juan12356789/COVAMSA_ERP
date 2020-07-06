@@ -144,7 +144,8 @@ let pedidos_vendedores = () => {
         success: function(response) {
 
             let ruta = ['Norte', 'Sur'];
-            let estatus = ['Nuevo', 'En Proceso', 'Parcial', 'Completo', 'Ruta', 'Cancelado', 'Detenido'];
+            
+    let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida'];
             let prioridad_info = ["Normal", "Normal", "Urgente"];
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
             response.filter(n => n.nombre_estatus = estatus[n.estatus - 1]);
@@ -260,6 +261,7 @@ let cancelarOrden =() =>{
                 }
 
                 if(response  != 'false' && response != "null"){
+                    let num_pedido = JSON.parse(response);
                     $('#spinnerUpload').modal('hide');
                     pedidos(response);
                     pedidos_vendedores();
@@ -272,8 +274,11 @@ let cancelarOrden =() =>{
                     $("#inputCliente").hide();
                     $("#imgct").hide();
                     $("#ocultar_excel").show();
-                    
-
+                    swal({
+                        title: `El  pedido ha sido guardado con éxito con el número ${num_pedido[0].id_pedido}`,
+                        type: `success`,
+                        showConfirmButton: true
+                    });
 
                 }
                

@@ -146,7 +146,8 @@ let pedidos_urgentes_normales = (tipo_de_pedido, numero_pedido, tipo_prioridad) 
             }
 
             let ruta = ['Norte', 'Sur'];
-            let estatus = ['Nuevo', 'En Proceso', 'Parcial', 'Completo', 'Ruta', 'Cancelado', 'Detenido'];
+            
+            let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida'];
             let prioridad_info = ["Normal", "Normal", "Urgente"];
 
             response.filter(n => n.ruta = ruta[n.ruta - 1]);

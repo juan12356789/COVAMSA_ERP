@@ -201,7 +201,7 @@ const sendRuta  = id =>{
 }; 
 
 const chanche_estatus_almacen = (order) => {
-    $('#change_status').modal('hide');
+    // $('#change_status').modal('hide');
 
     let estado_nuevo = document.getElementById('estado_nuevo').value;
     
