@@ -229,6 +229,7 @@ const insertUser = () => {
                 <select name="tipo_usuario" id="tipo_usuario" class="form-control" >
                     <option  value="Administrador" >Administrador</option>
                     <option  value="Almacen" >Almacén</option>
+                    <option value="Compras">Compras</option>
                     <option  value="Entregas" >Entregas</option>
                     <option  value="Facturas" > Facturas </option>
                     <option  value="Ventas" >Ventas</option>
