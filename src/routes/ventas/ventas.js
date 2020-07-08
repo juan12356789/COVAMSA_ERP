@@ -58,11 +58,16 @@ router.post('/importe', async(req, res) => {
 router.post("/updateTrasferencia",upload.fields([{ name: 'comprobante_pago', maxCount: 1  }]), async(req , res)=>{
         const  updateComprobante  =  await pool.query(`UPDATE pedidos SET comprobante_pago='${req.body.comprobante_pago}'  ,ruta_pdf_comprobante_pago='${req.files.comprobante_pago[0].filename}', estatus = 1 WHERE num_pedido = ?`,req.body.num_pedido); 
         res.end(req.body.comprobante_pago);
-        
-    
-    
 }); 
-   
+// se   usa para confirmar que la  se muestre la  ventana modal en la sesion que debe de ser
+router.post('/notificacionEntregado',  async (req , res)=>{
+
+    const comprobarVentana  = await pool.query(` SELECT * FROM empleados inner join pedidos on id_empleados = id_empleado where idacceso = ? and num_pedido = ?`,[req.user[0].idacceso,req.body.id]); 
+    if(comprobarVentana.length > 0 )  return res.send( true ) ;
+    res.send(false);
+    
+}) ;
+
 router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { name: 'num_pedido', maxCount: 1 },{ name: 'comprobante_pago', maxCount: 1 }]),async(req, res) => {
    
    

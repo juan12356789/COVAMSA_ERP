@@ -39,7 +39,7 @@ router.post('/partidas',async (req , res)=>{
                                         from pedidos inner  join   partidas b using(id_pedido) 
                                                      inner join partidas_productos using(idPartida) 
                                                      inner join  productos using(idProducto)
-                                        where num_pedido = ? and cantidad =  cantidad_surtida`,req.body.id);
+                                        where num_pedido = ? and   cantidad_surtida > 0 `,req.body.id);
 //    console.log(partidas);
    
     res.send(partidas);

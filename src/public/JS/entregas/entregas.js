@@ -70,7 +70,8 @@ let sendData = (data) => {
 // Se cambia el status y se sube  una foto del comprobante 
 const cambioStatus  = id  =>{
     $.ajax({type: "POST",url: "/entregas/archivo",data: {id:id}, success: function (response) {
-
+     
+        
         let tabla_entregas = `
         <div class="modal fade" id="entregasPedidos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -145,7 +146,7 @@ const  uploadExcel  = id =>{
 
         request.done(function( msg )
         {
-
+        socket.emit('data:alertEntregado', id);
         if(msg) notifications("El  comprobante  ha sido guardado",'success'); 
         tablaRepartidor(); 
         pedidos(); 

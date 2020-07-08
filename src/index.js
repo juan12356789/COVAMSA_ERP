@@ -84,12 +84,11 @@ const io = SocketIO(server);
 
 io.on('connection', (socket) => {
 
-    socket.on('data:pedidos', (data) => {
-        
-        io.sockets.emit('data:pedidos', data); 
-
-    });
-
-    socket.on('data:facturas', data =>  io.sockets.emit('data:facturas',data)    ); 
+    // se actualiza la llegada y cambios de status de los  pedidos 
+    socket.on('data:pedidos', data => io.sockets.emit('data:pedidos', data) );
+    //Se usa para que las  facturas se estén  actualizando de manera continua  
+    socket.on('data:facturas', data =>  io.sockets.emit('data:facturas',data) ); 
+    //  se dispara el alert al momento de que el status  cambia a entregado 
+    socket.on('data:alertEntregado', data => io.sockets.emit('data:alertEntregado',data)); 
 
 });

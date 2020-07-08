@@ -106,7 +106,6 @@ const enviarPedidos  = (id ,ruta, prioridad) =>{
     rutaPedidos.push(ruta); 
     idPedidosAEntregar.push(id); 
     
-   
 }; 
 
 // Se muestran los  pedidos  que van a estar listos para enviar 
@@ -201,7 +200,7 @@ const sendRuta  = id =>{
 }; 
 
 const chanche_estatus_almacen = (order) => {
-    // $('#change_status').modal('hide');
+
 
     let estado_nuevo = document.getElementById('estado_nuevo').value;
     

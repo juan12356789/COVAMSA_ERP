@@ -23,7 +23,7 @@ let orderTable = () => {
                                 sortable: false,
                                 "render": function(data, type, full, meta) {
 
-                                    return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'<a href="#"> COMPROBANTE</a>':full.comprobante_pago }</a>`;
+                                    return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'':full.comprobante_pago }</a>`;
                                 }
                             }, {
                                 sortable: false,

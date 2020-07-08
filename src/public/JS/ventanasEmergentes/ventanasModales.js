@@ -185,8 +185,6 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
                 <option value="5" >Requerir  </option>
             `;
             }
-            console.log(status);
-            
             if(status == "Suspendida" ){
                 document.getElementById('estado_nuevo').innerHTML = `
                 <option value="1" > Nuevo </option>
@@ -202,23 +200,25 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
     
 }; 
 
-const cantidadProducto = (cantidad  , id_partidas_productos,numero ,id , status) =>{
+// rellena el checkbox al palomearlo   
+const cantidadProducto = (cantidad  , id_partidas_productos, numero ,id , status) => {
 
     let checkbox =   document.getElementById("completo"+numero).checked;
     let cantidad_entrante = $("#numero"+numero).val();
     if(checkbox) cantidad_entrante =  cantidad; 
-    if($("#numero"+numero).val() > cantidad  ) return notifications("La cantidad que introdujo es mayor a las piezas que se  solicitan ","warning"); 
-    if( $("#numero"+numero).val() < 0 )return notifications("No puede tener valores menores a 0 ","warning");
+    if( $("#numero"+numero).val() > cantidad  ) return notifications("La cantidad que introdujo es mayor a las piezas que se  solicitan ","warning"); 
+    if( $("#numero"+numero).val() < 0 ) return notifications("No puede tener valores menores a 0 ","warning");
     $.ajax({type: "POST",url: "/almacen/cantidad_pedido",data: {op:checkbox,numero: cantidad_entrante,id:id_partidas_productos},success: function (response) {
-        tabla_partidas(`${id}`,`${status}`);    
+        // se manda la cantidad completa del producto para que se surta 
+        $(`#numero${numero}`).val(cantidad_entrante);
+        // tabla_partidas(`${id}`,`${status}`);    
+
         }
     });
     
 }
 
 // este onckick nos sirve paea saber si todos los productos se han encontrado 
-
-
 const completarListga  = ( id ,status ) => {
     
     let checkbox =   document.getElementById("partida_completa").checked;

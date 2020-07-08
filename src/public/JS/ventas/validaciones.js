@@ -95,7 +95,7 @@ $(document).ready(function() {
                                 }, {
                                     sortable: false,
                                     "render": function(data, type, full, meta) {
-                                        return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'<a href="#"> Comprobante</a>':full.comprobante_pago }</a>`;
+                                        return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'':full.comprobante_pago }</a>`;
                                     }
                                 }, {
                                     sortable: false,
@@ -182,12 +182,28 @@ const pedidos = (data) => {
 
 };
 
+// da la notificacion  cuando el pedido cambia al status a entregado 
+socket.on('data:alertEntregado',  data => notificacionEntregado(data)); 
+
 socket.on('data:pedidos', function(data) {
     pedidos_vendedores();
 
 });
 
 //---------------------------------------
+
+const notificacionEntregado = id =>{
+        
+    $.ajax({type: "POST", url: "/ventas/notificacionEntregado", data: {id:id}, success: function (response) {
+                    
+            console.log(response);
+            notifications(` El pedido ${response} ha sido entregado `,'success'); 
+            
+
+        }
+    });
+
+}; 
 
 const tipoEntrega  = () =>{
     let  tipoEntrega =  document.getElementById("entrega").value;
