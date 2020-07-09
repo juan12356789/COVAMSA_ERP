@@ -70,7 +70,8 @@ router.post('/notificacionEntregado',  async (req , res)=>{
 
 router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { name: 'num_pedido', maxCount: 1 },{ name: 'comprobante_pago', maxCount: 1 }]),async(req, res) => {
    
-   
+    // console.log(req.body);
+    
     const validacion_pedido_existente  = await pool.query("select id_pedido from pedidos where num_pedido = ?", req.body.numeroPedido); 
     if(validacion_pedido_existente.length != 0)  return res.send("null") ; 
     const partidas_info   =  JSON.parse(req.body.productosArray);
@@ -99,8 +100,10 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
             prioridad: req.body.prioridad[0],
             tipo_de_pago:req.body.tipos_pago,
             numero_partidas : partidas_info.Sheet1[partidas_info.Sheet1.length - 1].numero_partidas,
-            prioridadE: req.body.tipo_entrega == "Entrega completo" ? 1 : 0 
+            prioridadE: req.body.tipo_entrega == "Entrega  completo" ? 1 : 0 
         };
+        console.log(insert);
+        
         
         await pool.query("INSERT INTO pedidos set ? ", [insert]);
         await pool.query(`INSERT INTO  partidas VALUES (null,(select id_pedido from pedidos where num_pedido = "${req.body.numeroPedido}" ),1)`); 

@@ -61,7 +61,7 @@ let sendData = (data) => {
 
                   <th scope="row">${numeracion_pedidos++}</th>
                   <td> ${estatus[data.estatus - 1] == "Facturado"?`<input type="checkbox" id="${data.num_pedido}"  onclick="enviarPedidos('${data.num_pedido}','${ruta[data.ruta - 1]}','${prioridad_info[data.prioridad]}')" ></input>`:''} </td>
-                  <td> <i class="fas fa-file-invoice" onclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.num_pedido}')"></i> </td>
+                  <td><i class="fas fa-tools" onclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.num_pedido}')"></i>  </td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_comprobante_pago}">${data.comprobante_pago}</a></td>
