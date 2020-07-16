@@ -17,14 +17,29 @@ router.get('/', isLoggedIn ,( req , res )=>{
 });
 
 router.post('/informacion_envios',  async (req , res)=>{
-       
-    const pedidos = await pool.query(`SELECT DATE_FORMAT(fecha_facturacion,'%d-%m-%Y %H:%i %p') fecha_facturas,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad
-    FROM  pedidos inner join facturas using(id_pedido) WHERE estatus >= 10 
-    order by prioridad desc,fecha_inicial asc`);
-    
-    res.send(pedidos);
-    
-        
+    const usuario  = await  pool.query("SELECT tipo_usuario,id_empleados from acceso inner join empleados using(idacceso) where idacceso  = ?",req.user[0].idacceso);
+    console.log(usuario[0].id_empleados);
+    if(usuario[0].tipo_usuario == 'Entregas'){
+      
+        const pedidosE = await pool.query(`SELECT   DATE_FORMAT(fecha_facturacion,'%d-%m-%Y %H:%i %p') fecha_facturas,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,a.num_pedido,observacion,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad   from  acceso  
+                                                            inner join empleados using(idacceso)   
+                                                            inner join   pedidos a on id_empleados = id_empleado  
+                                                            inner join facturas using(id_pedido) 
+                                                            inner join   entregas on idFacutura  = idFactura 
+                                          WHERE estatus >= 10     and   repartidor  = ${usuario[0].id_empleados}
+                                          order by prioridad desc,fecha_inicial asc`); 
+        // ${req.user[0].idacceso}  
+        res.send(pedidosE); 
+
+    }
+    if(usuario[0].tipo_usuario == 'Administrador'){
+
+        const pedidos = await pool.query(`SELECT DATE_FORMAT(fecha_facturacion,'%d-%m-%Y %H:%i %p') fecha_facturas,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad
+        FROM  pedidos inner join facturas using(id_pedido) WHERE estatus >= 10 
+        order by prioridad desc,fecha_inicial asc`);
+        res.send(pedidos);
+    }
+
 }); 
 
 router.post('/archivo', async (req , res)=>{

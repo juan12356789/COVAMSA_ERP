@@ -87,7 +87,7 @@
 {{!-- el contenido se muestra en español --}}
 <title> Covamsa  | Ventas </title>
 <meta http-equiv="Content-Language" content="es"/>
-<div class="container">
+<div class="container-fluid">
   <div class="accordion" id="accordionExample">
     <div class="card">
       <div class="card-header" id="headingOne">
@@ -114,8 +114,7 @@
             
             <div class="jumbotron">
               <div class="container">
-                  <button   type="button"class="btn btn-primary"  onclick="orderDetail()" >Detalle</button>
-                   <button  type="button" class="btn btn-danger" onclick="cancelarOrden()" >Cancela</button>
+                  
                    <div  id="detallesPedido" ></div>
                 <div class="row ">
                   <label for="oc" class="col-sm-2 col-form-label">Orden de Compra:</label>
@@ -259,7 +258,17 @@
                 <div class="form-group row justify-content-right">
                   <label for="" class="col-sm-2 col-form-label"></label><label for="" class="col-sm-2 col-form-label"></label>
                   <div class="col-sm-4">
-                    <div id="button_send"></div>
+                    <div class="row">
+                        <div class="col">
+                          <button   type="button"class="btn btn-primary btn-lg btn-block"  onclick="orderDetail()" >Detalle</button>
+                        </div>
+                        <div class="col">
+                          <div id="button_send"></div>
+                        </div>
+                        <div class="col" >
+                          <button  type="button" class="btn btn-danger btn-lg btn-block" onclick="cancelarOrden()" >Cancela</button>
+                        </div>
+                    </div>
                   </div>
                   <br>
                 </div>
@@ -358,8 +367,8 @@
            
               <tr >
                 <th>Partidas</th>
-                <th  style="background-color: #A79F21;">Orden De Compra</th>
                 <th  style="background-color: #229954;">Número De Pedido</th>
+                <th  style="background-color: #A79F21;">Orden De Compra</th>
                 <th  style="background-color: #1A5276;">Comprabante De Pago</th>
                 <th >Tipo De Pago</th>
                 <th >Ruta</th>
@@ -396,30 +405,30 @@
 
 
 <script>
-//   let intentos = 0;
-// 
-// document
-//   .getElementById('validar')
-//   .addEventListener('click', function(evt) {
-//     const campo = document.getElementById('campo'),
-//       valido = document.getElementById('campoOK')
-// 
-// 
-//     if (intentos >= 3) {
-//       return;
-//     }
-// 
-//     if (/^\d+$/g.test(campo.value)) {
-//       valido.innerText = "válido";
-//       intentos = 0;
-// 
-//     } else {
-//       intentos++;
-//       valido.innerText = "incorrecto, intentos: " + intentos;
-// 
-//       if (intentos >= 3) {
-//         valido.innerText = "Nunca mas vas a poder intentar";
-//       }
-//     }
-//   });
+  // let intentos = 0;
+ 
+ //document
+  // .getElementById('validar')
+  // .addEventListener('click', function(evt) {
+  //   const campo = document.getElementById('campo'),
+  //     valido = document.getElementById('campoOK')
+ //
+ //
+  //   if (intentos >= 3) {
+  //     return;
+  //   }
+ //
+  //   if (/^\d+$/g.test(campo.value)) {
+  //     valido.innerText = "válido";
+  //     intentos = 0;
+ //
+  //   } else {
+  //     intentos++;
+  //     valido.innerText = "incorrecto, intentos: " + intentos;
+ //
+  //     if (intentos >= 3) {
+  //       valido.innerText = "Nunca mas vas a poder intentar";
+  //     }
+  //   }
+  // });
 </script>

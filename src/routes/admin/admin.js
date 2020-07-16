@@ -2,8 +2,8 @@ const express=require("express");
 const router =  express.Router(); 
 const path=require("path"); 
 const pool = require('../../database');
-
-router.get('/'  , (req , res) =>  res.render('links/admin/admin.hbs') );
+const { isLoggedIn } = require('../../lib/auth');
+router.get('/'  , isLoggedIn,(req , res) =>  res.render('links/admin/admin.hbs') );
 router.post('/urgentes' ,  async (req , res)=>{
        
     switch (req.body.tipo_de_pedido) {

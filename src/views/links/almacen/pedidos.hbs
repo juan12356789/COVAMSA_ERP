@@ -25,6 +25,33 @@
     max-width: 100%;
 }
 
+.table-fixed thead,
+.table-fixed tfoot{
+  width: 97%;
+}
+
+.table-fixed tbody {
+  height: 230px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.table-fixed thead,
+.table-fixed tbody,
+.table-fixed tfoot,
+.table-fixed tr,
+.table-fixed td,
+.table-fixed th {
+  display: block;
+}
+
+.table-fixed tbody td,
+.table-fixed thead > tr> th,
+.table-fixed tfoot > tr> td{
+  float: left;
+  border-bottom-width: 0;
+}
+
 </style>
 <!DOCTYPE html>
 <html lang="en">
@@ -98,14 +125,26 @@
                        <tbody id="pedidos"></tbody>
 
                    </table>
-             <div class="modal fade bd-example-modal-lg" id="change_status" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
+                   <div class="modal fade" id="change_status" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Cambio de  estado </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                  <div id="status" ></div>
 
-                    <div id="status"  ></div>
+                             </div>
+                             
+                             <div id="button" ></div>
 
-                </div>
-            </div>
+                            </div>
+                          </div>
+                        </div>
+ 
         </div>
         <div id="entregas" ></div>
     </div>

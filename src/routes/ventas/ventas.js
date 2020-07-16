@@ -102,8 +102,6 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
             numero_partidas : partidas_info.Sheet1[partidas_info.Sheet1.length - 1].numero_partidas,
             prioridadE: req.body.tipo_entrega == "Entrega  completo" ? 1 : 0 
         };
-        console.log(insert);
-        
         
         await pool.query("INSERT INTO pedidos set ? ", [insert]);
         await pool.query(`INSERT INTO  partidas VALUES (null,(select id_pedido from pedidos where num_pedido = "${req.body.numeroPedido}" ),1)`); 

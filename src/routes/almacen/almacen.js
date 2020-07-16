@@ -5,8 +5,9 @@ const multer = require("multer");
 const pool = require('../../database');
 const { ALPN_ENABLED } = require("constants");
 const { route } = require("../menu/menu");
-
-router.get('/', async(req, res) => {
+const { query } = require("express");
+const { isLoggedIn } = require('../../lib/auth');
+router.get('/', isLoggedIn , async(req, res) => {
 
     res.render('links/almacen/pedidos');
 
@@ -27,16 +28,22 @@ router.post('/partidas', async (req , res)=>{
    
 });
 router.post('/cantidad_pedido',async(req , res)=>{
+  
+    let cantidad =  JSON.parse(req.body.cantidad) , partidas  = JSON.parse(req.body.partidas) ;
 
-    if(req.body.op == "true") await pool.query(`UPDATE partidas_productos SET cantidad_surtida = ${req.body.numero}  WHERE id_partidas_productos = ${req.body.id}`);
-    if(req.body.op == "false") await pool.query(`UPDATE partidas_productos SET cantidad_surtida = 0 WHERE id_partidas_productos = ${req.body.id}`);
+    for (let i = 0; i < cantidad.length; i++) {
+
+      if(cantidad[i] != '0') await pool.query(`UPDATE partidas_productos SET cantidad_surtida = ${parseInt(cantidad[i])}  WHERE id_partidas_productos = ${partidas[i]}`);
+       
+    }
+    
     res.send('guardado'); 
     
 });
 
 router.post("/pedidos_check",  async ( req , res )=>{
-  
-      
+      // console.log('hola');
+     
       let productos_cantidad =  await  pool.query(`select id_partidas_productos,cantidad  
                                              from  pedidos inner join partidas using(id_pedido) 
                                                            inner join partidas_productos using(idPartida) 
@@ -61,7 +68,6 @@ router.post("/pedidos_check",  async ( req , res )=>{
       res.send(true);
         // console.log(productos_cantidad);
         
-      
 }); 
 
 // Checar
@@ -80,7 +86,7 @@ router.post('/cambio_estado', async (req , res)=>{
 
 // se hace la búsqueda para los repartidores
 router.post('/repartidores' , async( req , res ) =>{
-
+  
   const repartidores = await pool.query(`select  id_empleados , a.nombre , apellido_paterno, apellido_materno
                                           from empleados a inner join empleados_departamentos using(id_empleados)  
                                                            inner join  departamentos b using(id_departamento) 
@@ -93,9 +99,11 @@ router.post('/repartidores' , async( req , res ) =>{
 router.post('/envioEntregas', async (req , res )=>{
 
   const pedidos = JSON.parse(req.body.partidas);
+  
   for (let i = 0; i < pedidos.length; i++) {
     await pool.query(`UPDATE pedidos SET estatus = 10 WHERE num_pedido = ? `, pedidos[i]);
-    await pool.query(`INSERT INTO entregas VALUES (?,?,?,?,?,?,?)`,[null,req.body.descripcion,req.body.empleado,pedidos[i],'','','']); 
+    let facturas  =  await  pool.query(`SELECT idFacutura FROM  pedidos inner join  facturas using(id_pedido) where num_pedido = ? `,pedidos[i]);
+    await pool.query(`INSERT INTO entregas VALUES (?,?,?,?,?,?,?,?)`,[null,req.body.descripcion,req.body.empleado,pedidos[i],'','','',facturas[0].idFacutura]); 
     
   }
 

@@ -58,7 +58,6 @@ let sendData = (data) => {
     data.forEach(data => {
         if (data.prioridad == 2) numero_de_pedidos_urgentes++;
         table += `<tr>
-
                   <th scope="row">${numeracion_pedidos++}</th>
                   <td> ${estatus[data.estatus - 1] == "Facturado"?`<input type="checkbox" id="${data.num_pedido}"  onclick="enviarPedidos('${data.num_pedido}','${ruta[data.ruta - 1]}','${prioridad_info[data.prioridad]}')" ></input>`:''} </td>
                   <td><i class="fas fa-tools" onclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.num_pedido}')"></i>  </td>
@@ -94,7 +93,7 @@ let sendData = (data) => {
 // Esta funcion se utiliza para mandar los pedidos al modulo de entregas 
 let  idPedidosAEntregar   = [] , rutaPedidos  = [] , prioridadPedidos = []; 
 const enviarPedidos  = (id ,ruta, prioridad) =>{
-    
+
     $('#enviar').prop('disabled', false);
     if(document.getElementById(`${id}`).checked == false){
         idPedidosAEntregar.splice(idPedidosAEntregar.indexOf(id) , 1 );
@@ -194,6 +193,7 @@ const sendRuta  = id =>{
             success: function (response) {
                      notifications(`El envio ha sido guardado con éxito`, 'success');
                      pedidos(); 
+                     idPedidosAEntregar   = [] , rutaPedidos  = [] , prioridadPedidos = []; 
                      $("#entregasModal").modal("hide"); 
         }
     });

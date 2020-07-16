@@ -27,14 +27,20 @@ const  uploadExcel  = () =>{
           if(msg == "null") return notifications(`No se en cuentra ese cliente en la base de datos`,'warning');
           $("#ocultar_excel").hide();
           excelInfo  = []; // se vacia la info para la siguinte orden 
-          let info = JSON.parse(msg);
+          let info = JSON.parse(msg), n =  false ,pedido = ``,cont  = 0 ; 
+          info.Sheet1.forEach(element => {
+            if(element.K == "Subtotal")  n = false;  
+            if(n) cont++; 
+            if(element.C == "Clave")  n = true ; 
+           
+          });
           excelInfo.push(msg);
           notifications("Ha sido importado de manera correcta",'success'); 
           $("#imgct").show();
           $("#infoPedido").val(info.Sheet1[info.Sheet1.length - 1 ].cotizacion);
           $("#fecha_pedido").val(info.Sheet1[info.Sheet1.length - 1 ].fecha.split('/').reverse().join('-'));
           $("#importe").val(info.Sheet1[info.Sheet1.length - 1 ].total.replace(',',''));
-          $("#numero_partidas").val(info.Sheet1[info.Sheet1.length - 1 ].numero_partidas);
+          $("#numero_partidas").val(cont);
           $("#nombre_cliente").val(info.Sheet1[info.Sheet1.length - 1 ].cliente);
           $("#tipo_entrega").val(info.Sheet1[info.Sheet1.length - 1 ].prioridadE == 0 ? "Entrega parcial" : "Entrega  completo" );
           cliente(info.cliente);

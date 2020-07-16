@@ -82,17 +82,18 @@ $(document).ready(function() {
                                 "render": function(data, type, full, meta) {
                                     return `<i class="fas fa-tools" onclick="orderDatailMisPedidos('${full.num_pedido}')"  ></i>`;
                                 }
+                            },
+                            {
+                                sortable: false,
+                                "render": function(data, type, full, meta) {
+                                    return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
+                                }
                             },{
                                     sortable: false,
                                     "render": function(data, type, full, meta) {
                                         return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}"  style="a {color:#130705;} " >${full.orden_de_compra}</a>`;
                                     }
-                                }, {
-                                    sortable: false,
-                                    "render": function(data, type, full, meta) {
-                                        return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
-                                    }
-                                }, {
+                                },  {
                                     sortable: false,
                                     "render": function(data, type, full, meta) {
                                         return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'':full.comprobante_pago }</a>`;
@@ -125,7 +126,7 @@ $(document).ready(function() {
                  { data: 'fecha_inicial'},{
                    sortable:false,
                    "render": function(data, type, full ,meta){
-                    if(full.estatus != 6 )return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close"    ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button><br>`;
+                    if(full.estatus != 6 )return `<center><i class="fas fa-trash-alt" onclick="cancelOrder('${full.num_pedido}')" ></i></center>`;
                     return ' '; 
                    }  
                  }

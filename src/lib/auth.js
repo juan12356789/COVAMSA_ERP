@@ -6,7 +6,7 @@ module.exports = {
             }// si no de regreso al login
             return  res.redirect('/'); 
             
-        }
+        },
         // , el usuario  ya esta logeado 
         // isNotLoggedIn(){
         //     if(!req.isAuthenticated()){
