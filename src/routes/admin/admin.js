@@ -8,10 +8,13 @@ router.post('/urgentes' ,  async (req , res)=>{
        
     switch (req.body.tipo_de_pedido) {
         case '1':
-            const pedidos  = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad ,tipo_de_pago
-            FROM pedidos  INNER JOIN empleados  on id_empleado = id_empleados 
+            const pedidos  = await pool.query(`SELECT numero_factura,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,tipo_de_pago
+            FROM pedidos  INNER  JOIN empleados  on id_empleado = id_empleados  left join facturas using(id_pedido)
+            UNION
+            SELECT numero_factura,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,tipo_de_pago
+            FROM pedidos  INNER JOIN empleados  on id_empleado = id_empleados   RIGHT  JOIN  facturas using(id_pedido )
             ORDER BY fecha_inicial ASC`);
-            
+           
             res.send(pedidos);
         break;
 

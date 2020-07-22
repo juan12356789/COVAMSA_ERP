@@ -73,16 +73,12 @@ $(document).ready(function() {
                         "order": [
                             [10, "desc"]
                         ],
+                        fixedHeader: true,
                         "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                             if (aData.estatus == 6) $('td', nRow).css('color', 'red');
                         },
                         columns: [
-                            {
-                                sortable: false,
-                                "render": function(data, type, full, meta) {
-                                    return `<i class="fas fa-tools" onclick="orderDatailMisPedidos('${full.num_pedido}')"  ></i>`;
-                                }
-                            },
+                         
                             {
                                 sortable: false,
                                 "render": function(data, type, full, meta) {
@@ -97,6 +93,11 @@ $(document).ready(function() {
                                     sortable: false,
                                     "render": function(data, type, full, meta) {
                                         return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'':full.comprobante_pago }</a>`;
+                                    }
+                                },{
+                                    sortable: false,
+                                    "render": function(data, type, full, meta) {
+                                        return `${full.numero_factura == null?'':full.numero_factura}`;
                                     }
                                 }, {
                                     sortable: false,
@@ -122,8 +123,14 @@ $(document).ready(function() {
                         
                      return `  <p class="line-clamp" >${full.observacion}</p>`;
                     }  
-                  },
-                 { data: 'fecha_inicial'},{
+                  }, 
+                  { data: 'fecha_inicial'},
+                    {
+                    sortable: false,
+                    "render": function(data, type, full, meta) {
+                        return `<i class="fas fa-tools" onclick="orderDatailMisPedidos('${full.num_pedido}')"  ></i>`;
+                    }
+                },{
                    sortable:false,
                    "render": function(data, type, full ,meta){
                     if(full.estatus != 6 )return `<center><i class="fas fa-trash-alt" onclick="cancelOrder('${full.num_pedido}')" ></i></center>`;
@@ -158,6 +165,7 @@ let pedidos_vendedores = () => {
     });
 
 };
+
 let cancelOrder = ( order ) =>{
     
     reson_to_cancel( order ); 
@@ -208,7 +216,7 @@ const notificacionEntregado = id =>{
 
 const tipoEntrega  = () =>{
     let  tipoEntrega =  document.getElementById("entrega").value;
-    $("#tipo_entrega").val( tipoEntrega == 0 ? "Entrega parcial" : "Entega completo" );
+    $("#tipo_entrega").val( tipoEntrega == 0 ? "Entrega parcial" : "Entrega completa" );
 };
 
 // componente guardar  

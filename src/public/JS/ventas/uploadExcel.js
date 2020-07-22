@@ -54,7 +54,7 @@ const  uploadExcel  = () =>{
 
       }; 
 
-      const orderDetail  =  () =>{
+const orderDetail  =  () =>{
         
       let info  = JSON.parse(excelInfo), n =  false ,pedido = ``,cont  = 1 ;  
       

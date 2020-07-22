@@ -36,15 +36,16 @@ let sendData = (data) => {
         table += `<tr>
 
                   <th scope="row">${numeracion_pedidos++}</th>
-                  <td> ${estatus[data.estatus - 1] == "Ruta"?`<input type="checkbox" id="${data.num_pedido}" onclick="suspenderEntregas('${data.num_pedido}')" name="" id="suspenderPedido">`:'' }</td>
                   <td> <button  class="btn btn-primary" onclick="cambioStatus('${data.num_pedido}')" >Entregado</button> </td>
-                  <td> <i class="fas fa-file-invoice" onclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.num_pedido}')"></i> </td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
+                  <td>${data.numero_factura} </td>
                   <td  style="background-color:${data.ruta ==  1 ? "#DFBC92" : "#92C1DF"} " >${ruta[data.ruta - 1]}</td>
                   <td id="userinput" >${data.importe}</td> 
                   <td style="background-color:${colores[data.estatus - 1]}" >${estatus[data.estatus - 1]}</td>
                   <td >${prioridad_info[data.prioridad]}</td>
                   <td>${data.fecha_facturas}</td>
+                  <td> <center><i class="fas fa-tools" onclick="orderDatailMisPedidos('${data.num_pedido}')"  ></i></center> </td>
+                  <td> ${estatus[data.estatus - 1] == "Ruta"?`<input type="checkbox" id="${data.num_pedido}" onclick="suspenderEntregas('${data.num_pedido}')" name="" id="suspenderPedido">`:'' }</td>
 
                 </tr>`;
     })
@@ -234,3 +235,60 @@ const idSuspender  = () =>{
     });
     
 }; 
+
+const  orderDatailMisPedidos =  (id , opcion = 0)  =>{
+    console.log('hola');
+    $.ajax({ type: "POST",url: "/entregas/detalles",data: {pedido: id},   success: function (response) {
+        let pedido  = `` , cont  = 1 ; 
+        response.forEach(element => {
+
+          pedido  +=  `
+            <tr>
+             <td>${cont++}</td>  
+             <td>${element.clave}</td>
+             <td>${element.nombre}</td>
+             <td>${element.cantidad_surtida}</td>
+            </tr>
+          `; 
+ 
+       
+    });
+       let ventana  = `
+       <div class="modal fade" id="detalleMisPpedidos" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+       <div class="modal-dialog  modal-dialog-scrollable modal-lg"  >
+         <div class="modal-content">
+           <div class="modal-header">
+             <h5 class="modal-title" id="staticBackdropLabel">Información pedidos</h5>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+             </button>
+           </div>
+           <div class="modal-body">
+            <div class="container" >
+                <table  class="table" >
+                <thead  class="thead-dark" >
+                    <th>#</th>
+                    <th>Clave</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                </thead>
+                <tbody id="cuerpo" >
+                 ${pedido}
+                </tbody>
+              </table>
+            </div>
+           </div>
+           <div class="modal-footer">
+             <button type="button" class="btn btn-success" data-dismiss="modal">Aceptar</button>
+           </div>
+         </div>
+       </div>
+     </div>
+    `;
+        document.getElementById('detalle_mis_pedidos').innerHTML = ventana;
+        $('#detalleMisPpedidos').modal('show');
+   
+      }
+    });
+    
+ };

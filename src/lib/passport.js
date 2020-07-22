@@ -1,6 +1,10 @@
+const express=require("express"); 
+const app =  express(); 
 const passport = require('passport'); // para autentificaciones
 const Strategy = require('passport-local').Strategy;
 const pool = require('../database');
+const cooKieSession =  require('cookie-session');
+
 
 passport.use('local.signin', new Strategy({
     usernameField: 'email',
@@ -21,7 +25,7 @@ passport.use('local.signin', new Strategy({
             const validacionUsuarios = await pool.query("SELECT * FROM  acceso WHERE  correo = ? ", [email]);
             if(validacionUsuarios[0].intentos_login >= 3  ){
                 await pool.query(`UPDATE acceso SET  estado = 0  WHERE idacceso = ?`,validacionUsuarios[0].idacceso);   
-                req.flash('error', 'Su usuario ha sido bloquieado, contacte al administrador.');
+                req.flash('error', 'Su usuario ha sido bloqueado por 3 intentos fallidos , contacte al administrador.');
                 return done(null, false);
             }
     

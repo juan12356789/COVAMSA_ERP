@@ -9,55 +9,68 @@ let orderTable = () => {
                     "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                         if (aData.estatus == 6) $('td', nRow).css('color', 'red');
                     },
-                    columns: [{
+                    columns: [
+                     
+                        {
+                            sortable: false,
+                            "render": function(data, type, full, meta) {
+                                return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
+                            }
+                        },{
                                 sortable: false,
                                 "render": function(data, type, full, meta) {
-                                    return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}" >${full.orden_de_compra}</a>`;
+                                    return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}"  style="a {color:#130705;} " >${full.orden_de_compra}</a>`;
                                 }
-                            }, {
+                            },  {
                                 sortable: false,
                                 "render": function(data, type, full, meta) {
-                                    return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
-                                }
-                            }, {
-                                sortable: false,
-                                "render": function(data, type, full, meta) {
-
                                     return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago ==''?'':full.comprobante_pago }</a>`;
                                 }
-                            }, {
+                            },{
                                 sortable: false,
                                 "render": function(data, type, full, meta) {
-                                    let pagos = ['Transferencia', 'Anticipado', 'Contra Entrega', 'Crédito'];
+                                    return `${full.numero_factura == null?'':full.numero_factura}`;
+                                }
+                            },{
+                                sortable: false,
+                                "render": function(data, type, full, meta) {
+                                    let pagos = ['Transferencia', 'Anticipado', 'Cntra Entrega', 'Crédito'];
                                     return `${pagos[ full.tipo_de_pago - 1 ]}`;
 
                                 }
                             },
                             { data: 'ruta' },
                             { data: 'importe' },
+                            //  { data: 'nombre_estatus' },
                             {
                                 sortable: false,
                                 "render": function(data, type, full, meta) {
                                         return `${full.nombre_estatus == "Detenido"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
-              }
-        },
-        { data: 'prioridad' },
-        {
-        sortable:false,
-        "render": function(data, type, full ,meta){
-            
-            return `  <p class="line-clamp" >${full.observacion}</p>`;
-        } , 
-        },
-            { data: 'fecha_inicial' }, {
+                  }
+            },
+             { data: 'prioridad' },
+             {
+                sortable:false,
+                "render": function(data, type, full ,meta){
+                    
+                 return `  <p class="line-clamp" >${full.observacion}</p>`;
+                }  
+              }, 
+              { data: 'fecha_inicial'},
+                {
                 sortable: false,
                 "render": function(data, type, full, meta) {
-                    if(full.estatus <= 3 || full.estatus == 7  )return `<button type="button" class="btn btn-danger" onclick="cancelOrder('${full.num_pedido}')" class="close"    ><img src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></button><br>`;
-                    return ' '; 
+                    return `<i class="fas fa-tools" onclick="orderDatailMisPedidos('${full.num_pedido}')"  ></i>`;
                 }
-            }
+            },{
+               sortable:false,
+               "render": function(data, type, full ,meta){
+                if(full.estatus != 6 )return `<center><i class="fas fa-trash-alt" onclick="cancelOrder('${full.num_pedido}')" ></i></center>`;
+                return ' '; 
+               }  
+             }
 
-        ]
+            ]
 
     });
 
@@ -70,17 +83,18 @@ let piorityTable = () => {
         "order": [
             [9, "desc"]
         ],
-        columns: [{
-                sortable: false,
-                "render": function(data, type, full, meta) {
-                    return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}" >${full.orden_de_compra}</a>`;
-                }
-            }, {
+        columns: [
+            {
                 sortable: false,
                 "render": function(data, type, full, meta) {
                     return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
                 }
-            }, {
+            },{
+                sortable: false,
+                "render": function(data, type, full, meta) {
+                    return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}" >${full.orden_de_compra}</a>`;
+                }
+            },  {
                 sortable: false,
                 "render": function(data, type, full, meta) {
                     return `<a href="/almacen/pdf/${full.ruta_pdf_comprobante_pago}" >${full.comprobante_pago}</a>`;
@@ -108,8 +122,13 @@ let piorityTable = () => {
 
                     return `  <p class="line-clamp" >${full.observacion}</p>`;
                 }
-            },
-            { data: 'fecha_inicial' }, {
+            },{ data: 'fecha_inicial' },{
+                sortable: false,
+                "render": function(data, type, full, meta) {
+                   return `<i class="fas fa-tools" onclick="orderDatailMisPedidosUrgentes('${full.num_pedido}',1)"  ></i>`;
+               }
+           },
+             {
                 sortable: false,
                 "render": function(data, type, full, meta) {
                     let disabled = ''
@@ -249,3 +268,120 @@ let pedidos = (data) => {
     socket.emit('data:pedidos', data);
 
 };
+
+// se ven los detalles de la orden 
+const  orderDatailMisPedidos =  (id , opcion = 0)  =>{
+
+    $.ajax({ type: "POST",url: "/excel/excelDetail",data: {pedido: id},   success: function (response) {
+        let pedido  = `` , cont  = 1 ; 
+        response.forEach(element => {
+
+          pedido  +=  `
+            <tr>
+             <td>${cont++}</td>  
+             <td>${element.clave}</td>
+             <td>${element.cantidad}</td>
+             <td>${element.nombre}</td>
+            </tr>
+          `; 
+ 
+       
+    });
+       let ventana  = `
+       <div class="modal fade" id="detalleMisPpedidos" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+       <div class="modal-dialog  modal-dialog-scrollable modal-lg"  >
+         <div class="modal-content">
+           <div class="modal-header">
+             <h5 class="modal-title" id="staticBackdropLabel">Información pedidos</h5>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+             </button>
+           </div>
+           <div class="modal-body">
+            <div class="container" >
+                <table  class="table" >
+                <thead  class="thead-dark" >
+                    <th>#</th>
+                    <th>Clave</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                </thead>
+                <tbody id="cuerpo" >
+                 ${pedido}
+                </tbody>
+              </table>
+            </div>
+           </div>
+           <div class="modal-footer">
+             <button type="button" class="btn btn-success" data-dismiss="modal">Aceptar</button>
+           </div>
+         </div>
+       </div>
+     </div>
+    `;
+        document.getElementById('detalle_mis_pedidos').innerHTML = ventana;
+        $('#detalleMisPpedidos').modal('show');
+   
+      }
+    });
+    
+ };
+
+ const  orderDatailMisPedidosUrgentes =  id   =>{
+
+    $.ajax({ type: "POST",url: "/excel/excelDetail",data: {pedido: id},   success: function (response) {
+        let pedido  = `` , cont  = 1 ; 
+        response.forEach(element => {
+
+          pedido  +=  `
+            <tr>
+             <td>${cont++}</td>  
+             <td>${element.clave}</td>
+             <td>${element.cantidad}</td>
+             <td>${element.nombre}</td>
+            </tr>
+          `; 
+ 
+       
+    });
+       let ventana  = `
+       <div class="modal fade" id="detalleMisPpedidosUrgentes" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+       <div class="modal-dialog  modal-dialog-scrollable modal-lg"  >
+         <div class="modal-content">
+           <div class="modal-header">
+             <h5 class="modal-title" id="staticBackdropLabel">Información pedidos</h5>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+             </button>
+           </div>
+           <div class="modal-body">
+            <div class="container" >
+                <table  class="table" >
+                <thead  class="thead-dark" >
+                    <th>#</th>
+                    <th>Clave</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                </thead>
+                <tbody id="cuerpo" >
+                 ${pedido}
+                </tbody>
+              </table>
+            </div>
+           </div>
+           <div class="modal-footer">
+             <button type="button" class="btn btn-success" data-dismiss="modal">Aceptar</button>
+           </div>
+         </div>
+       </div>
+     </div>
+    `;
+        document.getElementById('detalle_mis_pedidos_urgentes').innerHTML = ventana;
+        $('#detalleMisPpedidosUrgentes').modal('show');
+        
+   
+      }
+    });
+    
+ };
+ 

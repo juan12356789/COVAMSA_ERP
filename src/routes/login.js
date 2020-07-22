@@ -32,7 +32,6 @@ router.post('/', (req, res, next) => {
 router.get('/logout', (req, res) => {
     req.logOut();
     res.redirect('/');
-
 });
 
 

@@ -59,17 +59,18 @@ let sendData = (data) => {
         if (data.prioridad == 2) numero_de_pedidos_urgentes++;
         table += `<tr>
                   <th scope="row">${numeracion_pedidos++}</th>
-                  <td> ${estatus[data.estatus - 1] == "Facturado"?`<input type="checkbox" id="${data.num_pedido}"  onclick="enviarPedidos('${data.num_pedido}','${ruta[data.ruta - 1]}','${prioridad_info[data.prioridad]}')" ></input>`:''} </td>
-                  <td><i class="fas fa-tools" onclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.num_pedido}')"></i>  </td>
-                  <td><a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
+                  <td><a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_comprobante_pago}">${data.comprobante_pago}</a></td>
+                  <td> ${data.numero_factura == null?'': data.numero_factura} </td>
                   <td  style="background-color:${data.ruta ==  1 ? "#DFBC92" : "#92C1DF"} " >${ruta[data.ruta - 1]}</td>
                   <td id="userinput" >${data.importe}</td> 
                   <td style="background-color:${colores[data.estatus - 1]}" >${estatus[data.estatus - 1]}</td>
                   <td >${prioridad_info[data.prioridad]}</td>
                   <td >  <p class="line-clamp" >  ${data.observacion} </p> </td>
                   <td>${data.fecha_inicial}</td>
+                  <td><i class="fas fa-tools" onclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.num_pedido}')"></i>  </td>
+                  <td> ${estatus[data.estatus - 1] == "Facturado"?`<input type="checkbox" id="${data.num_pedido}"  onclick="enviarPedidos('${data.num_pedido}','${ruta[data.ruta - 1]}','${prioridad_info[data.prioridad]}')" ></input>`:''} </td>
                
                 </tr>`;
     });
@@ -123,7 +124,7 @@ const enviar = () =>{
             }
              let ventanaEntregas  =`
              <div class="modal fade" id="entregasModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-               <div class="modal-dialog   modal-dialog-scrollable">
+               <div class="modal-dialog  modal-lg  modal-dialog-scrollable">
                  <div class="modal-content">
                    <div class="modal-header">
                      <h5 class="modal-title" id="exampleModalLabel">Entregas</h5>
@@ -142,7 +143,7 @@ const enviar = () =>{
                             </div>
                             <div class="col" >
                                 <label>Intrucciones especiales</label>
-                                <textarea class="form-control"  id="texto" ></textarea>  
+                                <textarea class="form-control" maxlength="29"  id="texto" ></textarea>  
                             </div>
                         </div>
                             <br>
@@ -209,6 +210,7 @@ const chanche_estatus_almacen = (order) => {
             if(estado_nuevo != "Nuevo" && estado_nuevo != "Surtiendo" )    actualizarFacturas(`${order}`);
             let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido'];
             cambios_status_pedidos(  estatus[estado_nuevo - 1] , order);
+            if(estatus[estado_nuevo - 1] == 'Requerir' || estatus[estado_nuevo - 1] ==  'Requerir y facturar ')  subPedidos(order)  ;
             notifications(`El estado del pedido ${order} ha sido cambiado `, 'success');
             pedidos();
             actualizar();
@@ -217,7 +219,13 @@ const chanche_estatus_almacen = (order) => {
 
 };
 
+let subPedidos = id =>{
 
+    $.ajax({type: "POST",url: "/almacen/subpedidos", data: {id:id} ,success: function (response) {
+            
+        }
+    });
+}
 
 /*  preguntarle a rosa para que es esto 
 document.getElementById("userinput").onblur = function() {

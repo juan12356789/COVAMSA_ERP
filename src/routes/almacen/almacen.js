@@ -15,9 +15,24 @@ router.get('/', isLoggedIn , async(req, res) => {
 
 router.get('/pedidos', async(req, res) => {
 
-    const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad
-                                      FROM pedidos WHERE estatus != 7
-                                      order by prioridad desc,fecha_inicial asc`);
+    const pedidos = await pool.query(`SELECT numero_factura ,id_pedido,orden_de_compra,
+	                                        	 ruta,estatus,ruta_pdf_orden_compra,
+		                                         ruta_pdf_pedido,ruta_pdf_comprobante_pago ,
+		                                         num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,
+		                                         comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,  IF(prioridad = 1,0,prioridad) prioridadA,prioridad
+                                      FROM pedidos   LEFT JOIN facturas using(id_pedido)
+                                      WHERE estatus != 7
+
+                                      UNION
+ 
+                                      SELECT numero_factura,id_pedido,orden_de_compra,
+                                      		ruta,estatus,ruta_pdf_orden_compra,
+                                      		ruta_pdf_pedido,ruta_pdf_comprobante_pago ,
+                                      		num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,
+                                      		comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,  IF(prioridad = 1,0,prioridad) prioridadA,prioridad
+                                      FROM pedidos    RIGHT  JOIN facturas using(id_pedido)
+                                      WHERE estatus != 7
+                                      order by  prioridadA desc, fecha_inicial asc`);
 
     res.send(pedidos);
 });
@@ -33,7 +48,7 @@ router.post('/cantidad_pedido',async(req , res)=>{
 
     for (let i = 0; i < cantidad.length; i++) {
 
-      if(cantidad[i] != '0') await pool.query(`UPDATE partidas_productos SET cantidad_surtida = ${parseInt(cantidad[i])}  WHERE id_partidas_productos = ${partidas[i]}`);
+     await pool.query(`UPDATE partidas_productos SET cantidad_surtida = ${cantidad[i] == ''? 0 : parseInt(cantidad[i]) }  WHERE id_partidas_productos = ${partidas[i]}`);
        
     }
     
@@ -42,7 +57,6 @@ router.post('/cantidad_pedido',async(req , res)=>{
 });
 
 router.post("/pedidos_check",  async ( req , res )=>{
-      // console.log('hola');
      
       let productos_cantidad =  await  pool.query(`select id_partidas_productos,cantidad  
                                              from  pedidos inner join partidas using(id_pedido) 
@@ -126,7 +140,51 @@ router.post('/envioEntregas', async (req , res )=>{
     
   res.send(true);
   
-}); 
+});
+// Se  hace el subpedido 
+router.post('/subpedidos', async (req , res)=>{
+
+  const pedidos  = await pool.query(`SELECT * FROM  pedidos where num_pedido = ?`, req.body.id);
+  let f = new Date();
+  pedidos[0].idSubpedidos = pedidos[0].id_pedido ;
+  pedidos[0].id_pedido = null;
+  pedidos[0].estatus = 1;
+  pedidos[0].num_pedido = pedidos[0].num_pedido + ' --> 1 ';
+  pedidos[0].fecha_inicial = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes();
+  await pool.query(`INSERT INTO pedidos SET  ? `, pedidos[0]);
+
+  const  productos  = await pool.query(`select  idProducto  ,(cantidad - cantidad_surtida) faltante,cantidad ,cantidad_surtida 
+                                        from pedidos inner join partidas using(id_pedido) 
+                                                     inner join partidas_productos using(idPartida)
+                                        where cantidad != cantidad_surtida  and num_pedido = ?`,req.body.id);
+  const numeroPedidoNuevo = await  pool.query(`SELECT id_pedido FROM pedidos where num_pedido = ?`,pedidos[0].num_pedido);
+  await pool.query(`INSERT INTO partidas  VALUES(?,?,?)`,[null,numeroPedidoNuevo[0].id_pedido,1] ); 
+  const numeroPartida = await pool.query(`SELECT idPartida  FROM partidas where id_pedido = ? `,numeroPedidoNuevo[0].id_pedido); 
+  console.log(numeroPartida);
+
+  for (let i = 0; i < productos.length; i++) {
+    
+    await pool.query(`INSERT INTO partidas_protudctos VALUES (?,?,?,?,?)`,
+    [
+      null,
+      numeroPartida[0].idPartidas,
+      productos[i].idProducto,
+      productos[i].faltante,
+      0
+    ]); 
+    
+  }
+  
+ 
+
+
+
+
+
+
+
+});
+
 // Descarga el PDF 
 router.get('/pdf/:id', (req, res) => {
  

@@ -64,7 +64,17 @@ let cambios_status_pedidos = (current_status, order) => {
     let nuevo_estatus = document.getElementById('estado_nuevo');
     
     let elementsHTML = `
-
+    <style>
+    .table-responsive{
+        height:400px;  
+        overflow:scroll;
+      }
+       thead tr:nth-child(1) th{
+          position: sticky;
+          top: 0;
+          z-index: 10;
+        }
+    </style>
         <div class="modal-body">
         <div class="row" >
             <div  class="col">
@@ -94,20 +104,20 @@ let cambios_status_pedidos = (current_status, order) => {
         <div class="row" >
             <div class="col" >
             <div id="numero_partidas" ></div>
-            <div class="table table-responsive  ">
-            <table class="table  table-striped table-bordered">
-                  <thead class="thead-dark" >
-                      <tr>
-                          <th class="col-xs-2" >#</th>
-                          <th class="col-xs-2" >Clave </th>
-                          <th class="col-xs-2" >Nombre</th>
-                          <th class="col-xs-2" >Cantidad </th>
-                          <th class="col-xs-2" >Cantidad surtida</th>
-                          <th class="col-xs-2" > Encontrado </th>
+            <div class=" table-responsive ">
+            <table class="thead-dark" id="job-table" >
+                  <thead>
+                      <tr class="text-center" > 
+                          <th class="col" >#</th>
+                          <th class="col" >Clave </th>
+                          <th class="col" >Nombre</th>
+                          <th class="col" >Cantidad </th>
+                          <th class="col" >Cantidad surtida</th>
+                          <th class="col" > Encontrado </th>
 
                       </tr>
-                  </thead>
-                  <tbody id="partidas"></tbody>
+                  </thead  >
+                  <tbody id="partidas" class="text-center tableBody"></tbody>
                
 
               </table>
@@ -130,24 +140,26 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
     $.ajax({type: "POST",url: "/almacen/partidas",data: {pedido:id_pedido},success: function (response) {
             idPartidas = [];
             idPartidas =     response.map(n => n.id_partidas_productos);  
-            let   partidasOp  = 0,cont = 0,numero = 0 ,tipo_status = `` ;   
+            let   partidasOp  = 0,cont = 0,numero = 0 ,tipo_status = `` , noSurtida  = 0;   
             let   tabla_partidas   = ``, numero_partidas = 0;
             response.forEach(response => {
                 numero++; 
                 if(partidasOp < response.idPartida)partidasOp = response.idPartida;
                 cont++; 
                 tabla_partidas+= `
-                <tr>
-                    <td class="col-xs-2" >${cont}</td>
-                    <td class="col-xs-2" >${response.clave}</td>
-                    <td class="col-xs-2" >${response.nombre}</td>
-                    <td class="col-xs-2"  >${response.cantidad}</td>
-                    ${ status == "Surtiendo" ? `<td class="col-xs-2"  ><input type='text' maxlength="11"   value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  name='numero' id='numero${numero}' ></td>`:`<td class="col-xs-2"><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </td>` }
-                    ${ status == "Surtiendo" ?`<td class="col-xs-2" ><input type="checkbox" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"   ${response.cantidad_surtida == response.cantidad?"checked":" "} name="completo${cont}" id="completo${cont}"></td>`:`<td class="col-xs-2"><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></td>`}
+                <tr >
+                    <td class="col" >${cont}</td>
+                    <td class="col" >${response.clave}</td>
+                    <td class="col" >${response.nombre}</td>
+                    <td class="col"  >${response.cantidad}</td>
+                    ${ status == "Surtiendo" ? `<td class="col"  ><input type='text' maxlength="11" onkeypress=" return justNumbers(event ,'numero${numero}','${response.cantidad}')"    value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  name='numero' id='numero${numero}' ></td>`:`<td class="col"><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </td>` }
+                    ${ status == "Surtiendo" ?`<td class="col" ><input type="checkbox" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"   ${response.cantidad_surtida == response.cantidad?"checked":" "} name="completo${cont}" id="completo${cont}"></td>`:`<td class="col"><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></td>`}
                 </tr>`;
                 if(response.cantidad_surtida == response.cantidad)  numero_partidas++; 
+                if(response.cantidad_surtida  ==  0  ) noSurtida++; 
 
             });
+           
             document.getElementById('button').innerHTML = `
             <div class="modal-footer">
                 <button onclick="guardarPartidas('${id_pedido}', '${status}')" class="btn btn-primary" >Guardar</button>
@@ -173,17 +185,23 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
             document.getElementById('partidas').innerHTML = tabla_partidas;
             
             if(status == "Nuevo") document.getElementById('estado_nuevo').innerHTML = `<option value="2" > Surtiendo </option>`;  
-            if(status == "Surtiendo" && response[0].prioridadE == 0  ){ document.getElementById('estado_nuevo').innerHTML = `
-                <option value="3">Facturable </option>
-                <option value="4" >Requerir y facturar  </option>
-            `;
+            if(status == "Surtiendo" && response[0].prioridadE == 0  ){
+                if(noSurtida == response.length)  document.getElementById('estado_nuevo').innerHTML = ` <option value="5" >Requerir  </option>`;
+                if(noSurtida != response.length) document.getElementById('estado_nuevo').innerHTML = `<option value="4" >Requerir y facturar  </option>`;
+                if(numero_partidas == response.length)document.getElementById('estado_nuevo').innerHTML = ` <option value="3">Facturable </option>`;
             }
+
             if(status == "Surtiendo" && response[0].prioridadE == 1){
-                document.getElementById('estado_nuevo').innerHTML = `
-                <option value="3" >Facturable </option>
-                <option value="5" >Requerir  </option>
-            `;
+
+                if(numero_partidas == response.length){
+
+                     document.getElementById('estado_nuevo').innerHTML = ` <option value="3"> Facturable </option>`;
+                } else{
+
+                     document.getElementById('estado_nuevo').innerHTML = ` <option value="5" > Requerir  </option>`;
+                }
             }
+
             if(status == "Suspendida" ){
                 document.getElementById('estado_nuevo').innerHTML = `
                 <option value="1" > Nuevo </option>
@@ -198,6 +216,23 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
     });
     
 }; 
+
+let concatenarNumeros= "";
+function justNumbers (event , id , cantidad ) {
+    var x = event.which || event.keyCode;
+    numero   = '0123456789'; 
+    concatenarNumeros += String.fromCharCode(x);
+    if( parseInt(concatenarNumeros) > parseInt(cantidad)  ){ 
+        concatenarNumeros = ""; 
+        $(`#${id}`).val('');
+        return false ;
+    } 
+    if( numero.indexOf(String.fromCharCode(x)) == -1  ){
+        concatenarNumeros = "";
+        return false ;
+    }
+
+}
 
 
 
@@ -223,8 +258,9 @@ const cantidadProducto = (cantidad  , id_partidas_productos, numero ,id , status
 
 //  se guardan los elementos del  pedido 
 const guardarPartidas =  (id , status) =>{
-
+   
     let  values =  $("input[name='numero']").map(function(){return $(this).val();}).get();
+    console.log(values);
     $.ajax({type: "POST",url: "/almacen/cantidad_pedido",data: {cantidad :JSON.stringify(values) , partidas: JSON.stringify(idPartidas) , id:id},success: function (response) {
 
         tabla_partidas(id , status);
