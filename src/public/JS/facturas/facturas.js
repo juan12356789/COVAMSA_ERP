@@ -22,13 +22,14 @@ const facturas  = () =>{
         prioridad_info = ["Normal", "Normal", "Urgente"];
         colores = ["#C6AED8", "#A1DEDB ", "#C1DEA1", "#C1DEA1", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED"];
         let numeracion_pedidos = 1 , numero_de_pedidos_urgentes = 0;
+        console.log(response);
         response.forEach(data => {
             if (data.prioridad == 2) numero_de_pedidos_urgentes++;
             table += `<tr>
     
                       <th scope="row">${numeracion_pedidos++}</th>
-                      <td> ${estatus[data.estatus - 1] != "Facturando"?`<button  type="button"  class="btn btn-secondary"  onclick="procesando('${data.num_pedido}','${estatus[data.estatus - 1]}')"   > Procesar </button>`:`<button  type="button"  class="btn btn-success"  onclick="procesando('${data.num_pedido}','${estatus[data.estatus - 1]}')"   > Completo</button>`} </td>
-                      <td><button   class="btn btn-primary" onclick="partidas('${data.num_pedido}')" > Partidas </button></td>
+                      <td> ${estatus[data.estatus - 1] != "Facturando"?`<button  type="button"  class="btn btn-secondary"  onclick="procesando('${data.id_pedido}','${estatus[data.estatus - 1]}')"   > Procesar </button>`:`<button  type="button"  class="btn btn-success"  onclick="procesando('${data.id_pedido}','${estatus[data.estatus - 1]}')"   > Completo</button>`} </td>
+                      <td><button   class="btn btn-primary" onclick="partidas('${data.id_pedido}')" > Partidas </button></td>
                       <td><a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
                       <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
                       <td><a  href="/almacen/pdf/${data.ruta_pdf_comprobante_pago}">${data.comprobante_pago}</a></td>

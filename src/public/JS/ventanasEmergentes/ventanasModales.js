@@ -58,22 +58,14 @@ let reson_to_cancel = (order) => {
 };
 
 let cambios_status_pedidos = (current_status, order) => {
-
+        console.log(order);
     if (current_status == "Cancelado") return notifications("Este pedido ha sido cancelado no es posible cambiar  el status", 'warning');
     $('#change_status').modal('show');
     let nuevo_estatus = document.getElementById('estado_nuevo');
     
     let elementsHTML = `
     <style>
-    .table-responsive{
-        height:400px;  
-        overflow:scroll;
-      }
-       thead tr:nth-child(1) th{
-          position: sticky;
-          top: 0;
-          z-index: 10;
-        }
+   
     </style>
         <div class="modal-body">
         <div class="row" >
@@ -159,12 +151,15 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
                 if(response.cantidad_surtida  ==  0  ) noSurtida++; 
 
             });
-           
-            document.getElementById('button').innerHTML = `
-            <div class="modal-footer">
-                <button onclick="guardarPartidas('${id_pedido}', '${status}')" class="btn btn-primary" >Guardar</button>
-            </div>
-            `;
+            if(status == "Surtiendo"){
+
+                document.getElementById('button').innerHTML = `
+                <div class="modal-footer">
+                    <button onclick="guardarPartidas('${id_pedido}', '${status}')" class="btn btn-primary" >Guardar</button>
+                </div>
+                `;
+                
+            }
             document.getElementById("numero_partidas").innerHTML = `
             
                 <div class="row" >
@@ -274,7 +269,7 @@ const guardarPartidas =  (id , status) =>{
 
 // este onckick nos sirve paea saber si todos los productos se han encontrado 
 const completarListga  = ( id ,status ) => {
-    
+                console.log(id);
     let checkbox =   document.getElementById("partida_completa").checked;
         $.ajax({type: "POST",url: "/almacen/pedidos_check",data: {num_pedido : id ,check : checkbox},success: function (response) {
 

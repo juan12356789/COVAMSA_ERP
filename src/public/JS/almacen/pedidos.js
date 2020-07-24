@@ -49,6 +49,7 @@ socket.on('data:facturas', function(data) {
 });
 
 let sendData = (data) => {
+    console.log(data);
     let table = '';
     ruta = ["Norte", "Sur"];
     let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida'];
@@ -69,8 +70,8 @@ let sendData = (data) => {
                   <td >${prioridad_info[data.prioridad]}</td>
                   <td >  <p class="line-clamp" >  ${data.observacion} </p> </td>
                   <td>${data.fecha_inicial}</td>
-                  <td><i class="fas fa-tools" onclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.num_pedido}')"></i>  </td>
-                  <td> ${estatus[data.estatus - 1] == "Facturado"?`<input type="checkbox" id="${data.num_pedido}"  onclick="enviarPedidos('${data.num_pedido}','${ruta[data.ruta - 1]}','${prioridad_info[data.prioridad]}')" ></input>`:''} </td>
+                  <td><i class="fas fa-tools" onclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.id_pedido}')"></i>  </td>
+                  <td> ${estatus[data.estatus - 1] == "Facturado"?`<input type="checkbox" id="${data.num_pedido}"  onclick="enviarPedidos('${data.num_pedido}','${ruta[data.ruta - 1]}','${prioridad_info[data.prioridad]}','${data.id_pedido}')" ></input>`:''} </td>
                
                 </tr>`;
     });
@@ -92,16 +93,21 @@ let sendData = (data) => {
 }
 
 // Esta funcion se utiliza para mandar los pedidos al modulo de entregas 
-let  idPedidosAEntregar   = [] , rutaPedidos  = [] , prioridadPedidos = []; 
-const enviarPedidos  = (id ,ruta, prioridad) =>{
+let  idPedidosAEntregar   = [] , rutaPedidos  = [] , prioridadPedidos = [], idPedidoOriginal = []; 
+const enviarPedidos  = (id ,ruta, prioridad,id_pedido) =>{
 
     $('#enviar').prop('disabled', false);
     if(document.getElementById(`${id}`).checked == false){
+
         idPedidosAEntregar.splice(idPedidosAEntregar.indexOf(id) , 1 );
+        idPedidoOriginal.splice(idPedidoOriginal.indexOf(id_pedido),1)
         rutaPedidos.splice(rutaPedidos.indexOf(ruta) , 1 );
         prioridadPedidos.splice(prioridadPedidos.indexOf(prioridad) , 1 );
         return idPedidosAEntregar.length == 0 ?  $('#enviar').prop('disabled', true):$('#enviar').prop('disabled', false);
+
     }  
+    console.log(idPedidoOriginal);
+    idPedidoOriginal.push(id_pedido); 
     prioridadPedidos.push(prioridad); 
     rutaPedidos.push(ruta); 
     idPedidosAEntregar.push(id); 
@@ -121,7 +127,7 @@ const enviar = () =>{
                     <td>${rutaPedidos[i]}</td>
                     <td>${prioridadPedidos[i]}</td>
                 </tr>`
-            }
+            } 
              let ventanaEntregas  =`
              <div class="modal fade" id="entregasModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                <div class="modal-dialog  modal-lg  modal-dialog-scrollable">
@@ -187,7 +193,7 @@ const sendRuta  = id =>{
     $.ajax({type: "POST",
             url: "/almacen/envioEntregas",
             data: {
-                partidas : JSON.stringify(idPedidosAEntregar),
+                partidas : JSON.stringify(idPedidoOriginal),
                 empleado: document.getElementById('repartidor').value,
                 descripcion: document.getElementById('texto').value
                 },
@@ -202,7 +208,7 @@ const sendRuta  = id =>{
 
 const chanche_estatus_almacen = (order) => {
 
-
+    console.log(order);
     let estado_nuevo = document.getElementById('estado_nuevo').value;
     
     $.ajax({type: "POST",url: "/almacen/cambio_estado",data: { estado_nuevo, order }, success: function(response) {
@@ -210,7 +216,7 @@ const chanche_estatus_almacen = (order) => {
             if(estado_nuevo != "Nuevo" && estado_nuevo != "Surtiendo" )    actualizarFacturas(`${order}`);
             let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido'];
             cambios_status_pedidos(  estatus[estado_nuevo - 1] , order);
-            if(estatus[estado_nuevo - 1] == 'Requerir' || estatus[estado_nuevo - 1] ==  'Requerir y facturar ')  subPedidos(order)  ;
+            if( estatus[estado_nuevo - 1] ==  'Requerir y facturar ')  subPedidos(order)  ;
             notifications(`El estado del pedido ${order} ha sido cambiado `, 'success');
             pedidos();
             actualizar();

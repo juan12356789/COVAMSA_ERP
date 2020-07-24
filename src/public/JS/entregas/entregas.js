@@ -36,7 +36,7 @@ let sendData = (data) => {
         table += `<tr>
 
                   <th scope="row">${numeracion_pedidos++}</th>
-                  <td> <button  class="btn btn-primary" onclick="cambioStatus('${data.num_pedido}')" >Entregado</button> </td>
+                  <td> <button  class="btn btn-primary" onclick="cambioStatus('${data.id_pedido}')" >Entregado</button> </td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
                   <td>${data.numero_factura} </td>
                   <td  style="background-color:${data.ruta ==  1 ? "#DFBC92" : "#92C1DF"} " >${ruta[data.ruta - 1]}</td>
@@ -44,8 +44,8 @@ let sendData = (data) => {
                   <td style="background-color:${colores[data.estatus - 1]}" >${estatus[data.estatus - 1]}</td>
                   <td >${prioridad_info[data.prioridad]}</td>
                   <td>${data.fecha_facturas}</td>
-                  <td> <center><i class="fas fa-tools" onclick="orderDatailMisPedidos('${data.num_pedido}')"  ></i></center> </td>
-                  <td> ${estatus[data.estatus - 1] == "Ruta"?`<input type="checkbox" id="${data.num_pedido}" onclick="suspenderEntregas('${data.num_pedido}')" name="" id="suspenderPedido">`:'' }</td>
+                  <td> <center><i class="fas fa-tools" onclick="orderDatailMisPedidos('${data.id_pedido}')"  ></i></center> </td>
+                  <td> ${estatus[data.estatus - 1] == "Ruta"?`<input type="checkbox" id="${data.id_pedido}" onclick="suspenderEntregas('${data.id_pedido}')" name="" id="suspenderPedido">`:'' }</td>
 
                 </tr>`;
     })
@@ -71,7 +71,6 @@ let sendData = (data) => {
 // Se cambia el status y se sube  una foto del comprobante 
 const cambioStatus  = id  =>{
     $.ajax({type: "POST",url: "/entregas/archivo",data: {id:id}, success: function (response) {
-     
         
         let tabla_entregas = `
         <div class="modal fade" id="entregasPedidos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
