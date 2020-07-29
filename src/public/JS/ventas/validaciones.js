@@ -82,7 +82,8 @@ $(document).ready(function() {
                             {
                                 sortable: false,
                                 "render": function(data, type, full, meta) {
-                                    return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
+                                    console.log(full.num_pedido);
+                                    return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_subpedido == null ? full.num_pedido : full.num_subpedido  }</a>`;
                                 }
                             },{
                                     sortable: false,
@@ -113,10 +114,14 @@ $(document).ready(function() {
                                 {
                                     sortable: false,
                                     "render": function(data, type, full, meta) {
-                                            return `${full.nombre_estatus == "Detenido"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.nombre_estatus}</a>`:full.nombre_estatus}`;
+                                        let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida'];
+                                        let colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078"];
+
+                                            return `${estatus[full.estatus - 1]  == "Detenido"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.estatus}</a>`:estatus[full.estatus - 1]}`;
                       }
                 },
                  { data: 'prioridad' },
+                 {data:'prioridadE'},
                  {
                     sortable:false,
                     "render": function(data, type, full ,meta){
@@ -133,7 +138,7 @@ $(document).ready(function() {
                 },{
                    sortable:false,
                    "render": function(data, type, full ,meta){
-                    if(full.estatus != 6 )return `<center><i class="fas fa-trash-alt" onclick="cancelOrder('${full.num_pedido}')" ></i></center>`;
+                    if(full.estatus != 6 )return `<center><i class="fas fa-trash-alt" onclick="cancelOrder('${full.id_pedido}')" ></i></center>`;
                     return ' '; 
                    }  
                  }
@@ -150,14 +155,16 @@ let pedidos_vendedores = () => {
         type: "POST",
         url: "/ventas/pedidos_vendedor",
         success: function(response) {
+            console.log(response);
+            let ruta = ['Norte', 'Sur'];  
+            let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida'];
+            let colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078"];
 
-            let ruta = ['Norte', 'Sur'];
-            
-    let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida'];
             let prioridad_info = ["Normal", "Normal", "Urgente"];
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
-            response.filter(n => n.nombre_estatus = estatus[n.estatus - 1]);
+            // response.filter(n => n.nombre_estatus = `<div style="background-color:${colores[n.estatus - 1]}; >`+estatus[n.estatus - 1] + '</div>');
             response.filter(n => n.prioridad = prioridad_info[n.prioridad]);
+            response.filter(n => n.prioridadE == 0 ? n.prioridadE = 'Sí' : n.prioridadE = 'No');
             dataTable.rows().remove();
             dataTable.rows.add(response).draw();
             
@@ -257,7 +264,7 @@ let cancelarOrden =() =>{
 
             },
             success: function(response) {
-                //   $('#spinnerUpload').modal('hide');
+                  $('#spinnerUpload').modal('hide');
                 if(response == "null"){
                     
                     $('#spinnerUpload').modal('hide');
@@ -272,8 +279,7 @@ let cancelarOrden =() =>{
 
 
                 } 
-
-                if (response == 'false') {
+                if (response == 'false' || response == 'null') {
                     $('#spinnerUpload').modal('hide');
                     notifications("No se pudo guardar su pedido favor de checar sus campos",'warning'); 
                     $('#imgct').trigger("reset");
@@ -281,7 +287,6 @@ let cancelarOrden =() =>{
                     $("#input").hide();
                     $("#imgct").hide();
                     $("#ocultar_excel").show();
-
 
                 }
 
@@ -299,15 +304,16 @@ let cancelarOrden =() =>{
                     $("#inputCliente").hide();
                     $("#imgct").hide();
                     $("#ocultar_excel").show();
+                    $("#excel").val('');
                     swal({
-                        title: `El  pedido ha sido guardado con éxito con el número ${num_pedido[0].id_pedido}`,
+                        title: `El  pedido ha sido guardado con éxito con el número ${num_pedido[0].num_pedido}`,
                         type: `success`,
                         showConfirmButton: true
                     });
 
                 }
                
-                
+                $("#excel").val('');
             },
             cache: false,
             contentType: false,

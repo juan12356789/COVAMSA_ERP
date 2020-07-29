@@ -58,7 +58,6 @@ let reson_to_cancel = (order) => {
 };
 
 let cambios_status_pedidos = (current_status, order) => {
-        console.log(order);
     if (current_status == "Cancelado") return notifications("Este pedido ha sido cancelado no es posible cambiar  el status", 'warning');
     $('#change_status').modal('show');
     let nuevo_estatus = document.getElementById('estado_nuevo');
@@ -100,7 +99,7 @@ let cambios_status_pedidos = (current_status, order) => {
             <table class="thead-dark" id="job-table" >
                   <thead>
                       <tr class="text-center" > 
-                          <th class="col" >#</th>
+                          <th class="col-2"   >#</th>
                           <th class="col" >Clave </th>
                           <th class="col" >Nombre</th>
                           <th class="col" >Cantidad </th>
@@ -130,6 +129,7 @@ let idPartidas = [];
 const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
     
     $.ajax({type: "POST",url: "/almacen/partidas",data: {pedido:id_pedido},success: function (response) {
+        console.log(response);
             idPartidas = [];
             idPartidas =     response.map(n => n.id_partidas_productos);  
             let   partidasOp  = 0,cont = 0,numero = 0 ,tipo_status = `` , noSurtida  = 0;   
@@ -140,11 +140,11 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
                 cont++; 
                 tabla_partidas+= `
                 <tr >
-                    <td class="col" >${cont}</td>
+                    <td class="col"  >${cont}</td>
                     <td class="col" >${response.clave}</td>
                     <td class="col" >${response.nombre}</td>
                     <td class="col"  >${response.cantidad}</td>
-                    ${ status == "Surtiendo" ? `<td class="col"  ><input type='text' maxlength="11" onkeypress=" return justNumbers(event ,'numero${numero}','${response.cantidad}')"    value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  name='numero' id='numero${numero}' ></td>`:`<td class="col"><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </td>` }
+                    ${ status == "Surtiendo" ? `<td class="col"  ><input type='text' maxlength="11"  onclick="cleanFunction()" onkeypress=" return justNumbers(event ,'numero${numero}','${response.cantidad}')"    value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  name='numero' id='numero${numero}' ></td>`:`<td class="col"><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </td>` }
                     ${ status == "Surtiendo" ?`<td class="col" ><input type="checkbox" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"   ${response.cantidad_surtida == response.cantidad?"checked":" "} name="completo${cont}" id="completo${cont}"></td>`:`<td class="col"><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></td>`}
                 </tr>`;
                 if(response.cantidad_surtida == response.cantidad)  numero_partidas++; 
@@ -213,6 +213,9 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
 }; 
 
 let concatenarNumeros= "";
+
+let cleanFunction = () => concatenarNumeros= "" ; 
+
 function justNumbers (event , id , cantidad ) {
     var x = event.which || event.keyCode;
     numero   = '0123456789'; 
@@ -221,7 +224,7 @@ function justNumbers (event , id , cantidad ) {
         concatenarNumeros = ""; 
         $(`#${id}`).val('');
         return false ;
-    } 
+    }
     if( numero.indexOf(String.fromCharCode(x)) == -1  ){
         concatenarNumeros = "";
         return false ;
@@ -269,7 +272,7 @@ const guardarPartidas =  (id , status) =>{
 
 // este onckick nos sirve paea saber si todos los productos se han encontrado 
 const completarListga  = ( id ,status ) => {
-                console.log(id);
+
     let checkbox =   document.getElementById("partida_completa").checked;
         $.ajax({type: "POST",url: "/almacen/pedidos_check",data: {num_pedido : id ,check : checkbox},success: function (response) {
 

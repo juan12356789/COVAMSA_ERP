@@ -15,24 +15,24 @@ router.get('/', isLoggedIn , async(req, res) => {
 
 router.get('/pedidos', async(req, res) => {
 
-    const pedidos = await pool.query(`SELECT numero_factura ,id_pedido,orden_de_compra,
+    const pedidos = await pool.query(`SELECT num_subpedido,numero_factura ,id_pedido,orden_de_compra,
 	                                        	 ruta,estatus,ruta_pdf_orden_compra,
 		                                         ruta_pdf_pedido,ruta_pdf_comprobante_pago ,
-		                                         num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,
+		                                         num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial, fecha_inicial fecha ,
 		                                         comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,  IF(prioridad = 1,0,prioridad) prioridadA,prioridad
                                       FROM pedidos   LEFT JOIN facturas using(id_pedido)
                                       WHERE estatus != 7
 
                                       UNION
  
-                                      SELECT numero_factura,id_pedido,orden_de_compra,
+                                      SELECT num_subpedido,numero_factura,id_pedido,orden_de_compra,
                                       		ruta,estatus,ruta_pdf_orden_compra,
                                       		ruta_pdf_pedido,ruta_pdf_comprobante_pago ,
-                                      		num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,
+                                      		num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,fecha_inicial fecha ,
                                       		comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,  IF(prioridad = 1,0,prioridad) prioridadA,prioridad
                                       FROM pedidos    RIGHT  JOIN facturas using(id_pedido)
                                       WHERE estatus != 7
-                                      order by  prioridadA desc, fecha_inicial asc`);
+                                      order by  prioridadA desc, fecha asc`);
 
     res.send(pedidos);
 });
@@ -124,6 +124,7 @@ router.post('/envioEntregas', async (req , res )=>{
 
   }
 
+  let  numeroEntrega ;
   for (let i = 0; i < pedidos.length; i++) {
 
      let  pedido = await pool.query(`SELECT idProducto  
@@ -132,7 +133,7 @@ router.post('/envioEntregas', async (req , res )=>{
                                                     inner join  productos using(idProducto)
                                      WHERE  id_pedido = "${pedidos[i]}" and  cantidad = cantidad_surtida`);
          
-     let  numeroEntrega   = await pool.query(`select idEntregas from entregas where id_pedido = "${pedidos[i]}"`);
+       numeroEntrega   = await pool.query(`select idEntregas from entregas where id_pedido = "${pedidos[i]}"`);
 
       for (let i = 0; i < pedido.length; i++) {
 
@@ -141,20 +142,23 @@ router.post('/envioEntregas', async (req , res )=>{
       }
     
   }
+  // console.log(numeroEntrega[0].idEntregas);
     
-  res.send(true);
+  res.send(numeroEntrega[0]);
   
 });
 // Se  hace el subpedido 
 router.post('/subpedidos', async (req , res)=>{
 
   const pedidos  = await pool.query(`SELECT * FROM  pedidos where id_pedido = ?`, req.body.id);
+  const cantidad_pedidos   = await pool.query(`SELECT count(*) cantidad_pedidos FROM  pedidos where num_pedido= ?`, pedidos[0].num_pedido);
+  pedidos[0].num_subpedido = `${pedidos[0].num_pedido}-sub ${cantidad_pedidos[0].cantidad_pedidos } ` ;
   let f = new Date();
   pedidos[0].idSubpedidos = pedidos[0].id_pedido ;
   pedidos[0].id_pedido = null;
   pedidos[0].estatus = 1;
-  pedidos[0].fecha_inicial = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes();
-
+  pedidos[0].fecha_inicial = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
+  console.log(pedidos[0]);
   await pool.query(`INSERT INTO pedidos SET  ? `, pedidos[0]);
 
   const  productos  = await pool.query(`select  idProducto  ,(cantidad - cantidad_surtida) faltante,cantidad ,cantidad_surtida 

@@ -22,27 +22,27 @@ const  uploadExcel  = () =>{
 
         request.done(function( msg )
         {
-          
+         
           if(msg == "false" ) return notifications(`Este cliente pertenece a  otro vendedor, favor de notificarlo con en administrador`,'warning');
           if(msg == "null") return notifications(`No se en cuentra ese cliente en la base de datos`,'warning');
           $("#ocultar_excel").hide();
           excelInfo  = []; // se vacia la info para la siguinte orden 
           let info = JSON.parse(msg), n =  false ,pedido = ``,cont  = 0 ; 
-          info.Sheet1.forEach(element => {
-            if(element.K == "Subtotal")  n = false;  
+          // console.log(info);
+          info.Hoja1.forEach(element => {
             if(n) cont++; 
-            if(element.C == "Clave")  n = true ; 
+            if(element.B == "CODIGO")  n = true ; 
            
           });
           excelInfo.push(msg);
           notifications("Ha sido importado de manera correcta",'success'); 
           $("#imgct").show();
-          $("#infoPedido").val(info.Sheet1[info.Sheet1.length - 1 ].cotizacion);
-          $("#fecha_pedido").val(info.Sheet1[info.Sheet1.length - 1 ].fecha.split('/').reverse().join('-'));
-          $("#importe").val(info.Sheet1[info.Sheet1.length - 1 ].total.replace(',',''));
+          $("#infoPedido").val(info.Hoja1[info.Hoja1.length - 1 ].cotizacion);
+          $("#fecha_pedido").val(info.Hoja1[info.Hoja1.length - 1 ].fecha.split('/').reverse().join('-'));
+          $("#importe").val(info.Hoja1[info.Hoja1.length - 1 ].total);
           $("#numero_partidas").val(cont);
-          $("#nombre_cliente").val(info.Sheet1[info.Sheet1.length - 1 ].cliente);
-          $("#tipo_entrega").val(info.Sheet1[info.Sheet1.length - 1 ].prioridadE == 0 ? "Entrega parcial" : "Entrega  completo" );
+          $("#nombre_cliente").val(info.Hoja1[info.Hoja1.length - 1 ].cliente);
+          $("#tipo_entrega").val(info.Hoja1[info.Hoja1.length - 1 ].prioridadE == 0 ? "Entrega parcial" : "Entrega  completo" );
           cliente(info.cliente);
 
         });
@@ -59,19 +59,19 @@ const orderDetail  =  () =>{
       let info  = JSON.parse(excelInfo), n =  false ,pedido = ``,cont  = 1 ;  
       
       
-      info.Sheet1.forEach(element => {
-          if(element.K == "Subtotal")  n = false;  
-          if(n){
+      info.Hoja1.forEach(element => {
+          // if(element.K == "Subtotal")  n = false;  
+          if(n ==  true  && element.B != undefined){
             pedido  +=  `
               <tr>
                <td>${cont++}</td>
-               <td>${element.C}</td>
-               <td>${element.F}</td>
-               <td>${element.O}</td>
+               <td>${element.B}</td>
+               <td>${element.D}</td>
+               <td>${element.A}</td>
               </tr>
             `; 
           }
-          if(element.C == "Clave")  n = true ; 
+          if(element.B == "CODIGO")  n = true ; 
          
       });
          let ventana  = `
@@ -79,7 +79,7 @@ const orderDetail  =  () =>{
          <div class="modal-dialog  modal-dialog-scrollable modal-lg"  >
            <div class="modal-content">
              <div class="modal-header">
-               <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+               <h5 class="modal-title" id="staticBackdropLabel"> Detalles de la  partida </h5>
                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                  <span aria-hidden="true">&times;</span>
                </button>

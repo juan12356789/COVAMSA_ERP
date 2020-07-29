@@ -60,7 +60,7 @@ let sendData = (data) => {
         if (data.prioridad == 2) numero_de_pedidos_urgentes++;
         table += `<tr>
                   <th scope="row">${numeracion_pedidos++}</th>
-                  <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
+                  <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_subpedido == null? data.num_pedido:data.num_subpedido}</a></td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_comprobante_pago}">${data.comprobante_pago}</a></td>
                   <td> ${data.numero_factura == null?'': data.numero_factura} </td>
@@ -71,7 +71,7 @@ let sendData = (data) => {
                   <td >  <p class="line-clamp" >  ${data.observacion} </p> </td>
                   <td>${data.fecha_inicial}</td>
                   <td><i class="fas fa-tools" onclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.id_pedido}')"></i>  </td>
-                  <td> ${estatus[data.estatus - 1] == "Facturado"?`<input type="checkbox" id="${data.num_pedido}"  onclick="enviarPedidos('${data.num_pedido}','${ruta[data.ruta - 1]}','${prioridad_info[data.prioridad]}','${data.id_pedido}')" ></input>`:''} </td>
+                  <td> ${estatus[data.estatus - 1] == "Facturado"?`<input type="checkbox" id="${data.num_subpedido == null? data.num_pedido:data.num_subpedido}"  onclick="enviarPedidos('${data.num_subpedido == null? data.num_pedido:data.num_subpedido}','${ruta[data.ruta - 1]}','${prioridad_info[data.prioridad]}','${data.id_pedido}')" ></input>`:''} </td>
                
                 </tr>`;
     });
@@ -106,7 +106,6 @@ const enviarPedidos  = (id ,ruta, prioridad,id_pedido) =>{
         return idPedidosAEntregar.length == 0 ?  $('#enviar').prop('disabled', true):$('#enviar').prop('disabled', false);
 
     }  
-    console.log(idPedidoOriginal);
     idPedidoOriginal.push(id_pedido); 
     prioridadPedidos.push(prioridad); 
     rutaPedidos.push(ruta); 
@@ -198,7 +197,8 @@ const sendRuta  = id =>{
                 descripcion: document.getElementById('texto').value
                 },
             success: function (response) {
-                     notifications(`El envio ha sido guardado con éxito`, 'success');
+                     console.log(response);
+                     notifications(`El envio ha sido guardado con éxito con el número de entrega ${response.idEntregas}`, 'success');
                      pedidos(); 
                      idPedidosAEntregar   = [] , rutaPedidos  = [] , prioridadPedidos = []; 
                      $("#entregasModal").modal("hide"); 
@@ -208,7 +208,7 @@ const sendRuta  = id =>{
 
 const chanche_estatus_almacen = (order) => {
 
-    console.log(order);
+    
     let estado_nuevo = document.getElementById('estado_nuevo').value;
     
     $.ajax({type: "POST",url: "/almacen/cambio_estado",data: { estado_nuevo, order }, success: function(response) {

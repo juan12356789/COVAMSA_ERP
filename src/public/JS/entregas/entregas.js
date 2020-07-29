@@ -36,8 +36,9 @@ let sendData = (data) => {
         table += `<tr>
 
                   <th scope="row">${numeracion_pedidos++}</th>
-                  <td> <button  class="btn btn-primary" onclick="cambioStatus('${data.id_pedido}')" >Entregado</button> </td>
+                  <td> <button  class="btn btn-primary" onclick="cambioStatus('${data.id_pedido}')" ${estatus[data.estatus - 1] == "Suspendida" ? "disabled" : "" } >${estatus[data.estatus - 1] == "Ruta" ? "Entregado" : "Actualizar" }</button> </td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
+                  <td>${data.idEntregas}</td>
                   <td>${data.numero_factura} </td>
                   <td  style="background-color:${data.ruta ==  1 ? "#DFBC92" : "#92C1DF"} " >${ruta[data.ruta - 1]}</td>
                   <td id="userinput" >${data.importe}</td> 

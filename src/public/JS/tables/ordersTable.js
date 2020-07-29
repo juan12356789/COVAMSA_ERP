@@ -14,7 +14,7 @@ let orderTable = () => {
                         {
                             sortable: false,
                             "render": function(data, type, full, meta) {
-                                return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
+                                return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_subpedido == null ? full.num_pedido : full.num_subpedido}</a>`;
                             }
                         },{
                                 sortable: false,
@@ -65,7 +65,7 @@ let orderTable = () => {
             },{
                sortable:false,
                "render": function(data, type, full ,meta){
-                if(full.estatus != 6 )return `<center><i class="fas fa-trash-alt" onclick="cancelOrder('${full.num_pedido}')" ></i></center>`;
+                if(full.estatus != 6 )return `<center><i class="fas fa-trash-alt" onclick="cancelOrder('${full.id_pedido}')" ></i></center>`;
                 return ' '; 
                }  
              }
@@ -87,7 +87,7 @@ let piorityTable = () => {
             {
                 sortable: false,
                 "render": function(data, type, full, meta) {
-                    return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_pedido}</a>`;
+                    return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_subpedido == null ? full.num_pedido : full.num_subpedido}</a>`;
                 }
             },{
                 sortable: false,

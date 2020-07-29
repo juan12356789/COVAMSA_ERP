@@ -70,7 +70,6 @@ router.post('/notificacionEntregado',  async (req , res)=>{
 
 router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { name: 'num_pedido', maxCount: 1 },{ name: 'comprobante_pago', maxCount: 1 }]),async(req, res) => {
    
-    // console.log(req.body);
     
     const validacion_pedido_existente  = await pool.query("select id_pedido from pedidos where num_pedido = ?", req.body.numeroPedido); 
     if(validacion_pedido_existente.length != 0)  return res.send("null") ; 
@@ -94,12 +93,12 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
             ruta_pdf_comprobante_pago: req.files.comprobante_pago != undefined? req.files.comprobante_pago[0].filename: '',
             num_pedido: req.body.numeroPedido,
             observacion: req.body.observaciones,
-            fecha_inicial: f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes(),
+            fecha_inicial: f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds(),
             comprobante_pago: req.body.comprobante_pago != undefined && req.body.comprobante_pago ?req.body.comprobante_pago:'' ,
             importe: req.body.importe,
             prioridad: req.body.prioridad[0],
             tipo_de_pago:req.body.tipos_pago,
-            numero_partidas : partidas_info.Sheet1[partidas_info.Sheet1.length - 1].numero_partidas,
+            numero_partidas : partidas_info.Hoja1[partidas_info.Hoja1.length - 1].numero_partidas,
             prioridadE: req.body.tipo_entrega == "Entrega  completo" ? 1 : 0 
         };
         
@@ -110,20 +109,20 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
         const partidas_pedido  = await pool.query("SELECT a.id_pedido, idPartida FROM  pedidos a inner join partidas  using(id_pedido) where num_pedido = ?",req.body.numeroPedido); 
         
         let cont_partidas = -1; 
-        
-        for (let i = 0; i < partidas_info.Sheet1.length; i++) {
+        for (let i = 0; i < partidas_info.Hoja1.length; i++) {
 
-            let producto = await pool.query("SELECT idProducto from productos where clave = ?" , [partidas_info.Sheet1[i].C]); 
+            let producto = await pool.query("SELECT idProducto from productos where clave = ?" , [partidas_info.Hoja1[i].B]);
+            console.log(producto); 
             if( producto.length > 0 ){
                     // console.log(partidas_pedido[0].idPartida,producto[0].idProducto,parseInt(partidas_info.Sheet1[i].B.replace(',','')));
-                    await pool.query(`INSERT INTO partidas_productos VALUES (null , ${partidas_pedido[0].idPartida} , ${producto[0].idProducto},${parseInt(partidas_info.Sheet1[i].B.replace(',',''))}  ,${0}) `);
+                    await pool.query(`INSERT INTO partidas_productos VALUES (null , ${partidas_pedido[0].idPartida} , ${producto[0].idProducto},${parseInt(partidas_info.Hoja1[i].A)},${0}) `);
             }  
 
         }
         const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
                                         FROM pedidos`);
 
-        const numeroRastreo = await pool.query(`SELECT id_pedido from pedidos where num_pedido = ?`,req.body.numeroPedido);
+        const numeroRastreo = await pool.query(`SELECT num_pedido from pedidos where num_pedido = ?`,req.body.numeroPedido);
         
         res.send(numeroRastreo); 
         // res.send(pedidos);
@@ -139,11 +138,11 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
 
 router.post('/pedidos_vendedor', async(req, res) => {
 
-    const ordenes_vendedores = await pool.query(`SELECT numero_factura,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,tipo_de_pago
+    const ordenes_vendedores = await pool.query(`SELECT id_pedido,num_subpedido,prioridadE,numero_factura,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,tipo_de_pago
                                                  FROM pedidos  INNER  JOIN empleados  on id_empleado = id_empleados  left join facturas using(id_pedido)
                                                  WHERE idacceso = ${req.user[0].idacceso}
                                                  UNION
-                                                 SELECT numero_factura,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,tipo_de_pago
+                                                 SELECT id_pedido,num_subpedido,prioridadE,numero_factura,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,tipo_de_pago
                                                  FROM pedidos  INNER JOIN empleados  on id_empleado = id_empleados   RIGHT  JOIN  facturas using(id_pedido )
                                                  WHERE idacceso = ${req.user[0].idacceso}
                                                  ORDER BY fecha_inicial ASC `);
@@ -153,8 +152,7 @@ router.post('/pedidos_vendedor', async(req, res) => {
 
 router.post('/cancel', async(req, res) => {
 
-    await pool.query(`update pedidos set estatus = 6 , motivo_de_cancelacion = '${req.body.reason}' where  num_pedido  = ?`, req.body.data);
-
+    await pool.query(`update pedidos set estatus = 6 , motivo_de_cancelacion = '${req.body.reason}' where  id_pedido  = ?`, req.body.data);
     res.send('Guardado');
 
 });

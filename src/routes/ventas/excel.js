@@ -29,9 +29,8 @@ router.post('/', (req , res) => {
                 sourceFile: rutimage + filename,
                 // header:{rows:15},
                 // columnTokey:{B:'cantidad',C:'Clave',F:'Descripción',O:'Importe'},
-                sheets:['Sheet1']
+                sheets:['Hoja1']
             });
-         
             const infoPedidos = {
                 cotizacion:'',
                 fecha: '',
@@ -40,36 +39,37 @@ router.post('/', (req , res) => {
                 total:'',
                 numero_partidas : ''
             }; 
-
             let numero_partidas = 0 , contador  = 0 ,clave = -1; 
-            for (let i = 0; i < result.Sheet1.length; i++) {
+            for (let i = 0; i < result.Hoja1.length; i++) {
                     if(clave != -1) clave++; 
-                    if(result.Sheet1[i].M == 'COTIZACIÓN No. :') infoPedidos.cotizacion =  result.Sheet1[i].O;
-                    if(result.Sheet1[i].M == 'Fecha') infoPedidos.fecha =  result.Sheet1[i].O;
-                    if(result.Sheet1[i].B == 'Cliente:')infoPedidos.cliente =  result.Sheet1[i].D;
-                    if(result.Sheet1[i].B == 'Vendedor :') infoPedidos.vendedor =  result.Sheet1[i].C;
-                    if(numero_partidas >  contador ) contador = numero_partidas;
-                    if(result.Sheet1[i].K == 'Total')infoPedidos.total =  result.Sheet1[i].O;
-                    if(result.Sheet1[i].C == 'Clave')  clave = 0;       
+                    if(result.Hoja1[i].A == 'FOLIO COTIZACION') infoPedidos.cotizacion =  result.Hoja1[i].B;
+                    if(result.Hoja1[i].D == 'FECHA') infoPedidos.fecha =  result.Hoja1[i].E;
+                    if(result.Hoja1[i].A == 'NUMERO DE CLIENTE')infoPedidos.cliente =  result.Hoja1[i].B;
+                    if(result.Hoja1[i].A == 'NUMERO VENDEDOR') infoPedidos.vendedor =  result.Hoja1[i].B;
+                    if(numero_partidas >  contador ) contador = numero_partidas; 
+                    if(result.Hoja1[i].F == 'TOTAL') infoPedidos.total =  result.Hoja1[i].G;
+                    if(result.Hoja1[i].C == 'CODIGO')  clave = 0;       
             }
 
              infoPedidos.numero_partidas = numero_partidas;
-            
+                // console.log(infoPedidos);
             
              try {
                  const cliente  = await pool.query("SELECT nombre , prioridadE FROM clientes inner join preferencias_cliente using(idcliente) where numero_interno = ?",infoPedidos.cliente);
                  const clientes_verndedor =  await pool.query(`select * from acceso inner join empleados using(idacceso) 
                     	                                                            inner  join clientes using(id_empleados)  
-                                                                where idacceso = ${req.user[0].idacceso}  and numero_interno  = ${infoPedidos.cliente} `); 
-                
+                                                                where idacceso = ${req.user[0].idacceso}  and numero_interno  = ${infoPedidos.cliente} `);
+                    // console.log(clientes_verndedor);
+
                 
                 if(clientes_verndedor.length == 0) {
+
                     return  res.send(false); 
                 }else{
 
                  infoPedidos.cliente = cliente[0].nombre;
                  infoPedidos.tipoDeEntega  =  cliente[0].prioridadE;
-                 result.Sheet1.push(infoPedidos); 
+                 result.Hoja1.push(infoPedidos); 
                  result.ruta  = filename ; 
                  res.send(result);  
                 }
