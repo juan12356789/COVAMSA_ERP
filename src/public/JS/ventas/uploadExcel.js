@@ -25,10 +25,10 @@ const  uploadExcel  = () =>{
          
           if(msg == "false" ) return notifications(`Este cliente pertenece a  otro vendedor, favor de notificarlo con en administrador`,'warning');
           if(msg == "null") return notifications(`No se en cuentra ese cliente en la base de datos`,'warning');
+          if(msg == "enProceso")  return  notifications(`Este  número  de orden ya se encunetra en proceso`,'warning');
           $("#ocultar_excel").hide();
           excelInfo  = []; // se vacia la info para la siguinte orden 
           let info = JSON.parse(msg), n =  false ,pedido = ``,cont  = 0 ; 
-          // console.log(info);
           info.Hoja1.forEach(element => {
             if(n) cont++; 
             if(element.B == "CODIGO")  n = true ; 
@@ -42,7 +42,8 @@ const  uploadExcel  = () =>{
           $("#importe").val(info.Hoja1[info.Hoja1.length - 1 ].total);
           $("#numero_partidas").val(cont);
           $("#nombre_cliente").val(info.Hoja1[info.Hoja1.length - 1 ].cliente);
-          $("#tipo_entrega").val(info.Hoja1[info.Hoja1.length - 1 ].prioridadE == 0 ? "Entrega parcial" : "Entrega  completo" );
+          $("#tipo_entre").val(info.Hoja1[info.Hoja1.length - 1 ].prioridadE == 0 ? "Entrega parcial" : "Entrega  completo" );
+          $(info.Hoja1[info.Hoja1.length - 1 ].prioridadE == 0 ? "#parcial" : "#completo").attr('checked', true);
           cliente(info.cliente);
 
         });
@@ -110,7 +111,7 @@ const orderDetail  =  () =>{
       }; 
 
     const  orderDatailMisPedidos =  id  =>{
-
+      console.log(id);
       $.ajax({ type: "POST",url: "/excel/excelDetail",data: {pedido: id},   success: function (response) {
           let pedido  = `` , cont  = 1 ; 
           response.forEach(element => {

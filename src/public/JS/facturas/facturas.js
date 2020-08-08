@@ -31,7 +31,7 @@ const facturas  = () =>{
                       <td> ${estatus[data.estatus - 1] != "Facturando"?`<button  type="button"  class="btn btn-secondary"  onclick="procesando('${data.id_pedido}','${estatus[data.estatus - 1]}')"   > Procesar </button>`:`<button  type="button"  class="btn btn-success"  onclick="procesando('${data.id_pedido}','${estatus[data.estatus - 1]}')"   > Completo</button>`} </td>
                       <td><button   class="btn btn-primary" onclick="partidas('${data.id_pedido}')" > Partidas </button></td>
                       <td><a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
-                      <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
+                      <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_subpedido == null ?data.num_pedido : data.num_subpedido}</a></td>
                       <td><a  href="/almacen/pdf/${data.ruta_pdf_comprobante_pago}">${data.comprobante_pago}</a></td>
                       <td  style="background-color:${data.ruta ==  1 ? "#DFBC92" : "#92C1DF"} " >${ruta[data.ruta - 1]}</td>
                       <td id="userinput" >${data.importe}</td> 
@@ -134,7 +134,7 @@ const procesando = (id , status)  =>{
                         <div class="row" >
                             <div class="col-12" >
                                 <center> ${status != "Facturando"? `<h3>¿Está listo para generar la factura de este pedido?</h3> `:``} </center>
-                                 ${status == "Facturando"?`<label>Número de factura: </label> <input type="text" maxlength="29" class="form-control" id="num_factura">`:''} 
+                                 ${status == "Facturando"?`<label>Número de factura: </label> <input type="text" maxlength="29" onkeypress="return justLetters(event)" class="form-control" id="num_factura">`:''} 
                             </div>
                         </div>
           
@@ -154,3 +154,13 @@ const procesando = (id , status)  =>{
     $("#modalProcess").modal('show');
 
 }; 
+
+let justLetters = event =>{
+  let  x = event.which || event.keyCode;
+  let validas  = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM123456789-'; 
+  concatenarNumeros += String.fromCharCode(x);
+  if( validas.indexOf(String.fromCharCode(x)) == -1  ){
+    return false ;
+  }
+
+}

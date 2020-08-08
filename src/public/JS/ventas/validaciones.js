@@ -75,14 +75,16 @@ $(document).ready(function() {
                         ],
                         fixedHeader: true,
                         "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                            
+                            let colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078"];
                             if (aData.estatus == 6) $('td', nRow).css('color', 'red');
+                            else $(nRow).find('td:eq(7)').css('background-color', colores[aData.estatus - 1]);
                         },
                         columns: [
                          
                             {
                                 sortable: false,
                                 "render": function(data, type, full, meta) {
-                                    console.log(full.num_pedido);
                                     return `<a href="/almacen/pdf/${full.ruta_pdf_pedido}" >${full.num_subpedido == null ? full.num_pedido : full.num_subpedido  }</a>`;
                                 }
                             },{
@@ -115,9 +117,8 @@ $(document).ready(function() {
                                     sortable: false,
                                     "render": function(data, type, full, meta) {
                                         let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida'];
-                                        let colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078"];
-
-                                            return `${estatus[full.estatus - 1]  == "Detenido"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.estatus}</a>`:estatus[full.estatus - 1]}`;
+                                       
+                                            return `${estatus[full.estatus - 1]  == "Detenido"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.estatus}</a>`:` ${estatus[full.estatus - 1]}`}`;
                       }
                 },
                  { data: 'prioridad' },
@@ -133,7 +134,7 @@ $(document).ready(function() {
                     {
                     sortable: false,
                     "render": function(data, type, full, meta) {
-                        return `<i class="fas fa-tools" onclick="orderDatailMisPedidos('${full.num_pedido}')"  ></i>`;
+                        return `<i class="fas fa-tools" onclick="orderDatailMisPedidos('${full.id_pedido}')"  ></i>`;
                     }
                 },{
                    sortable:false,
@@ -212,7 +213,7 @@ const notificacionEntregado = id =>{
         
     $.ajax({type: "POST", url: "/ventas/notificacionEntregado", data: {id:id}, success: function (response) {
                     
-            console.log(response);
+      
             notifications(` El pedido ${response} ha sido entregado `,'success'); 
             
 
@@ -223,7 +224,8 @@ const notificacionEntregado = id =>{
 
 const tipoEntrega  = () =>{
     let  tipoEntrega =  document.getElementById("entrega").value;
-    $("#tipo_entrega").val( tipoEntrega == 0 ? "Entrega parcial" : "Entrega completa" );
+    $("#parcial").val( tipoEntrega == 0 ? "Entrega parcial" : "Entrega completa" );
+    $(selector).val();
 };
 
 // componente guardar  
@@ -251,7 +253,11 @@ let cancelarOrden =() =>{
         e.preventDefault();
         var formData = new FormData(document.getElementById("imgct"));
         formData.append("productosArray", excelInfo);
-        if((pdf_orden.value  !=  "" && orden_compra.value == "") || (pdf_orden.value  ==  "" && orden_compra.value != "")  ) return notifications("Ingrese el número de orden de compra y seleccione el archivo",'warning');
+        if((pdf_orden.value  !=  "" && orden_compra.value == "") || (pdf_orden.value  ==  "" && orden_compra.value != "")  ){
+           
+             return notifications("Ingrese el número de orden de compra y seleccione el archivo",'warning');
+             
+        } else{ 
         $.ajax({
             url: "/ventas/add",
             type: "POST",
@@ -260,42 +266,18 @@ let cancelarOrden =() =>{
             beforeSend: function() {
                 
                 cargar_pedido();
-                $('#spinnerUpload').modal('show');
+                
 
             },
             success: function(response) {
-                  $('#spinnerUpload').modal('hide');
-                if(response == "null"){
-                    
-                    $('#spinnerUpload').modal('hide');
-                    notifications("Esta orden ya esta en proceso ",'warning'); 
-                    $("#input").hide();
-                    $("#imgct").hide();
-                    $("#ocultar_excel").show();
-                    $("#comprobante").hide();
-                    $("#cargarOrden").hide();
-                    $('body').removeClass('modal-open');
-                    $('.modal-backdrop fade show').remove();
 
-
-                } 
-                if (response == 'false' || response == 'null') {
-                    $('#spinnerUpload').modal('hide');
-                    notifications("No se pudo guardar su pedido favor de checar sus campos",'warning'); 
-                    $('#imgct').trigger("reset");
-                    $("#comprobante").hide();
-                    $("#input").hide();
-                    $("#imgct").hide();
-                    $("#ocultar_excel").show();
-
-                }
-
-                if(response  != 'false' && response != "null"){
+                // if(response  != 'false' && response != "null"){
                     let num_pedido = JSON.parse(response);
                     $('#spinnerUpload').modal('hide');
+                    console.log('hola');
                     pedidos(response);
                     pedidos_vendedores();
-                    notifications("Su pedido se ha guardado con éxito",'success'); 
+                    // notifications("Su pedido se ha guardado con éxito",'success'); 
                     document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`;
                     $('#imgct').trigger("reset");
                     $("#comprobante").hide();
@@ -306,18 +288,17 @@ let cancelarOrden =() =>{
                     $("#ocultar_excel").show();
                     $("#excel").val('');
                     swal({
-                        title: `El  pedido ha sido guardado con éxito con el número ${num_pedido[0].num_pedido}`,
+                        title: `El  pedido ha sido guardado con éxito con el número`,
                         type: `success`,
                         showConfirmButton: true
                     });
-
-                }
-               
-                $("#excel").val('');
+                    $("#excel").val('');
             },
             cache: false,
             contentType: false,
             processData: false
         })
+    }
     });
+
 });

@@ -31,7 +31,7 @@ router.post('/informacion_envios',  async (req , res)=>{
     
     if(usuario[0].tipo_usuario == 'Entregas'){
       
-        const pedidosE = await pool.query(`SELECT idEntregas,id_pedido,numero_factura ,  DATE_FORMAT(fecha_facturacion,'%d-%m-%Y %H:%i %p') fecha_facturas,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,a.num_pedido,observacion,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad   from  acceso  
+        const pedidosE = await pool.query(`SELECT idEntregas,a.id_pedido,numero_factura ,  DATE_FORMAT(fecha_facturacion,'%d-%m-%Y %H:%i %p') fecha_facturas,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,a.num_pedido,observacion,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad   from  acceso  
                                                             inner join empleados using(idacceso)   
                                                             inner join   pedidos a on id_empleados = id_empleado  
                                                             inner join facturas using(id_pedido) 
@@ -44,11 +44,12 @@ router.post('/informacion_envios',  async (req , res)=>{
     }
     if(usuario[0].tipo_usuario == 'Administrador'){
 
-        const pedidos = await pool.query(`SELECT idEntregas,a.id_pedido,numero_factura ,  DATE_FORMAT(fecha_facturacion,'%d-%m-%Y %H:%i %p') fecha_facturas,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,a.num_pedido,observacion,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad   from  acceso  
+        const pedidos = await pool.query(`SELECT idEntregas,n.nombre nombreRepartidor,a.id_pedido,numero_factura ,  DATE_FORMAT(fecha_facturacion,'%d-%m-%Y %H:%i %p') fecha_facturas,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,a.num_pedido,observacion,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,prioridad   from  acceso  
                                                         inner join empleados using(idacceso)   
                                                         inner join   pedidos a on id_empleados = id_empleado  
                                                         inner join facturas using(id_pedido) 
                                                         inner join   entregas on idFacutura  = idFactura 
+                                                        inner join empleados n on repartidor = n.id_empleados
                                           WHERE estatus >= 10     
                                          order by prioridad desc,fecha_inicial asc`);
         res.send(pedidos);

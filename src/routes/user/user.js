@@ -48,10 +48,9 @@ router.post('/selectIdUser',async(req , res)=>{
 
 
 router.post('/updateInfoUsers', async(req, res) => {
-    console.log(req.body);
 
     await pool.query(`UPDATE acceso 
-                     SET  correo = "${req.body.correo}",estado=${req.body.actividad},  password="${req.body.password}", tipo_usuario="${req.body.tipo_usuario}", estado="${req.body.actividad}" 
+                     SET  correo = "${req.body.correo}",estado=${req.body.actividad}, password="${req.body.password}", tipo_usuario="${req.body.tipo_usuario}", estado="${req.body.actividad}" ${req.body.actividad  == 1? ", intentos_login = 0 ":''}
                      WHERE idacceso = ?`, req.body.id);
 
     await pool.query(`UPDATE empleados 

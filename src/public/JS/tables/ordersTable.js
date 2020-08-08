@@ -60,7 +60,7 @@ let orderTable = () => {
                 {
                 sortable: false,
                 "render": function(data, type, full, meta) {
-                    return `<i class="fas fa-tools" onclick="orderDatailMisPedidos('${full.num_pedido}')"  ></i>`;
+                    return `<i class="fas fa-tools" onclick="orderDatailMisPedidos('${full.id_pedido}')"  ></i>`;
                 }
             },{
                sortable:false,
@@ -125,7 +125,7 @@ let piorityTable = () => {
             },{ data: 'fecha_inicial' },{
                 sortable: false,
                 "render": function(data, type, full, meta) {
-                   return `<i class="fas fa-tools" onclick="orderDatailMisPedidosUrgentes('${full.num_pedido}',1)"  ></i>`;
+                   return `<i class="fas fa-tools" onclick="orderDatailMisPedidosUrgentes('${full.id_pedido}',1)"  ></i>`;
                }
            },
              {

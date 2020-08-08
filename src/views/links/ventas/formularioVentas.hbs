@@ -64,13 +64,13 @@ thead tr:nth-child(1) th{
     z-index: 10;
 }
 
-  textarea {
+textarea {
     box-sizing: border-box;
     height: 200px;
     margin: 5px 0 15px 0;
     padding: 5px 2px;
     width: 100%;
-  }
+}
 
   .borderojo {
     outline: none;
@@ -246,13 +246,16 @@ thead tr:nth-child(1) th{
                 <div class="correo"></div>
                 <br>
                 
-               Tipo de Entrega:
+              
                 <div>
-                  <input type="text" name="tipo_entrega" readonly  class="form-control" id="tipo_entrega">
-                <select class="custom-select" id="entrega"  onchange="tipoEntrega();"  name="entrega" >
+                 {{!-- <input type="text" name="tipo_entrega" readonly  class="form-control" id="tipo_entrega"> --}}
+                Tipo de Entrega <br> <br>
+                <label for="">Entrega parcial</label>   <input type="radio" value="0" name="entrega" id="parcial"> 
+                <label for="">Entrega completa </label>  <input type="radio" value="1" name="entrega" id="completo"> 
+                {{!-- <select class="custom-select" id="entrega"  onchange="tipoEntrega();"  name="entrega" >
                   <option value="0">Entrega Parcial</option>
                   <option value="1">Entrega Completa</option> 
-                </select>
+                </select> --}}
                 </div>
                 <div>
                

@@ -31,6 +31,7 @@ let sendData = (data) => {
     prioridad_info = ["Normal", "Normal", "Urgente"];
     colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078"];
     let numeracion_pedidos = 1 , numero_de_pedidos_urgentes = 0;
+    console.log(data);
     data.forEach(data => {
         if (data.prioridad == 2) numero_de_pedidos_urgentes++;
         table += `<tr>
@@ -39,6 +40,7 @@ let sendData = (data) => {
                   <td> <button  class="btn btn-primary" onclick="cambioStatus('${data.id_pedido}')" ${estatus[data.estatus - 1] == "Suspendida" ? "disabled" : "" } >${estatus[data.estatus - 1] == "Ruta" ? "Entregado" : "Actualizar" }</button> </td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
                   <td>${data.idEntregas}</td>
+                  <td>${data.nombreRepartidor}</td>
                   <td>${data.numero_factura} </td>
                   <td  style="background-color:${data.ruta ==  1 ? "#DFBC92" : "#92C1DF"} " >${ruta[data.ruta - 1]}</td>
                   <td id="userinput" >${data.importe}</td> 
@@ -205,7 +207,7 @@ const modalSuspender  = () =>{
             </div>
             <div class="modal-body">
                  <div class="form-group">
-                    <label for="exampleFormControlTextarea1">Example textarea</label>
+                    <label for="exampleFormControlTextarea1">Ingrese el motivo por el cual el pedido ha sido suspendido  </label>
                      <textarea class="form-control" id="motivoCancelacion" rows="3"></textarea>
                  </div>
             </div>

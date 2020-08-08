@@ -48,7 +48,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-key"></i></span>
                     </div>
-                    <input type="password" id="campo"  onkeyup="validar()" name="password" class="form-control"  required class="inputFormu"  placeholder="Contraseña" pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*"
+                    <input type="password" id="campo"  onkeyup="validar()" name="password" class="form-control"  required class="inputFormu"  placeholder="Contraseña" 
                      title="El password es incorrecto, intente de nuevo">
                 </div>
 
@@ -84,53 +84,4 @@
 
 <script src="JS/ventas/ventanasModales.js"></script>
 
-<!--hacer que usuario ponga sus datos en los input, porque no va a poder copiar y pegar --->
-<script language="JavaScript"> 
-function right(e) { 
-var msg = " ¡ No permitido ! Por favor ingresa tu nombre de USUARIO y tu CONTRASEÑA. "; 
-if (navigator.appName == 'Netscape' && e.which == 3) { 
-alert(msg); // Delete this line to disable but not alert user 
-return false; 
-} 
-else 
-if (navigator.appName == 'Microsoft Internet Explorer' && event.button==2) { 
-alert(msg); // Delete this line to disable but not alert user 
-return false; 
-} 
-return true; 
-} 
-document.onmousedown = right; 
-</script>
 
-<script>
-  //  let intentos = 0;
-
-// document
- // .getElementById('validar')
- // .addEventListener('click', function(evt) {
- //   const campo = document.getElementById('campo'),
- //     valido = document.getElementById('campoOK')
-//
-//
- //   if (intentos >= 3) {
- //     return;
- //   }
-//
- //   if (/^\d+$/g.test(campo.value)) {
- //     valido.innerText = "válido";
- //     intentos = 0;
-//
- //   } else {
- //     intentos++;
- //     valido.innerText = "intentos: " + intentos;
-//
- //     if (intentos >= 3) {
- //         swal({
- //          title: `Usuario bloqueado notifique al administrador`,
- //           type: `warning`,
- //          showConfirmButton: true
- //        });
- //     }
- //   }
- // });
-</script>

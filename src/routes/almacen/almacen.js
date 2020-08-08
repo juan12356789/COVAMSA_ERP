@@ -39,11 +39,10 @@ router.get('/pedidos', async(req, res) => {
 
 router.post('/partidas', async (req , res)=>{   
   const partidas  = await pool.query("select  id_partidas_productos,cantidad_surtida,idPartida, b.status, clave ,prioridadE, nombre, cantidad from pedidos inner  join   partidas b using(id_pedido) inner join partidas_productos using(idPartida) inner join  productos using(idProducto) where id_pedido = ?",req.body.pedido);
-  // console.log(partidas);
-  console.log('hola');
   res.send(partidas);
    
 });
+
 router.post('/cantidad_pedido',async(req , res)=>{
   
     let cantidad =  JSON.parse(req.body.cantidad) , partidas  = JSON.parse(req.body.partidas) ;
@@ -90,14 +89,19 @@ router.post("/pedidos_check",  async ( req , res )=>{
 router.post('/cambio_estado', async (req , res)=>{
 
    switch (req.body.estado_nuevo) {
+
      case "3":
+       
       const completados =    await pool.query(`SELECT count(*) completados FROM pedidos INNER JOIN partidas using(id_pedido) inner join partidas_productos using(idPartida) where id_pedido = ${req.body.order}  and  cantidad_surtida = cantidad `); 
       const totales  = await  pool.query(`SELECT count(*)  totales FROM pedidos INNER JOIN partidas using(id_pedido) inner join partidas_productos using(idPartida) where id_pedido = ${req.body.order}`);
       if(completados[0].completados != totales[0].totales ) return res.send(false);
-      break;
+
+     break;
+
    }
-   const status = await pool.query(`UPDATE pedidos SET estatus = ${req.body.estado_nuevo} WHERE id_pedido = ?`, req.body.order);
+   const status = await pool.query(`UPDATE pedidos SET estatus = ${req.body.estado_nuevo == 4 ? 3 : req.body.estado_nuevo } WHERE id_pedido = ?`, req.body.order);
    res.send(status);
+
 });
 
 // se hace la búsqueda para los repartidores
@@ -142,8 +146,6 @@ router.post('/envioEntregas', async (req , res )=>{
       }
     
   }
-  // console.log(numeroEntrega[0].idEntregas);
-    
   res.send(numeroEntrega[0]);
   
 });
@@ -156,7 +158,7 @@ router.post('/subpedidos', async (req , res)=>{
   let f = new Date();
   pedidos[0].idSubpedidos = pedidos[0].id_pedido ;
   pedidos[0].id_pedido = null;
-  pedidos[0].estatus = 1;
+  pedidos[0].estatus = 5;
   pedidos[0].fecha_inicial = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
   console.log(pedidos[0]);
   await pool.query(`INSERT INTO pedidos SET  ? `, pedidos[0]);
@@ -166,7 +168,7 @@ router.post('/subpedidos', async (req , res)=>{
                                                      inner join partidas_productos using(idPartida)
                                         where cantidad != cantidad_surtida  and id_pedido = ?`,req.body.id);
 
-  const numeroPedidoNuevo = await  pool.query(`SELECT id_pedido FROM pedidos where idSubpedidos = ?`,req.body.id);
+  const numeroPedidoNuevo = await  pool.query(`SELECT id_pedido , num_subpedido FROM pedidos where idSubpedidos = ?`,req.body.id);
 
   await pool.query(`INSERT INTO partidas  VALUES(?,?,?)`,[null,numeroPedidoNuevo[0].id_pedido,1] ); 
   const numeroPartida = await pool.query(`SELECT idPartida  FROM partidas where id_pedido = ? `,numeroPedidoNuevo[0].id_pedido); 
@@ -184,7 +186,7 @@ router.post('/subpedidos', async (req , res)=>{
     ]); 
     
   }
-  res.send(); 
+  res.send(numeroPedidoNuevo[0].num_subpedido); 
 });
 
 // Descarga el PDF 

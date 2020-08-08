@@ -70,16 +70,13 @@ router.post('/notificacionEntregado',  async (req , res)=>{
 
 router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { name: 'num_pedido', maxCount: 1 },{ name: 'comprobante_pago', maxCount: 1 }]),async(req, res) => {
    
-    
     const validacion_pedido_existente  = await pool.query("select id_pedido from pedidos where num_pedido = ?", req.body.numeroPedido); 
-    if(validacion_pedido_existente.length != 0)  return res.send("null") ; 
+    // if(validacion_pedido_existente.length != 0)  return res.send("null") ; 
     const partidas_info   =  JSON.parse(req.body.productosArray);
     
-     
-    if (req.body.nombre_cliente != undefined && req.body.nombre != ' '  && req.body.observaciones.length < 250) {
+    if (req.body.nombre_cliente != undefined && req.body.nombre != ' '  && req.body.observaciones.length < 250 && validacion_pedido_existente.length == 0) {
         const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre_cliente);
        
-        
         let f = new Date();
         const insert = {
             id_pedido: null,
@@ -99,7 +96,7 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
             prioridad: req.body.prioridad[0],
             tipo_de_pago:req.body.tipos_pago,
             numero_partidas : partidas_info.Hoja1[partidas_info.Hoja1.length - 1].numero_partidas,
-            prioridadE: req.body.tipo_entrega == "Entrega  completo" ? 1 : 0 
+            prioridadE: req.body.entrega  
         };
         
         await pool.query("INSERT INTO pedidos set ? ", [insert]);
@@ -112,7 +109,7 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
         for (let i = 0; i < partidas_info.Hoja1.length; i++) {
 
             let producto = await pool.query("SELECT idProducto from productos where clave = ?" , [partidas_info.Hoja1[i].B]);
-            console.log(producto); 
+       
             if( producto.length > 0 ){
                     // console.log(partidas_pedido[0].idPartida,producto[0].idProducto,parseInt(partidas_info.Sheet1[i].B.replace(',','')));
                     await pool.query(`INSERT INTO partidas_productos VALUES (null , ${partidas_pedido[0].idPartida} , ${producto[0].idProducto},${parseInt(partidas_info.Hoja1[i].A)},${0}) `);
@@ -125,7 +122,6 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
         const numeroRastreo = await pool.query(`SELECT num_pedido from pedidos where num_pedido = ?`,req.body.numeroPedido);
         
         res.send(numeroRastreo); 
-        // res.send(pedidos);
 
     } else {
 

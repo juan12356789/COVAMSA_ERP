@@ -36,7 +36,7 @@ let reson_to_cancel = (order) => {
         <div class="modal-header">
             <h5 class="modal-title">Cancelación del Pedido</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times;</span> 
             </button>
         </div>
         <div class="modal-body">
@@ -60,63 +60,54 @@ let reson_to_cancel = (order) => {
 let cambios_status_pedidos = (current_status, order) => {
     if (current_status == "Cancelado") return notifications("Este pedido ha sido cancelado no es posible cambiar  el status", 'warning');
     $('#change_status').modal('show');
-    let nuevo_estatus = document.getElementById('estado_nuevo');
-    
+
     let elementsHTML = `
-    <style>
-   
-    </style>
         <div class="modal-body">
         <div class="row" >
+        
             <div  class="col">
-
                 <label>Estado actual: </label>
                 <input type="text" name="" id=""  class="form-control"  value="${current_status}" disabled >
-
             </div>
+
             <div class="col-xs-2">
                 <br><br>
                 <i class="fas fa-arrow-right"></i>
             </div>
+
             <div class="col"  >
+                <label>Nuevo Estado:</label>
+                 <select  id="estado_nuevo"   class="form-control"></select>
+                </div>       
+            </div>
 
-            <label>Nuevo Estado:</label>
-            <select  id="estado_nuevo"   class="form-control"></select>
-            </div>       
-
-        </div>
         <div class="row">
             <div class="col">
-                <button value="0"  class="btn btn-primary"  onclick="chanche_estatus_almacen('${order}' )" >Aceptar</button>
+                <button value="0"    ${current_status != 'Nuevo' && current_status != 'Surtiendo'? 'disabled':'' }  class="btn btn-primary"  onclick= "chanche_estatus_almacen('${order}')" >Aceptar</button>
                 <button value="1" type="button" class="btn btn-secondary"  id="cancelar"  data-dismiss="modal">Cancelar</button>
             </div>
         </div>
+       
         <br><br>
-        <div class="row" >
-            <div class="col" >
             <div id="numero_partidas" ></div>
-            <div class=" table-responsive ">
-            <table class="thead-dark" id="job-table" >
-                  <thead>
-                      <tr class="text-center" > 
-                          <th class="col-2"   >#</th>
-                          <th class="col" >Clave </th>
-                          <th class="col" >Nombre</th>
-                          <th class="col" >Cantidad </th>
-                          <th class="col" >Cantidad surtida</th>
-                          <th class="col" > Encontrado </th>
-
-                      </tr>
-                  </thead  >
-                  <tbody id="partidas" class="text-center tableBody"></tbody>
-               
-
+                <div class="table-responsive">
+                    <table class="table-bordered" >
+                        <thead class="thead-dark">
+                            <tr class="text-center" > 
+                                <th width="5%" > #</th>
+                                <th width="15%"> Clave </th>
+                                <th width="40%"> Nombre</th> 
+                                <th width="15%"> Cantidad </th>
+                                <th width="20%"> Cantidad surtida</th>
+                                <th width="5%"> Encontrado </th>
+                            </tr>
+                        </thead>
+                  <tbody id="partidas"  > </tbody>
               </table>
             </div>
-        </diV>
-        
+            </div>
         </div>
-
+        </div>
     `;
 
     tabla_partidas(order,current_status);
@@ -124,55 +115,55 @@ let cambios_status_pedidos = (current_status, order) => {
     
 
 };
+
 // En esta  variable se almacena el id de las partidas de cada uno de los pedidos  
 let idPartidas = [];
 const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
     
     $.ajax({type: "POST",url: "/almacen/partidas",data: {pedido:id_pedido},success: function (response) {
-        console.log(response);
+
             idPartidas = [];
             idPartidas =     response.map(n => n.id_partidas_productos);  
-            let   partidasOp  = 0,cont = 0,numero = 0 ,tipo_status = `` , noSurtida  = 0;   
+            let   partidasOp  = 0,cont = 0,numero = 0 ,tipo_statusw = `` , noSurtida  = 0;   
             let   tabla_partidas   = ``, numero_partidas = 0;
-            response.forEach(response => {
+            response.forEach(response => { 
                 numero++; 
                 if(partidasOp < response.idPartida)partidasOp = response.idPartida;
                 cont++; 
                 tabla_partidas+= `
-                <tr >
-                    <td class="col"  >${cont}</td>
-                    <td class="col" >${response.clave}</td>
-                    <td class="col" >${response.nombre}</td>
-                    <td class="col"  >${response.cantidad}</td>
-                    ${ status == "Surtiendo" ? `<td class="col"  ><input type='text' maxlength="11"  onclick="cleanFunction()" onkeypress=" return justNumbers(event ,'numero${numero}','${response.cantidad}')"    value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  name='numero' id='numero${numero}' ></td>`:`<td class="col"><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </td>` }
-                    ${ status == "Surtiendo" ?`<td class="col" ><input type="checkbox" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"   ${response.cantidad_surtida == response.cantidad?"checked":" "} name="completo${cont}" id="completo${cont}"></td>`:`<td class="col"><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></td>`}
+                <tr>
+                    <td col="1">${cont}</td>
+                    <td col="2">${response.clave}</td>
+                    <td col="3">${response.nombre}</td>  
+                    <td col="2">${response.cantidad}</td>
+                    ${ status == "Surtiendo" ? `<td col="2"><input type='text' maxlength="11"  onclick="cleanFunction()" onkeypress=" return justNumbers(event ,'numero${numero}','${response.cantidad}')"    value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  name='numero' id='numero${numero}' ></td>`:`<td ><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </td>` }
+                    ${ status == "Surtiendo" ?`<td  col="2"><input type="checkbox" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"   ${response.cantidad_surtida == response.cantidad?"checked":" "} name="completo${cont}" id="completo${cont}"></td>`:`<td ><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></td>`}
                 </tr>`;
+
                 if(response.cantidad_surtida == response.cantidad)  numero_partidas++; 
                 if(response.cantidad_surtida  ==  0  ) noSurtida++; 
 
+
             });
             if(status == "Surtiendo"){
-
                 document.getElementById('button').innerHTML = `
                 <div class="modal-footer">
                     <button onclick="guardarPartidas('${id_pedido}', '${status}')" class="btn btn-primary" >Guardar</button>
                 </div>
                 `;
-                
             }
             document.getElementById("numero_partidas").innerHTML = `
-            
                 <div class="row" >
-                     <div class="col" >
+                     <div class="col-3" >
                      <strong> Número de partidas:</strong> ${cont}
                      </div>
-                     <div class="col" >
+                     <div class="col-3" >
                      <strong>Entregas parcial: </strong>${response[0].prioridadE == 0 ? " Sí " : "No"  }
                      </div>
-                     <div class="col" >
+                     <div class="col-3" >
                         <strong>Estado del pedido:</strong> ${response.length == numero_partidas?'Partidas completas':'Hay partidas incompletas' }
                      </div>
-                     <div class="col" >   
+                     <div class="col-3" >   
                         <strong>Pedidos completo:</strong>   <input type="checkbox" ${status == 'Surtiendo'?'':'disabled'}   ${checkbox || response.length == numero_partidas ?"checked":''}  id="partida_completa" onclick="completarListga('${id_pedido}','${status}')"  > 
                     </div>
                 </div>
@@ -210,6 +201,36 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
         }
     });
     
+}; 
+
+// Con esta funcion aparece  una ventana modal la cual muestra la confirmacion al momento de querer cambiar un status 
+const  validacionCambiarStatus = status =>{
+
+    let modalConfirmation  = `
+         <div class="modal fade" id="confitmacionEstatus" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body">
+               <h1> que onda </h1>
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               <button type="button" class="btn btn-primary">Save changes</button>
+             </div>
+           </div>
+         </div>
+        </div>
+    `;
+    // $('#Ventana_Modal_order').modal('show');
+    $("#confitmacionEstatus").modal('show');
+    document.getElementById('confitmar').innerHTML = modalConfirmation; 
+
 }; 
 
 let concatenarNumeros= "";
@@ -371,9 +392,6 @@ const cargar_pedido = () =>{
              <div class="modal-content">
                 <div class="modal-header">
                      <h5 class="modal-title" id="staticBackdropLabel">Cargar pedido </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                             <span aria-hidden="true">&times;</span>
-                        </button>
                         </div>
                          <div class="modal-body">
                             <h5>La orden se esta procesando, esta operación puede tomar unos minutos.</h5>
@@ -392,6 +410,7 @@ const cargar_pedido = () =>{
     `;
     
     document.getElementById('spinnerOrder').innerHTML = modal;
+    $('#spinnerUpload').modal('show');
    
 } 
 

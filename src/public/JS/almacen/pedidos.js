@@ -49,7 +49,6 @@ socket.on('data:facturas', function(data) {
 });
 
 let sendData = (data) => {
-    console.log(data);
     let table = '';
     ruta = ["Norte", "Sur"];
     let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida'];
@@ -206,17 +205,17 @@ const sendRuta  = id =>{
     });
 }; 
 
-const chanche_estatus_almacen = (order) => {
-
+const chanche_estatus_almacen = (order , confirm = true ) => {
+    
     
     let estado_nuevo = document.getElementById('estado_nuevo').value;
-    
+    if(estado_nuevo ==  4 && confirm ) return confitmStatus(order);
     $.ajax({type: "POST",url: "/almacen/cambio_estado",data: { estado_nuevo, order }, success: function(response) {
             if(response == false )  return notifications(`No se puede cambiar el status a facturación ya que hay partidas incompletas`, 'warning');
             if(estado_nuevo != "Nuevo" && estado_nuevo != "Surtiendo" )    actualizarFacturas(`${order}`);
-            let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido'];
+            let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar', 'Requerir', 'Cancelado', 'Detenido'];
             cambios_status_pedidos(  estatus[estado_nuevo - 1] , order);
-            if( estatus[estado_nuevo - 1] ==  'Requerir y facturar ')  subPedidos(order)  ;
+            if( estatus[estado_nuevo - 1] ==  'Requerir y facturar')  subPedidos(order)  ;
             notifications(`El estado del pedido ${order} ha sido cambiado `, 'success');
             pedidos();
             actualizar();
@@ -225,10 +224,38 @@ const chanche_estatus_almacen = (order) => {
 
 };
 
+const confitmStatus = id =>{
+
+    swal({
+        title: "¿Está seguro de realizar esta acción?",
+        text: "El pedido se procesara como orden parcial, las partidas encontradas se procesaran para envio, y el faltante se requerira ",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Aceptar",
+        cancelButtonText: 'Cancelar'
+      }).then(result => {
+        // swal("Deleted!", "Your file has been deleted.", "success");
+        if (result.value) {
+            // swall.closeModal();
+           return  chanche_estatus_almacen(id , false);
+        } else if (
+          // Read more about handling dismissals
+          result.dismiss === swal.DismissReason.cancel
+        ) {
+          swal("Cancelada", "La acción ha sido cancelada", "error");
+        }
+        swall.closeModal();
+      });
+ 
+  
+}
+
 let subPedidos = id =>{
 
     $.ajax({type: "POST",url: "/almacen/subpedidos", data: {id:id} ,success: function (response) {
             
+            notifications(`El sub pedido fue guardado con el número ${response}`, 'success');
         }
     });
 }

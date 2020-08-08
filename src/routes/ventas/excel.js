@@ -52,16 +52,15 @@ router.post('/', (req , res) => {
             }
 
              infoPedidos.numero_partidas = numero_partidas;
-                // console.log(infoPedidos);
-            
+             
              try {
                  const cliente  = await pool.query("SELECT nombre , prioridadE FROM clientes inner join preferencias_cliente using(idcliente) where numero_interno = ?",infoPedidos.cliente);
                  const clientes_verndedor =  await pool.query(`select * from acceso inner join empleados using(idacceso) 
                     	                                                            inner  join clientes using(id_empleados)  
                                                                 where idacceso = ${req.user[0].idacceso}  and numero_interno  = ${infoPedidos.cliente} `);
-                    // console.log(clientes_verndedor);
-
-                
+                const pedidos = await pool.query(`SELECT * FROM pedidos where num_pedido  = ?`,infoPedidos.cotizacion);
+               
+                if(pedidos.length > 0) return res.send('enProceso'); 
                 if(clientes_verndedor.length == 0) {
 
                     return  res.send(false); 
@@ -89,7 +88,7 @@ router.post('/excelDetail', async (req , res)=>{
                                         from pedidos inner join partidas using(id_pedido) 
                                                      inner join partidas_productos using(idPartida)
                                                      inner join productos using(idProducto)
-                                        WHERE num_pedido = ? `,req.body.pedido);
+                                        WHERE id_pedido = ? `,req.body.pedido);
     res.send(productos);
     
 
