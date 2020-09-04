@@ -84,6 +84,11 @@ router.post('/updateInfoUsers', async(req, res) => {
             await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , (select id_departamento from departamentos  where nombre = "facturas") ) `);
             await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , (select id_departamento from departamentos  where nombre = "usuarios") ) `);
         break;
+        case "Compras":
+            await pool.query(`DELETE FROM  empleados_departamentos where id_empleados = ? `, idEmpleado[0].id_empleados);
+            await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , (select id_departamento from departamentos  where nombre = "compras") ) `);
+            await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , (select id_departamento from departamentos  where nombre = "usuarios") ) `);
+        break;
 
         case "Administrador":
             await pool.query(`DELETE FROM empleados_departamentos where id_empleados = ? `, idEmpleado[0].id_empleados);
@@ -94,6 +99,7 @@ router.post('/updateInfoUsers', async(req, res) => {
                 await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , ${usuarios[i].id_departamento} ) `);
             }
         break;
+        
     }
     res.send("Actualizado");
 
@@ -123,6 +129,10 @@ router.post('/insert', async(req, res) => {
 
         case "Entregas":
             await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , (select id_departamento from departamentos  where nombre = "entregas") ) `);
+            await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , (select id_departamento from departamentos  where nombre = "usuarios") ) `);
+        break;
+        case "Compras":
+            await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , (select id_departamento from departamentos  where nombre = "compras") ) `);
             await pool.query(`INSERT INTO  empleados_departamentos VALUE ( null , ${idEmpleado[0].id_empleados} , (select id_departamento from departamentos  where nombre = "usuarios") ) `);
         break;
         

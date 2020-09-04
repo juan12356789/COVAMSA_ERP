@@ -154,6 +154,7 @@ const selectUserc = id => {
                             <option  value="Entregas" >Entregas</option>
                             <option  value="Facturas" > Facturas </option>
                             <option  value="Ventas" >Ventas</option>
+                            <option  value="Compras" >Compras</option>
                         </select>
                     </div>
                     <div class="col-2">
@@ -220,6 +221,7 @@ const insertUser  = () =>{
                     <option  value="Entregas" >Entregas</option>
                     <option  value="Facturas" > Facturas </option>
                     <option  value="Ventas" >Ventas</option>
+                    <option  value="Compras" >Compras</option>
                 </select>
             </div>
             <div class="col-2">
