@@ -13,6 +13,8 @@ router.get('/', isLoggedIn , async(req, res) => {
 
 });
 
+
+
 router.get('/pedidos', async(req, res) => {
 
     const pedidos = await pool.query(`SELECT num_subpedido,numero_factura ,id_pedido,orden_de_compra,
@@ -46,7 +48,28 @@ router.post('/partidas', async (req , res)=>{
 router.post('/cantidad_pedido',async(req , res)=>{
   
     let cantidad =  JSON.parse(req.body.cantidad) , partidas  = JSON.parse(req.body.partidas) ;
-
+    if(req.body.status  == 'Comprado'){
+      const idFatnate  = await pool.query(`select idFaltantePartida,cantidad
+                                           from pedidos inner join partidas using(id_pedido)
+                                                        inner join partidas_productos using (idPartida)
+                                                        inner join faltantes_partidas using(id_partidas_productos)
+                                            WHERE id_pedido = ${req.body.id}`);
+      for (let i = 0; i < cantidad.length; i++) {
+        await pool.query(`UPDATE faltantes_partidas 
+                          SET    cantidad_surtida = ${cantidad[i] == ''? 0 : parseInt(cantidad[i]) },
+                                 estatus = ${cantidad[i] == idFatnate[i].cantidad ? 2 : cantidad[i] == 0 ? 0 : 1 } 
+                          WHERE  idFaltantePartida = ${idFatnate[i].idFaltantePartida}`);  
+        
+      }
+      const partida = await pool.query(`select idFaltante from  faltantes_partidas where idFaltantePartida = ${idFatnate[0].idFaltantePartida}`);
+      const status = await pool.query(`select  count(*) status from  faltantes_partidas where idFaltante = ${partida[0].idFaltante} and estatus = 2`);
+      console.log(status[0].status,cantidad.length);
+      if(status[0].status ==  cantidad.length)  await pool.query(`UPDATE faltantes SET estatus = 2 where idFaltante = ${partida[0].idFaltante}`); 
+      else  await pool.query(`UPDATE faltantes SET estatus = 1 where idFaltante = ${partida[0].idFaltante}`);
+      // const idFaltante = await pool.query(`SELECT idFaltante FROM faltantes_partidas where idFaltantePartida = ${idFatnate[0].idFaltantePartida} `);
+      // console.log(idFaltante);
+    }
+    
     for (let i = 0; i < cantidad.length; i++) {
 
      await pool.query(`UPDATE partidas_productos SET cantidad_surtida = ${cantidad[i] == ''? 0 : parseInt(cantidad[i]) }  WHERE id_partidas_productos = ${partidas[i]}`);
@@ -98,6 +121,27 @@ router.post('/cambio_estado', async (req , res)=>{
 
      break;
 
+   }
+   if(req.body.estado_nuevo == 5 ){
+
+     const idProductosFaltantes = await pool.query(`SELECT id_partidas_productos
+                                                    FROM  pedidos  inner join   partidas using(id_pedido) 
+                                                                   inner join partidas_productos using(idPartida)
+                                                    where id_pedido  = ?`,req.body.order);
+      // console.log(idProductosFaltantes);  
+      let f = new Date();
+      let time  = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
+      //  se guarda el  faltante en la tabla  
+      await pool.query(`INSERT INTO faltantes value (?,?,?,?,?)`,[null,0,time,'','']);
+      // Se  obtiene el maximo id de del faltante 
+      const idFaltante = await pool.query(`select MAX(idFaltante) idFaltante  from faltantes`);  
+     
+      //  Se procede a guardar  los faltantes por partidas 
+      for (let i = 0; i <  idProductosFaltantes.length; i++) {
+
+        await pool.query(`INSERT INTO  faltantes_partidas  VALUE (?,?,?,?,?)  `,[null,idProductosFaltantes[i].id_partidas_productos,idFaltante[0].idFaltante,0,0]);
+    
+      }
    }
    const status = await pool.query(`UPDATE pedidos SET estatus = ${req.body.estado_nuevo == 4 ? 3 : req.body.estado_nuevo } WHERE id_pedido = ?`, req.body.order);
    res.send(status);
@@ -152,6 +196,7 @@ router.post('/envioEntregas', async (req , res )=>{
 // Se  hace el subpedido 
 router.post('/subpedidos', async (req , res)=>{
 
+
   const pedidos  = await pool.query(`SELECT * FROM  pedidos where id_pedido = ?`, req.body.id);
   const cantidad_pedidos   = await pool.query(`SELECT count(*) cantidad_pedidos FROM  pedidos where num_pedido= ?`, pedidos[0].num_pedido);
   pedidos[0].num_subpedido = `${pedidos[0].num_pedido}-sub ${cantidad_pedidos[0].cantidad_pedidos } ` ;
@@ -160,20 +205,17 @@ router.post('/subpedidos', async (req , res)=>{
   pedidos[0].id_pedido = null;
   pedidos[0].estatus = 5;
   pedidos[0].fecha_inicial = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
-  console.log(pedidos[0]);
+  
   await pool.query(`INSERT INTO pedidos SET  ? `, pedidos[0]);
 
-  const  productos  = await pool.query(`select  idProducto  ,(cantidad - cantidad_surtida) faltante,cantidad ,cantidad_surtida 
+  const  productos  = await pool.query(`select  id_pedido ,idProducto  ,(cantidad - cantidad_surtida) faltante,cantidad ,cantidad_surtida 
                                         from pedidos inner join partidas using(id_pedido) 
                                                      inner join partidas_productos using(idPartida)
                                         where cantidad != cantidad_surtida  and id_pedido = ?`,req.body.id);
 
   const numeroPedidoNuevo = await  pool.query(`SELECT id_pedido , num_subpedido FROM pedidos where idSubpedidos = ?`,req.body.id);
-
   await pool.query(`INSERT INTO partidas  VALUES(?,?,?)`,[null,numeroPedidoNuevo[0].id_pedido,1] ); 
   const numeroPartida = await pool.query(`SELECT idPartida  FROM partidas where id_pedido = ? `,numeroPedidoNuevo[0].id_pedido); 
- 
-
   for (let i = 0; i < productos.length; i++) {
     
     await pool.query(`INSERT INTO partidas_productos VALUES (?,?,?,?,?)`,
@@ -186,6 +228,23 @@ router.post('/subpedidos', async (req , res)=>{
     ]); 
     
   }
+  // se consigue el id del la tabla de partidas_producto 
+  const idProductos  =  await pool.query(`SELECT id_partidas_productos from partidas_productos where  idPartida = ? `,numeroPartida[0].idPartida);
+  
+  let time  = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
+  //  se guarda el  faltante en la tabla  
+  await pool.query(`INSERT INTO faltantes value (?,?,?,?,?)`,[null,0,time,'','']);
+  // Se  obtiene el maximo id de del faltante 
+  const idFaltante = await pool.query(`select MAX(idFaltante) idFaltante  from faltantes`);  
+ 
+  //  Se procede a guardar  los faltantes por partidas 
+  for (let i = 0; i <  idProductos.length; i++) {
+    
+    await pool.query(`INSERT INTO  faltantes_partidas  VALUE (?,?,?,?,?)  `,[null,idProductos[i].id_partidas_productos,idFaltante[0].idFaltante,0,null]);
+
+  }
+
+
   res.send(numeroPedidoNuevo[0].num_subpedido); 
 });
 

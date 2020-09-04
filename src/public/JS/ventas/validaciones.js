@@ -247,6 +247,7 @@ let cancelarOrden =() =>{
     
     location.reload(true);
 };
+cargar_pedido(false);
  $(function () {  
     $("#imgct").submit(function (e) { 
         $('#Ventana_Modal').modal('hide'); 
@@ -258,26 +259,20 @@ let cancelarOrden =() =>{
              return notifications("Ingrese el número de orden de compra y seleccione el archivo",'warning');
              
         } else{ 
+            cargar_pedido(true);  
         $.ajax({
             url: "/ventas/add",
             type: "POST",
             dataType: "html",
             data: formData,
-            beforeSend: function() {
-                
-                cargar_pedido();
-                
-
-            },
             success: function(response) {
-
-                // if(response  != 'false' && response != "null"){
+                if ($('.modal-backdrop').is(':visible')) {
+                    $('body').removeClass('modal-open'); 
+                    $('.modal-backdrop').remove(); 
+                  };
                     let num_pedido = JSON.parse(response);
-                    $('#spinnerUpload').modal('hide');
-                    console.log('hola');
                     pedidos(response);
                     pedidos_vendedores();
-                    // notifications("Su pedido se ha guardado con éxito",'success'); 
                     document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`;
                     $('#imgct').trigger("reset");
                     $("#comprobante").hide();
@@ -287,18 +282,29 @@ let cancelarOrden =() =>{
                     $("#imgct").hide();
                     $("#ocultar_excel").show();
                     $("#excel").val('');
-                    swal({
-                        title: `El  pedido ha sido guardado con éxito con el número`,
-                        type: `success`,
-                        showConfirmButton: true
-                    });
+                    notificar(); 
                     $("#excel").val('');
             },
             cache: false,
             contentType: false,
             processData: false
-        })
+        });
     }
     });
-
 });
+
+let notificar = ()=>{
+    swal({
+        title: "El pedido ha sido guardado de manera exitosa",
+        type: "success",
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Aceptar",
+      }).then(result => {
+        // swal("Deleted!", "Your file has been deleted.", "success");
+        if (result.value) {
+            // swall.closeModal();
+            location.reload();
+          
+        } 
+      });
+};

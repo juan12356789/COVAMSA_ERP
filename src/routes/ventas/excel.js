@@ -52,7 +52,7 @@ router.post('/', (req , res) => {
             }
 
              infoPedidos.numero_partidas = numero_partidas;
-             
+             console.log('hoka');
              try {
                  const cliente  = await pool.query("SELECT nombre , prioridadE FROM clientes inner join preferencias_cliente using(idcliente) where numero_interno = ?",infoPedidos.cliente);
                  const clientes_verndedor =  await pool.query(`select * from acceso inner join empleados using(idacceso) 

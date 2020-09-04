@@ -41,32 +41,39 @@
 <style>
 
 
-    /* si se quiere poner la pantalla de almacen
-    @media screen and (max-width: 600px) {
-       table {
-           width:100%;
-           
-       }
-       thead {
-           display: none;
-       }
-       tr:nth-of-type(2n) {
-           background-color: inherit;
-       }
-       tr td:first-child {
-           background: #f0f1f0;
-           font-weight:bold;
-           font-size:1.3em;
-       }
-       tbody td {
-           display: block;
-           {{!-- text-align:center; --}}
-       }
-       tbody td:before {
-          
-           display: block;
-           text-align:center;
-       }
+        html{font-size:14px;} p.segunda{font-size:1rem;} @media screen and (orientation:portrait){ p.primera{font-size:1rem;} } @media screen and (orientation:landscape){ p.primera{font-size:1rem;} }
+
+ .line-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    width: 100%;
+    margin: auto;
+    border: 1px solid transparent;
+    font-family: sans-serif;
+    line-height: 1.4;
+  }
+.table-responsive{
+        height:500px;  
+        overflow:scroll;
+}
+thead tr:nth-child(1) th{
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.line-clamp:hover {
+    -webkit-line-clamp: 100;
+    cursor: pointer;
+}
+.table td.text span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
+}
 }
 */
 </style>
@@ -81,18 +88,12 @@
                        <thead class="thead-dark" >
                            <tr>
                                <th scope="col" >#</div></th>
-                               <th  style="background-color: #A79F21;">Orden De Compra</th>
-                               <th  style="background-color: #229954;">Número De Pedido</th>
-                               <th  style="background-color: #1A5276;">Comprabante De Pago</th>
-                               <th scope="col" >Ruta</th>
-                               <th scope="col" >Importe</th>
-                               <th scope="col" >Estado</th>
+                               <th scope="col"> Orden De Compra </th>
+                               <th scope="col">Fceha  </th>
                                <th scope="col">Prioridad</th>
-                               <th scope="col">Tipo de entrega</th>
-                               <th  >Observaciones</th>
-                               <th scope="col" >Fecha</th>
-                               <th scope="col">Almacen </th>
-
+                               <th scope="col">Estado</th>
+                               <th scope="col">Facturas </th>
+                               <th scope="col" >Faltantes</th>
                            </tr>
                        </thead>
 
@@ -101,14 +102,15 @@
 
                    </table>
                    <div id="modal_procesar" ></div>
+                   <div id="faltantesPorPartida" ></div>
              <div class="modal fade bd-example-modal-lg" id="change_status" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
 
                     <div id="status"  ></div>
-
             </div>
         </div>
+        
     </div>
     </div>
 <script src="librerias/jquery.js"></script>

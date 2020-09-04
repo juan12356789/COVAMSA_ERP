@@ -51,9 +51,9 @@ socket.on('data:facturas', function(data) {
 let sendData = (data) => {
     let table = '';
     ruta = ["Norte", "Sur"];
-    let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida'];
+    let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida','Comprado'];
     prioridad_info = ["Normal", "Normal", "Urgente"];
-    colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078"];
+    colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078","#E1FCE3"];
     let numeracion_pedidos = 1 , numero_de_pedidos_urgentes = 0;
     data.forEach(data => {
         if (data.prioridad == 2) numero_de_pedidos_urgentes++;
@@ -213,9 +213,12 @@ const chanche_estatus_almacen = (order , confirm = true ) => {
     $.ajax({type: "POST",url: "/almacen/cambio_estado",data: { estado_nuevo, order }, success: function(response) {
             if(response == false )  return notifications(`No se puede cambiar el status a facturación ya que hay partidas incompletas`, 'warning');
             if(estado_nuevo != "Nuevo" && estado_nuevo != "Surtiendo" )    actualizarFacturas(`${order}`);
-            let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar', 'Requerir', 'Cancelado', 'Detenido'];
+            let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida','Comprado'];
             cambios_status_pedidos(  estatus[estado_nuevo - 1] , order);
-            if( estatus[estado_nuevo - 1] ==  'Requerir y facturar')  subPedidos(order)  ;
+            // console.log(estatus[estado_nuevo - 1]);
+            if(estatus[estado_nuevo - 1] == "Requerir y facturar ") subPedidos(order);
+            // if( estatus[estado_nuevo - 1] ==  'Requerir y facturar')  subPedidos(order)  ;
+            // if( estatus[estado_nuevo - 1] ==  'Requerir y facturar')  console.log('hola'); 
             notifications(`El estado del pedido ${order} ha sido cambiado `, 'success');
             pedidos();
             actualizar();
@@ -254,7 +257,7 @@ const confitmStatus = id =>{
 let subPedidos = id =>{
 
     $.ajax({type: "POST",url: "/almacen/subpedidos", data: {id:id} ,success: function (response) {
-            
+            console.log('que pinche pedo');
             notifications(`El sub pedido fue guardado con el número ${response}`, 'success');
         }
     });

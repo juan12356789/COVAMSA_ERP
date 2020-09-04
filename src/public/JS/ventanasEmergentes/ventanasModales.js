@@ -83,7 +83,7 @@ let cambios_status_pedidos = (current_status, order) => {
 
         <div class="row">
             <div class="col">
-                <button value="0"    ${current_status != 'Nuevo' && current_status != 'Surtiendo'? 'disabled':'' }  class="btn btn-primary"  onclick= "chanche_estatus_almacen('${order}')" >Aceptar</button>
+                <button value="0"  class="btn btn-primary"  onclick= "chanche_estatus_almacen('${order}')" >Aceptar</button>
                 <button value="1" type="button" class="btn btn-secondary"  id="cancelar"  data-dismiss="modal">Cancelar</button>
             </div>
         </div>
@@ -136,8 +136,8 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
                     <td col="2">${response.clave}</td>
                     <td col="3">${response.nombre}</td>  
                     <td col="2">${response.cantidad}</td>
-                    ${ status == "Surtiendo" ? `<td col="2"><input type='text' maxlength="11"  onclick="cleanFunction()" onkeypress=" return justNumbers(event ,'numero${numero}','${response.cantidad}')"    value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  name='numero' id='numero${numero}' ></td>`:`<td ><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </td>` }
-                    ${ status == "Surtiendo" ?`<td  col="2"><input type="checkbox" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"   ${response.cantidad_surtida == response.cantidad?"checked":" "} name="completo${cont}" id="completo${cont}"></td>`:`<td ><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></td>`}
+                    ${ status == "Surtiendo" || status == "Comprado" ? `<td col="2"><input type='text' maxlength="11"  onclick="cleanFunction()" onkeypress=" return justNumbers(event ,'numero${numero}','${response.cantidad}')"    value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  name='numero' id='numero${numero}' ></td>`:`<td ><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </td>` }
+                    ${ status == "Surtiendo" || status == "Comprado" ?`<td  col="2"><input type="checkbox" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"   ${response.cantidad_surtida == response.cantidad?"checked":" "} name="completo${cont}" id="completo${cont}"></td>`:`<td ><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></td>`}
                 </tr>`;
 
                 if(response.cantidad_surtida == response.cantidad)  numero_partidas++; 
@@ -145,7 +145,7 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
 
 
             });
-            if(status == "Surtiendo"){
+            if(status == "Surtiendo" || status == "Comprado"){
                 document.getElementById('button').innerHTML = `
                 <div class="modal-footer">
                     <button onclick="guardarPartidas('${id_pedido}', '${status}')" class="btn btn-primary" >Guardar</button>
@@ -164,20 +164,19 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
                         <strong>Estado del pedido:</strong> ${response.length == numero_partidas?'Partidas completas':'Hay partidas incompletas' }
                      </div>
                      <div class="col-3" >   
-                        <strong>Pedidos completo:</strong>   <input type="checkbox" ${status == 'Surtiendo'?'':'disabled'}   ${checkbox || response.length == numero_partidas ?"checked":''}  id="partida_completa" onclick="completarListga('${id_pedido}','${status}')"  > 
+                        <strong>Pedidos completo:</strong>   <input type="checkbox" ${status == 'Surtiendo' || status == 'Comprado'?'':'disabled'}   ${checkbox || response.length == numero_partidas ?"checked":''}  id="partida_completa" onclick="completarListga('${id_pedido}','${status}')"  > 
                     </div>
                 </div>
              `;
             document.getElementById('partidas').innerHTML = tabla_partidas;
-            
             if(status == "Nuevo") document.getElementById('estado_nuevo').innerHTML = `<option value="2" > Surtiendo </option>`;  
-            if(status == "Surtiendo" && response[0].prioridadE == 0  ){
+            if((status == "Surtiendo" || status == "Comprado")  && response[0].prioridadE == 0  ){
                 if(noSurtida == response.length)  document.getElementById('estado_nuevo').innerHTML = ` <option value="5" >Requerir  </option>`;
                 if(noSurtida != response.length) document.getElementById('estado_nuevo').innerHTML = `<option value="4" >Requerir y facturar  </option>`;
                 if(numero_partidas == response.length)document.getElementById('estado_nuevo').innerHTML = ` <option value="3">Facturable </option>`;
             }
 
-            if(status == "Surtiendo" && response[0].prioridadE == 1){
+            if((status == "Surtiendo" || status == "Comprado")  && response[0].prioridadE == 1){
 
                 if(numero_partidas == response.length){
 
@@ -187,7 +186,8 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
                      document.getElementById('estado_nuevo').innerHTML = ` <option value="5" > Requerir  </option>`;
                 }
             }
-
+            if(status == 'Requerir') document.getElementById('estado_nuevo').innerHTML = ` <option value="13" >Comprado</option>`;
+            
             if(status == "Suspendida" ){
                 document.getElementById('estado_nuevo').innerHTML = `
                 <option value="1" > Nuevo </option>
@@ -277,10 +277,9 @@ const cantidadProducto = (cantidad  , id_partidas_productos, numero ,id , status
 
 //  se guardan los elementos del  pedido 
 const guardarPartidas =  (id , status) =>{
-   
+    console.log(id, status);
     let  values =  $("input[name='numero']").map(function(){return $(this).val();}).get();
-    console.log(values);
-    $.ajax({type: "POST",url: "/almacen/cantidad_pedido",data: {cantidad :JSON.stringify(values) , partidas: JSON.stringify(idPartidas) , id:id},success: function (response) {
+    $.ajax({type: "POST",url: "/almacen/cantidad_pedido",data: {status:status,cantidad :JSON.stringify(values) , partidas: JSON.stringify(idPartidas) , id:id},success: function (response) {
 
         tabla_partidas(id , status);
         notifications("Los productos han sido guardados ","success");
@@ -295,7 +294,7 @@ const guardarPartidas =  (id , status) =>{
 const completarListga  = ( id ,status ) => {
 
     let checkbox =   document.getElementById("partida_completa").checked;
-        $.ajax({type: "POST",url: "/almacen/pedidos_check",data: {num_pedido : id ,check : checkbox},success: function (response) {
+        $.ajax({type: "POST",url: "/almacen/pedidos_check",data: {num_pedido : id ,check : checkbox,status:status},success: function (response) {
 
             tabla_partidas(id , status, checkbox);
 
@@ -385,7 +384,7 @@ const uploadFileTransferencia = (num_pedido) => {
     };
 
 
-const cargar_pedido = () =>{
+const cargar_pedido = state =>{
     let modal  = `
        <div class="modal fade" id="spinnerUpload" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
          <div class="modal-dialog">
@@ -408,9 +407,12 @@ const cargar_pedido = () =>{
      </div>
         
     `;
-    
-    document.getElementById('spinnerOrder').innerHTML = modal;
-    $('#spinnerUpload').modal('show');
+    if(state  == false ){
+        $('#spinnerUpload').modal('hide');
+    }else{
+        document.getElementById('spinnerOrder').innerHTML = modal;
+        $('#spinnerUpload').modal('show');
+    }
    
 } 
 

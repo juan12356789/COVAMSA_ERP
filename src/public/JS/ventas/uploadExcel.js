@@ -6,10 +6,9 @@ const  uploadExcel  = () =>{
     if( csvFile == undefined ) return notifications(`Seleccione algún archivo `,'warning');
     if(csvFile.name.substring(csvFile.name.lastIndexOf("."))  != ".xlsx" )   return notifications(`Sólo se adminten archivos .xlsx`,'warning'); 
    
-    
     var data = new FormData(); 
     data.append('excel', csvFile);
-    
+    console.log(csvFile); 
     var request = $.ajax
         ({
             url: '/excel',
