@@ -71,6 +71,7 @@ app.use('/nadvar', require('./routes/nadvar/nadvar'));
 app.use('/facturas',require('./routes/facturas/facturas'));
 app.use('/compras',require('./routes/compras/compras'));
 app.use('/entregas', require('./routes/entregas/entregas'));
+app.use('/log', require('./routes/log/log'));
 // Public 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -90,5 +91,7 @@ io.on('connection', (socket) => {
     socket.on('data:facturas', data =>  io.sockets.emit('data:facturas',data) ); 
     //  se dispara el alert al momento de que el status  cambia a entregado 
     socket.on('data:alertEntregado', data => io.sockets.emit('data:alertEntregado',data)); 
+    // se actualizan  las compras 
+    socket.on('data:compras',data => io.sockets.emit('data:compras',data));
 
 });

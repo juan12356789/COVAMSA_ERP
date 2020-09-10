@@ -1,3 +1,5 @@
+const socket = io();
+
 
 const partidas = () =>{
     
@@ -29,6 +31,11 @@ const partidas = () =>{
 
 };
 
+socket.on('data:compras', function(data) {
+
+    partidas(data);
+
+});
 // Se manda a llamar los faltantes que se tienen por cada una da las   partidas 
 let arregloIdcheck = [] , idFaltante = []; ;
 const modalFaltantes  = id =>{
@@ -37,12 +44,14 @@ const modalFaltantes  = id =>{
         let table = ``,cont = 1 ,estatus = ["Faltante","Incompleto","Completo"] ;
         proveedores();
         arregloIdcheck = []; 
+        console.log(response);
             response.forEach(element => {
                 arregloIdcheck.push(element.idFaltantePartida);
                 table += `
                 <tr>
                     <td>${cont++}</td>
                     <td ><input type="checkbox"  ${element.nombre_proveedor == null ? '' : 'checked'} id="seleccion${element.idFaltantePartida}" onclick="selectProveedor('${element.idFaltantePartida}')" >  </td>
+                    <td><i class="fas fa-list-ul" onclick="log_faltantes('${element.idFaltantePartida}')"  ></i></td>
                     <td>${element.clave}</td>
                     <td>${element.nombre}</td>
                     <td>${element.cantidad}</td>
@@ -83,6 +92,7 @@ const modalFaltantes  = id =>{
                          <tr>
                              <th>#</th>
                              <th></th>
+                             <th>Info</th>
                              <th>Nombre</th>
                              <th>Descripción</th>
                              <th  >Cantidad requerida</th>
@@ -114,6 +124,63 @@ const modalFaltantes  = id =>{
         }
     });
 };  
+
+const log_faltantes  = id =>{
+    $.ajax({type: "POST", url: "/compras/log_faltante",data: {id : id},success: function (response) {
+        let table = ``,cont = 1 ,estatus = ["Faltante","Incompleto","Completo"] ;
+            response.forEach(element => {
+                table += `
+                <tr>
+                    <td>${cont++}</td>
+                    <td >${element.nombre}  </td>
+                    <td>${estatus[element.estado]}</td>
+                    <td>${element.fecha}</td>
+                    
+                </tr>
+                `; 
+            }); 
+
+           let modal  = `
+           <div class="modal fade" id="logFaltantes" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+           <div class="modal-dialog   modal-lg">
+             <div class="modal-content">
+               <div class="modal-header">
+                 <h5 class="modal-title" id="exampleModalLabel">Bitacora de  Faltantes </h5>
+                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+                 </button>
+               </div>
+               <div class="modal-body">
+                <div class="table-responsive">
+                 <table class="table table-bordered table-striped" >
+                     <thead class="thead-dark" >
+                         <tr>
+                             <th>#</th>
+                             <th>Usuario</th>
+                             <th>Estado</th>
+                             <th>Fecha y Hora </th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                     ${table}
+                     </tbody>
+                 </table>
+                </div>
+               </div>
+               <div class="modal-footer">
+                 <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+               </div>
+             </div>
+           </div>
+         </div>
+         `;
+         $("#modalFaltantes").modal('hide'); 
+         document.getElementById('FaltantesL').innerHTML = modal; 
+         $("#logFaltantes").modal('show'); 
+        }
+    });
+
+};
 
 const proveedores = () =>{
 

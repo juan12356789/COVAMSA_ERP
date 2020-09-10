@@ -48,6 +48,9 @@ router.post('/partidas', async (req , res)=>{
 router.post('/cantidad_pedido',async(req , res)=>{
   
     let cantidad =  JSON.parse(req.body.cantidad) , partidas  = JSON.parse(req.body.partidas) ;
+    const empleado  = await pool.query(`select id_empleados from empleados  where idacceso = ? `,req.user[0].idacceso); 
+    let f = new Date();
+   let time  = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
     if(req.body.status  == 'Comprado'){
       const idFatnate  = await pool.query(`select idFaltantePartida,cantidad
                                            from pedidos inner join partidas using(id_pedido)
@@ -58,16 +61,25 @@ router.post('/cantidad_pedido',async(req , res)=>{
         await pool.query(`UPDATE faltantes_partidas 
                           SET    cantidad_surtida = ${cantidad[i] == ''? 0 : parseInt(cantidad[i]) },
                                  estatus = ${cantidad[i] == idFatnate[i].cantidad ? 2 : cantidad[i] == 0 ? 0 : 1 } 
-                          WHERE  idFaltantePartida = ${idFatnate[i].idFaltantePartida}`);  
+                          WHERE  idFaltantePartida = ${idFatnate[i].idFaltantePartida}`);
+        let statusFaltante = await pool.query(`SELECT estado FROM log_faltantes where idFaltantePartida = ${idFatnate[i].idFaltantePartida} `);
+        let estado = cantidad[i] == idFatnate[i].cantidad ? 2 : cantidad[i] == 0 ? 0 : 1;
+        if(   statusFaltante.length  != 0   ){
+          
+          if(estado  != statusFaltante[0].estado) await pool.query(`INSERT INTO log_faltantes VALUE (?,?,?,?,?)`,[null,idFatnate[i].idFaltantePartida,cantidad[i] == idFatnate[i].cantidad ? 2 : cantidad[i] == 0 ? 0 : 1,time,empleado[0].id_empleados]);
         
+        }else{
+
+          await pool.query(`INSERT INTO log_faltantes VALUE (?,?,?,?,?)`,[null,idFatnate[i].idFaltantePartida,cantidad[i] == idFatnate[i].cantidad ? 2 : cantidad[i] == 0 ? 0 : 1,time,empleado[0].id_empleados]);
+       
+        } 
+      
       }
       const partida = await pool.query(`select idFaltante from  faltantes_partidas where idFaltantePartida = ${idFatnate[0].idFaltantePartida}`);
       const status = await pool.query(`select  count(*) status from  faltantes_partidas where idFaltante = ${partida[0].idFaltante} and estatus = 2`);
-      console.log(status[0].status,cantidad.length);
+
       if(status[0].status ==  cantidad.length)  await pool.query(`UPDATE faltantes SET estatus = 2 where idFaltante = ${partida[0].idFaltante}`); 
       else  await pool.query(`UPDATE faltantes SET estatus = 1 where idFaltante = ${partida[0].idFaltante}`);
-      // const idFaltante = await pool.query(`SELECT idFaltante FROM faltantes_partidas where idFaltantePartida = ${idFatnate[0].idFaltantePartida} `);
-      // console.log(idFaltante);
     }
     
     for (let i = 0; i < cantidad.length; i++) {
@@ -122,6 +134,9 @@ router.post('/cambio_estado', async (req , res)=>{
      break;
 
    }
+   let f = new Date();
+   let time  = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
+   const empleado  = await pool.query(`select id_empleados from empleados  where idacceso = ? `,req.user[0].idacceso); 
    if(req.body.estado_nuevo == 5 ){
 
      const idProductosFaltantes = await pool.query(`SELECT id_partidas_productos
@@ -129,8 +144,7 @@ router.post('/cambio_estado', async (req , res)=>{
                                                                    inner join partidas_productos using(idPartida)
                                                     where id_pedido  = ?`,req.body.order);
       // console.log(idProductosFaltantes);  
-      let f = new Date();
-      let time  = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
+
       //  se guarda el  faltante en la tabla  
       await pool.query(`INSERT INTO faltantes value (?,?,?,?,?)`,[null,0,time,'','']);
       // Se  obtiene el maximo id de del faltante 
@@ -144,6 +158,7 @@ router.post('/cambio_estado', async (req , res)=>{
       }
    }
    const status = await pool.query(`UPDATE pedidos SET estatus = ${req.body.estado_nuevo == 4 ? 3 : req.body.estado_nuevo } WHERE id_pedido = ?`, req.body.order);
+   await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,req.body.order,time,req.body.estado_nuevo == 4 ? 3 : req.body.estado_nuevo ,empleado[0].id_empleados]);
    res.send(status);
 
 });
@@ -163,14 +178,18 @@ router.post('/repartidores' , async( req , res ) =>{
 router.post('/envioEntregas', async (req , res )=>{
 
   const pedidos = JSON.parse(req.body.partidas);
-  
+  let f = new Date();
+  let fecha = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes();
+  const empleado  = await pool.query(`select id_empleados from empleados  where idacceso = ? `,req.user[0].idacceso); 
   for (let i = 0; i < pedidos.length; i++) {
-
     await pool.query(`UPDATE pedidos SET estatus = 10  WHERE    id_pedido = ? `, pedidos[i]);
+    await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,pedidos[i],fecha,10,empleado[0].id_empleados]);
     let facturas  =  await  pool.query(`SELECT idFacutura FROM  pedidos inner join  facturas using(id_pedido) where id_pedido = ? `,pedidos[i]);
     await pool.query(`INSERT INTO entregas VALUES (?,?,?,?,?,?,?,?)`,[null,req.body.descripcion,req.body.empleado,'','','',facturas[0].idFacutura,pedidos[i]]); 
 
   }
+
+  
 
   let  numeroEntrega ;
   for (let i = 0; i < pedidos.length; i++) {
@@ -205,16 +224,20 @@ router.post('/subpedidos', async (req , res)=>{
   pedidos[0].id_pedido = null;
   pedidos[0].estatus = 5;
   pedidos[0].fecha_inicial = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
-  
+  let t = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
   await pool.query(`INSERT INTO pedidos SET  ? `, pedidos[0]);
 
   const  productos  = await pool.query(`select  id_pedido ,idProducto  ,(cantidad - cantidad_surtida) faltante,cantidad ,cantidad_surtida 
                                         from pedidos inner join partidas using(id_pedido) 
                                                      inner join partidas_productos using(idPartida)
                                         where cantidad != cantidad_surtida  and id_pedido = ?`,req.body.id);
-
+  const empleado  = await pool.query(`select id_empleados from empleados  where idacceso = ? `,req.user[0].idacceso); 
+  
   const numeroPedidoNuevo = await  pool.query(`SELECT id_pedido , num_subpedido FROM pedidos where idSubpedidos = ?`,req.body.id);
+
+  await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,numeroPedidoNuevo[0].id_pedido,t,5,empleado[0].id_empleados]);
   await pool.query(`INSERT INTO partidas  VALUES(?,?,?)`,[null,numeroPedidoNuevo[0].id_pedido,1] ); 
+
   const numeroPartida = await pool.query(`SELECT idPartida  FROM partidas where id_pedido = ? `,numeroPedidoNuevo[0].id_pedido); 
   for (let i = 0; i < productos.length; i++) {
     

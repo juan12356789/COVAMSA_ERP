@@ -68,6 +68,17 @@ router.post('/notificacionEntregado',  async (req , res)=>{
     
 }) ;
 
+router.post('/log' , async (req , res )=>{
+
+        const log = await pool.query(`SELECT  IF(prioridadE = 0,'Sí','No') entrega ,if(prioridad = 0,"Normal","Urgente") prioridad,
+		                                      DATE_FORMAT( cambio_estado,'%d-%m-%Y %H:%i %p')  fecha ,estado,nombre
+                                      FROM  pedidos  inner join  log  using(id_pedido) 
+		                                             inner join empleados e  using(id_empleados) 
+                                      where id_pedido = ?`,req.body.id);
+        res.send(log);
+
+});
+
 router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { name: 'num_pedido', maxCount: 1 },{ name: 'comprobante_pago', maxCount: 1 }]),async(req, res) => {
    
     const validacion_pedido_existente  = await pool.query("select id_pedido from pedidos where num_pedido = ?", req.body.numeroPedido); 
@@ -78,6 +89,7 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
         const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre_cliente);
        
         let f = new Date();
+        let time =  f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
         const insert = {
             id_pedido: null,
             id_empleado: cliente_id[0].id_empleados,
@@ -90,7 +102,7 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
             ruta_pdf_comprobante_pago: req.files.comprobante_pago != undefined? req.files.comprobante_pago[0].filename: '',
             num_pedido: req.body.numeroPedido,
             observacion: req.body.observaciones,
-            fecha_inicial: f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds(),
+            fecha_inicial:time ,
             comprobante_pago: req.body.comprobante_pago != undefined && req.body.comprobante_pago ?req.body.comprobante_pago:'' ,
             importe: req.body.importe,
             prioridad: req.body.prioridad[0],
@@ -104,7 +116,7 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
             
    
         const partidas_pedido  = await pool.query("SELECT a.id_pedido, idPartida FROM  pedidos a inner join partidas  using(id_pedido) where num_pedido = ?",req.body.numeroPedido); 
-      
+        await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,partidas_pedido[0].id_pedido,time,(req.body.tipos_pago == 1  && req.body.comprobante_pago == '')? 7 : 1,cliente_id[0].id_empleados]);
         let cont_partidas = -1; 
         for (let i = 4; i < partidas_info.Hoja1.length; i++) {
 
@@ -154,7 +166,12 @@ router.post('/pedidos_vendedor', async(req, res) => {
 
 router.post('/cancel', async(req, res) => {
 
+    let f = new Date();
+    let time =  f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
     await pool.query(`update pedidos set estatus = 6 , motivo_de_cancelacion = '${req.body.reason}' where  id_pedido  = ?`, req.body.data);
+    const empleado  = await pool.query(`select id_empleados from empleados  where idacceso = ? `,req.user[0].idacceso); 
+    await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,req.body.data,time,6,empleado[0].id_empleados]);
+    // console.log(req.user[0].idacceso);
     res.send('Guardado');
 
 });

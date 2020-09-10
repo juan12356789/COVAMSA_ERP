@@ -280,7 +280,7 @@ const guardarPartidas =  (id , status) =>{
     console.log(id, status);
     let  values =  $("input[name='numero']").map(function(){return $(this).val();}).get();
     $.ajax({type: "POST",url: "/almacen/cantidad_pedido",data: {status:status,cantidad :JSON.stringify(values) , partidas: JSON.stringify(idPartidas) , id:id},success: function (response) {
-
+        actualizarCompras(true);
         tabla_partidas(id , status);
         notifications("Los productos han sido guardados ","success");
 

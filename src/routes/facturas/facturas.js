@@ -19,15 +19,17 @@ router.post('/', async (req , res) =>{
 router.post('/status', async (req , res)=>{
     let f = new Date();
     let fecha = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes();
-    console.log(req.body);
+    const empleado  = await pool.query(`select id_empleados from empleados  where idacceso = ? `,req.user[0].idacceso); 
     if(req.body.status  != "Facturando")  {
 
         await pool.query(`UPDATE pedidos SET estatus= 8  where id_pedido = ${req.body.id}` );
+        await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,req.body.id,fecha,8,empleado[0].id_empleados]);
 
     } else{
 
         await pool.query(`UPDATE pedidos SET estatus= 9  where id_pedido = ${req.body.id}` );
         await pool.query(`UPDATE facturas SET numero_factura = "${req.body.factura}"  where id_pedido = ${req.body.id} ` );
+        await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,req.body.id,fecha,9,empleado[0].id_empleados]);
     }  
     if(req.body.status != 'Facturando' ) await pool.query(`INSERT INTO facturas VALUES (null ,(select id_pedido from pedidos where id_pedido =${req.body.id}),'${fecha}','')`);
     res.send(true);

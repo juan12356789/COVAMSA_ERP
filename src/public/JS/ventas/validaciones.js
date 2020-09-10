@@ -76,7 +76,7 @@ $(document).ready(function() {
                         fixedHeader: true,
                         "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                             
-                            let colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078"];
+                            let colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078","#E1FCE3"];
                             if (aData.estatus == 6) $('td', nRow).css('color', 'red');
                             else $(nRow).find('td:eq(7)').css('background-color', colores[aData.estatus - 1]);
                         },
@@ -116,7 +116,7 @@ $(document).ready(function() {
                                 {
                                     sortable: false,
                                     "render": function(data, type, full, meta) {
-                                        let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida'];
+                                        let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida','Comprado'];
                                        
                                             return `${estatus[full.estatus - 1]  == "Detenido"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.estatus}</a>`:` ${estatus[full.estatus - 1]}`}`;
                       }
@@ -131,6 +131,13 @@ $(document).ready(function() {
                     }  
                   }, 
                   { data: 'fecha_inicial'},
+                  {
+                    sortable:false,
+                    "render": function(data, type, full ,meta){
+                        
+                     return `  <i class="fas fa-list-ul"  onclick="logPartidas('${full.id_pedido}')" ></i>`;
+                    }  
+                  },
                     {
                     sortable: false,
                     "render": function(data, type, full, meta) {
@@ -156,9 +163,8 @@ let pedidos_vendedores = () => {
         type: "POST",
         url: "/ventas/pedidos_vendedor",
         success: function(response) {
-            console.log(response);
             let ruta = ['Norte', 'Sur'];  
-            let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida'];
+            let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida','Comprado'];
             let colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078"];
 
             let prioridad_info = ["Normal", "Normal", "Urgente"];
@@ -173,6 +179,75 @@ let pedidos_vendedores = () => {
     });
 
 };
+
+const logPartidas  = id  =>{
+    $.ajax({type: "POST",url: "/ventas/log",data: {id : id},success: function (response) {
+            let table = ``,cont = 1; 
+            let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida','Comprado'];
+            let colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078"];
+            let descripcion = ['Se ha creado la orden en el sistema',
+                                'La order esta siendo surtida ',
+                                'La orden está lista para ser facturada',
+                                'La orden ha sido requerida al modulo de compras ',
+                                'La orden ha sido requerida al modulo de compras',
+                                'La orden ha sido cancelada',
+                                'La orden ha sido detenida',
+                                'La orden esta en proceso de factura',
+                                'La orden ha sido facturada',
+                                'La orden está en ruta',
+                                'La orden ha sido entregada',
+                                'La orden ha sido suspendida',
+                                'Se han comprado los faltantes de la orden'];
+            response.forEach(element => {
+                table += `
+                    <tr>
+                        <td>${cont++}</th>
+                        <td>${element.nombre}</td>
+                        <td style="background-color: ${colores[element.estado - 1]}" >${estatus[element.estado - 1]}</td>
+                        <td>${element.fecha}</td>
+                        <td><p>${descripcion[element.estado - 1]}</p></td>
+                    </tr>
+                `;
+            });
+            let modalLog = `
+              <div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Bitacora de Requerimiento</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <table class="table table-striped table-bordered " >
+                        <thead class="thead-dark" >
+                           <tr> 
+                              <th>#</th>
+                              <th>Usuario</th>
+                              <th>Estado </th>
+                              <th>Fecha y hora </th>
+                              <th>Notas</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${table}
+                        </tbody>
+                    </table>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                  </div>
+                </div>
+              </div>
+            </div>`;
+            document.getElementById('log').innerHTML = modalLog ;
+            $("#logModal").modal('show');
+            
+        }
+    });
+
+}; 
 
 let cancelOrder = ( order ) =>{
     

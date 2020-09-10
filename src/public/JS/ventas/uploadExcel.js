@@ -8,7 +8,6 @@ const  uploadExcel  = () =>{
    
     var data = new FormData(); 
     data.append('excel', csvFile);
-    console.log(csvFile); 
     var request = $.ajax
         ({
             url: '/excel',

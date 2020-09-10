@@ -39,6 +39,9 @@ const actualizar = (data) => {
     socket.emit('data:pedidos', data);
 
 };
+const actualizarCompras = (data) => socket.emit('data:compras', data);
+
+
 
 // soket para mandar facturas 
 const actualizarFacturas =  data =>  socket.emit('data:facturas', data); 
@@ -215,10 +218,8 @@ const chanche_estatus_almacen = (order , confirm = true ) => {
             if(estado_nuevo != "Nuevo" && estado_nuevo != "Surtiendo" )    actualizarFacturas(`${order}`);
             let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida','Comprado'];
             cambios_status_pedidos(  estatus[estado_nuevo - 1] , order);
-            // console.log(estatus[estado_nuevo - 1]);
             if(estatus[estado_nuevo - 1] == "Requerir y facturar ") subPedidos(order);
-            // if( estatus[estado_nuevo - 1] ==  'Requerir y facturar')  subPedidos(order)  ;
-            // if( estatus[estado_nuevo - 1] ==  'Requerir y facturar')  console.log('hola'); 
+            if(estatus[estado_nuevo - 1] == "Requerir" ||estatus[estado_nuevo - 1] == "Requerir y facturar "  ) actualizarCompras(true);
             notifications(`El estado del pedido ${order} ha sido cambiado `, 'success');
             pedidos();
             actualizar();
@@ -257,7 +258,6 @@ const confitmStatus = id =>{
 let subPedidos = id =>{
 
     $.ajax({type: "POST",url: "/almacen/subpedidos", data: {id:id} ,success: function (response) {
-            console.log('que pinche pedo');
             notifications(`El sub pedido fue guardado con el número ${response}`, 'success');
         }
     });

@@ -95,4 +95,14 @@ router.post('/selectAllSupplier',async ( req , res )=>{
     res.send(idSelectAll); 
 
 }); 
+
+router.post('/log_faltante', async (req , res)=>{
+
+    const idFaltante  = await pool.query(`SELECT estado,DATE_FORMAT(cambio_estado,'%d-%m-%Y %H:%i %p')  fecha ,nombre 
+                                          FROM log_faltantes inner join empleados on id_empleado = id_empleados
+                                          WHERE idFaltantePartida = ?`,req.body.id);
+
+    res.send(idFaltante);
+
+});
 module.exports = router; 
