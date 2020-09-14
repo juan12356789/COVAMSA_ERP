@@ -135,7 +135,7 @@ $(document).ready(function() {
                     sortable:false,
                     "render": function(data, type, full ,meta){
                         
-                     return `  <i class="fas fa-list-ul"  onclick="logPartidas('${full.id_pedido}')" ></i>`;
+                     return `  <i class="fas fa-list-ul"  onclick="logPartidas('${full.id_pedido}','${full.num_subpedido == null ? full.num_pedido : full.num_subpedido  }')" ></i>`;
                     }  
                   },
                     {
@@ -166,7 +166,6 @@ let pedidos_vendedores = () => {
             let ruta = ['Norte', 'Sur'];  
             let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida','Comprado'];
             let colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078"];
-
             let prioridad_info = ["Normal", "Normal", "Urgente"];
             response.filter(n => n.ruta = ruta[n.ruta - 1]);
             // response.filter(n => n.nombre_estatus = `<div style="background-color:${colores[n.estatus - 1]}; >`+estatus[n.estatus - 1] + '</div>');
@@ -180,7 +179,8 @@ let pedidos_vendedores = () => {
 
 };
 
-const logPartidas  = id  =>{
+const logPartidas  = ( id , num_pedido )  =>{
+    console.log(num_pedido);
     $.ajax({type: "POST",url: "/ventas/log",data: {id : id},success: function (response) {
             let table = ``,cont = 1; 
             let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida','Comprado'];
@@ -214,7 +214,7 @@ const logPartidas  = id  =>{
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Bitacora de Requerimiento</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Bitacora de Requerimiento #${num_pedido}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
