@@ -20,10 +20,9 @@ const  uploadExcel  = () =>{
 
         request.done(function( msg )
         {
-         
           if(msg == "false" ) return notifications(`Este cliente pertenece a  otro vendedor, favor de notificarlo con en administrador`,'warning');
           if(msg == "null") return notifications(`No se en cuentra ese cliente en la base de datos`,'warning');
-          if(msg == "enProceso")  return  notifications(`Este  número  de orden ya se encunetra en proceso`,'warning');
+          if(msg == "enProceso")  return  notifications(`Este  número  de orden ya se encuentra  en proceso`,'warning');
           $("#ocultar_excel").hide();
           excelInfo  = []; // se vacia la info para la siguinte orden 
           let info = JSON.parse(msg), n =  false ,pedido = ``,cont  = 0 ; 

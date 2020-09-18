@@ -79,6 +79,8 @@ $(document).ready(function() {
                             let colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078","#E1FCE3"];
                             if (aData.estatus == 6) $('td', nRow).css('color', 'red');
                             else $(nRow).find('td:eq(7)').css('background-color', colores[aData.estatus - 1]);
+                            $(nRow).find('td:eq(8)').css('background-color', aData.prioridad == "Normal"?'#ECF575':'#F5AD75');
+
                         },
                         columns: [
                          
@@ -105,7 +107,7 @@ $(document).ready(function() {
                                 }, {
                                     sortable: false,
                                     "render": function(data, type, full, meta) {
-                                        let pagos = ['Transferencia', 'Anticipado', 'Cntra Entrega', 'Crédito'];
+                                        let pagos = ['Transferencia', 'Anticipado', 'Contra Entrega', 'Crédito'];
                                         return `${pagos[ full.tipo_de_pago - 1 ]}`;
 
                                     }
@@ -117,8 +119,9 @@ $(document).ready(function() {
                                     sortable: false,
                                     "render": function(data, type, full, meta) {
                                         let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida','Comprado'];
-                                       
-                                            return `${estatus[full.estatus - 1]  == "Detenido"?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${full.estatus}</a>`:` ${estatus[full.estatus - 1]}`}`;
+                                        return `${estatus[full.estatus - 1]  == "Detenido"
+                                                ?`<a href="#"  onclick="uploadFileTransferencia('${full.num_pedido}')">${estatus[full.estatus - 1]}</a>`
+                                                :` ${estatus[full.estatus - 1]}`}`;
                       }
                 },
                  { data: 'prioridad' },
@@ -134,8 +137,7 @@ $(document).ready(function() {
                   {
                     sortable:false,
                     "render": function(data, type, full ,meta){
-                        
-                     return `  <i class="fas fa-list-ul"  onclick="logPartidas('${full.id_pedido}','${full.num_subpedido == null ? full.num_pedido : full.num_subpedido  }')" ></i>`;
+                     return `<i class="fas fa-list-ul" onclick="logPartidas('${full.id_pedido}','${full.orden_de_compra}','${full.num_pedido}','${full.ruta}','${full.fecha_inicial}')" ></i>`;
                     }  
                   },
                     {
@@ -146,7 +148,7 @@ $(document).ready(function() {
                 },{
                    sortable:false,
                    "render": function(data, type, full ,meta){
-                    if(full.estatus != 6 )return `<center><i class="fas fa-trash-alt" onclick="cancelOrder('${full.id_pedido}')" ></i></center>`;
+                    if(full.estatus != 6 && full.estatus != 11)return `<center><i  class="fas fa-trash-alt" onclick="cancelOrder('${full.id_pedido}')" ></i></center>`;
                     return ' '; 
                    }  
                  }
@@ -179,8 +181,8 @@ let pedidos_vendedores = () => {
 
 };
 
-const logPartidas  = ( id , num_pedido )  =>{
-    console.log(num_pedido);
+const logPartidas  = ( id , ordenCompra ,num_pedido, ruta , fecha_pedido )  =>{
+    console.log( ordenCompra );
     $.ajax({type: "POST",url: "/ventas/log",data: {id : id},success: function (response) {
             let table = ``,cont = 1; 
             let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida','Comprado'];
@@ -214,12 +216,19 @@ const logPartidas  = ( id , num_pedido )  =>{
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Bitacora de Requerimiento #${num_pedido}</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Bitacora de Requerimiento  #${num_pedido} </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
+                    <div class="row" >
+                        <div class="col-3" >Orden de compra: ${ordenCompra} </div>
+                        <div class="col-3">No.pedido: ${num_pedido} </div>
+                        <div class="col-3">Ruta: ${ruta}</div>
+                        <div class="col-3">Fecha de pedido: ${fecha_pedido} </div>
+                    </div>
+                    <br>
                     <table class="table table-striped table-bordered " >
                         <thead class="thead-dark" >
                            <tr> 

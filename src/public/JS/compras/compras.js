@@ -21,7 +21,7 @@ const partidas = () =>{
                       <td>${data.prioridad}</td>
                       <td style="background-color:${colores[data.estatus]}" >${statusFaltante[data.estatus]}</td>
                       <td> ${ data.numero_factura == null ? '' : data.numero_factura } </td>
-                      <td><i class="fas fa-list-ul"onclick="modalFaltantes('${data.idPartida}')"></i></td>
+                      <td><i class="fas fa-list-ul"onclick="modalFaltantes('${data.idPartida}',${ data.num_subpedido == null ? `${data.num_pedido}` : `${data.num_subpedido}` })"></i></td>
                     </tr>`;
         });
         document.getElementById('pedidos').innerHTML = table;
@@ -38,20 +38,20 @@ socket.on('data:compras', function(data) {
 });
 // Se manda a llamar los faltantes que se tienen por cada una da las   partidas 
 let arregloIdcheck = [] , idFaltante = []; ;
-const modalFaltantes  = id =>{
-
+const modalFaltantes  = ( id , num_pedido ) =>{
+    $("#logFaltantes").modal('hide'); 
     $.ajax({type: "POST",url: "/compras/faltantes_partida",data: {id:id},success: function (response) {
+        console.log(response);
         let table = ``,cont = 1 ,estatus = ["Faltante","Incompleto","Completo"] ;
         proveedores();
         arregloIdcheck = []; 
-        console.log(response);
             response.forEach(element => {
                 arregloIdcheck.push(element.idFaltantePartida);
                 table += `
                 <tr>
                     <td>${cont++}</td>
                     <td ><input type="checkbox"  ${element.nombre_proveedor == null ? '' : 'checked'} id="seleccion${element.idFaltantePartida}" onclick="selectProveedor('${element.idFaltantePartida}')" >  </td>
-                    <td><i class="fas fa-list-ul" onclick="log_faltantes('${element.idFaltantePartida}')"  ></i></td>
+                    <td><i class="fas fa-list-ul" onclick="log_faltantes('${element.idFaltantePartida}','${id}','${num_pedido}')"  ></i></td>
                     <td>${element.clave}</td>
                     <td>${element.nombre}</td>
                     <td>${element.cantidad}</td>
@@ -69,7 +69,7 @@ const modalFaltantes  = id =>{
            <div class="modal-dialog modal-dialog-scrollable  modal-xl">
              <div class="modal-content">
                <div class="modal-header">
-                 <h5 class="modal-title" id="exampleModalLabel"> Faltantes </h5>
+                 <h5 class="modal-title" id="exampleModalLabel"> Faltantes #${num_pedido} </h5>
                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                    <span aria-hidden="true">&times;</span>
                  </button>
@@ -125,7 +125,7 @@ const modalFaltantes  = id =>{
     });
 };  
 
-const log_faltantes  = id =>{
+const log_faltantes  = (id , idFaltantes,num) =>{
     $.ajax({type: "POST", url: "/compras/log_faltante",data: {id : id},success: function (response) {
         let table = ``,cont = 1 ,estatus = ["Faltante","Incompleto","Completo"] ;
             response.forEach(element => {
@@ -141,12 +141,12 @@ const log_faltantes  = id =>{
             }); 
 
            let modal  = `
-           <div class="modal fade" id="logFaltantes" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+           <div class="modal fade" id="logFaltantes" tabindex="-1" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
            <div class="modal-dialog   modal-lg">
              <div class="modal-content">
                <div class="modal-header">
                  <h5 class="modal-title" id="exampleModalLabel">Bitacora de  Faltantes </h5>
-                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <button type="button" onclick="modalFaltantes('${idFaltantes}','${num}')" class="close" data-dismiss="modal" aria-label="Close">
                    <span aria-hidden="true">&times;</span>
                  </button>
                </div>
@@ -168,7 +168,7 @@ const log_faltantes  = id =>{
                 </div>
                </div>
                <div class="modal-footer">
-                 <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                 <button type="button"  onclick="modalFaltantes('${idFaltantes}','${num}')" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
                </div>
              </div>
            </div>

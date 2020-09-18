@@ -52,28 +52,46 @@ router.post('/', (req , res) => {
             }
 
              infoPedidos.numero_partidas = numero_partidas;
-             console.log('hoka');
              try {
+                
                  const cliente  = await pool.query("SELECT nombre , prioridadE FROM clientes inner join preferencias_cliente using(idcliente) where numero_interno = ?",infoPedidos.cliente);
+            
                  const clientes_verndedor =  await pool.query(`select * from acceso inner join empleados using(idacceso) 
                     	                                                            inner  join clientes using(id_empleados)  
                                                                 where idacceso = ${req.user[0].idacceso}  and numero_interno  = ${infoPedidos.cliente} `);
-                const pedidos = await pool.query(`SELECT * FROM pedidos where num_pedido  = ?`,infoPedidos.cotizacion);
-               
-                if(pedidos.length > 0) return res.send('enProceso'); 
-                if(clientes_verndedor.length == 0) {
+                                    
+                 const usario_permiso = await pool.query(`SELECT tipo_usuario 
+                                                          FROM  acceso  
+                                                          where idacceso = ? AND tipo_usuario  = 'Administrador' `,req.user[0].idacceso);                 
+                
+                 const pedidos = await pool.query(`SELECT * FROM pedidos where num_pedido  = ?`,infoPedidos.cotizacion);
 
+                if(pedidos.length > 0 ) return res.send('enProceso'); 
+                if(clientes_verndedor.length == 0  && usario_permiso.length == 0  ) {
+                  
                     return  res.send(false); 
-                }else{
 
-                 infoPedidos.cliente = cliente[0].nombre;
-                 infoPedidos.tipoDeEntega  =  cliente[0].prioridadE;
-                 result.Hoja1.push(infoPedidos); 
-                 result.ruta  = filename ; 
-                 res.send(result);  
+                }else{
+                    if(usario_permiso.length != 0){
+
+                        const clientes_admin =  await pool.query(`select * from acceso inner join empleados using(idacceso) 
+                    	                                                            inner  join clientes using(id_empleados)  
+                                                                  where  numero_interno  = ${infoPedidos.cliente} `);
+                        infoPedidos.cliente = clientes_admin[0].nombre;
+                        if(cliente.length != 0) infoPedidos.tipoDeEntega  =  cliente[0].prioridadE;
+                        result.Hoja1.push(infoPedidos); 
+                        result.ruta  = filename ; 
+                        res.send(result);  
+
+                    }else{
+                        infoPedidos.cliente = clientes_verndedor[0].nombre;
+                        if(cliente.length != 0) infoPedidos.tipoDeEntega  =  cliente[0].prioridadE;
+                        result.Hoja1.push(infoPedidos); 
+                        result.ruta  = filename ; 
+                        res.send(result);  
+                    }
                 }
              } catch (error) {
-                 
                  res.send("null"); 
              }
              

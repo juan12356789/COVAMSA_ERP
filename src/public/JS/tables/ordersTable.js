@@ -34,7 +34,7 @@ let orderTable = () => {
                             },{
                                 sortable: false,
                                 "render": function(data, type, full, meta) {
-                                    let pagos = ['Transferencia', 'Anticipado', 'Cntra Entrega', 'Crédito'];
+                                    let pagos = ['Transferencia', 'Anticipado', 'Contra Entrega', 'Crédito'];
                                     return `${pagos[ full.tipo_de_pago - 1 ]}`;
 
                                 }

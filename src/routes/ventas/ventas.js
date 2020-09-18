@@ -71,7 +71,7 @@ router.post('/notificacionEntregado',  async (req , res)=>{
 router.post('/log' , async (req , res )=>{
 
         const log = await pool.query(`SELECT  IF(prioridadE = 0,'Sí','No') entrega ,if(prioridad = 0,"Normal","Urgente") prioridad,
-		                                      DATE_FORMAT( cambio_estado,'%d-%m-%Y %H:%i %p')  fecha ,estado,nombre
+		                                      DATE_FORMAT( cambio_estado,'%d-%m-%Y %H:%i:%s %p')  fecha ,estado,nombre
                                       FROM  pedidos  inner join  log  using(id_pedido) 
 		                                             inner join empleados e  using(id_empleados) 
                                       where id_pedido = ?`,req.body.id);
@@ -110,6 +110,8 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
             numero_partidas : partidas_info.Hoja1[partidas_info.Hoja1.length - 1].numero_partidas,
             prioridadE: req.body.entrega  
         };
+        console.log(req.body); 
+        // const validacion_pedidio = await pool.query(`SELECT id_pedido from pedidos where  id_pedido = ?`,); 
         
         await pool.query("INSERT INTO pedidos set ? ", [insert]);
         await pool.query(`INSERT INTO  partidas VALUES (null,(select id_pedido from pedidos where num_pedido = "${req.body.numeroPedido}" ),1)`); 
@@ -152,6 +154,23 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
 
 router.post('/pedidos_vendedor', async(req, res) => {
 
+    const usario_permiso = await pool.query(`SELECT tipo_usuario 
+                                             FROM  acceso  
+                                             where idacceso = ? AND tipo_usuario  = 'Administrador' `,req.user[0].idacceso);
+
+    if(usario_permiso.length != 0){
+
+        const ordenes_vendedores = await pool.query(`SELECT id_pedido,num_subpedido,prioridadE,numero_factura,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,tipo_de_pago
+                                                     FROM pedidos  INNER  JOIN empleados  on id_empleado = id_empleados  left join facturas using(id_pedido)
+                                                     UNION
+                                                     SELECT id_pedido,num_subpedido,prioridadE,numero_factura,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,tipo_de_pago
+                                                     FROM pedidos  INNER JOIN empleados  on id_empleado = id_empleados   RIGHT  JOIN  facturas using(id_pedido )
+                                                     ORDER BY fecha_inicial ASC `);
+                            
+        return res.send(ordenes_vendedores); 
+
+    }
+
     const ordenes_vendedores = await pool.query(`SELECT id_pedido,num_subpedido,prioridadE,numero_factura,orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,prioridad,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,tipo_de_pago
                                                  FROM pedidos  INNER  JOIN empleados  on id_empleado = id_empleados  left join facturas using(id_pedido)
                                                  WHERE idacceso = ${req.user[0].idacceso}
@@ -171,7 +190,6 @@ router.post('/cancel', async(req, res) => {
     await pool.query(`update pedidos set estatus = 6 , motivo_de_cancelacion = '${req.body.reason}' where  id_pedido  = ?`, req.body.data);
     const empleado  = await pool.query(`select id_empleados from empleados  where idacceso = ? `,req.user[0].idacceso); 
     await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,req.body.data,time,6,empleado[0].id_empleados]);
-    // console.log(req.user[0].idacceso);
     res.send('Guardado');
 
 });
