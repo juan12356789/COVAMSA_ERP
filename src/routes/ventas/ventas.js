@@ -81,13 +81,10 @@ router.post('/log' , async (req , res )=>{
 
 router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { name: 'num_pedido', maxCount: 1 },{ name: 'comprobante_pago', maxCount: 1 }]),async(req, res) => {
    
-    const validacion_pedido_existente  = await pool.query("select id_pedido from pedidos where num_pedido = ?", req.body.numeroPedido); 
-    // if(validacion_pedido_existente.length != 0)  return res.send("null") ; 
+    // const validacion_pedido_existente  = await pool.query("select id_pedido from pedidos where num_pedido = ?", req.body.numeroPedido); 
     const partidas_info   =  JSON.parse(req.body.productosArray);
-    
-    if (req.body.nombre_cliente != undefined && req.body.nombre != ' '  && req.body.observaciones.length < 250 && validacion_pedido_existente.length == 0) {
+    if (req.body.nombre_cliente != undefined && req.body.nombre != ' '  && req.body.observaciones.length < 250 ) {
         const cliente_id = await pool.query("SELECT idcliente, id_empleados FROM  empleados a inner join clientes b using(id_empleados) WHERE b.nombre = ?", req.body.nombre_cliente);
-       
         let f = new Date();
         let time =  f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
         const insert = {
@@ -110,32 +107,68 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
             numero_partidas : partidas_info.Hoja1[partidas_info.Hoja1.length - 1].numero_partidas,
             prioridadE: req.body.entrega  
         };
-        console.log(req.body); 
-        // const validacion_pedidio = await pool.query(`SELECT id_pedido from pedidos where  id_pedido = ?`,); 
-        
-        await pool.query("INSERT INTO pedidos set ? ", [insert]);
-        await pool.query(`INSERT INTO  partidas VALUES (null,(select id_pedido from pedidos where num_pedido = "${req.body.numeroPedido}" ),1)`); 
-            
-   
-        const partidas_pedido  = await pool.query("SELECT a.id_pedido, idPartida FROM  pedidos a inner join partidas  using(id_pedido) where num_pedido = ?",req.body.numeroPedido); 
-        await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,partidas_pedido[0].id_pedido,time,(req.body.tipos_pago == 1  && req.body.comprobante_pago == '')? 7 : 1,cliente_id[0].id_empleados]);
-        let cont_partidas = -1; 
-        for (let i = 4; i < partidas_info.Hoja1.length; i++) {
+        const validacion_pedidio = await pool.query(`SELECT id_pedido from pedidos where  num_pedido = ?` , req.body.numeroPedido); 
+        const empleado  = await pool.query(`select id_empleados from empleados  where idacceso = ? `,req.user[0].idacceso); 
 
-            let producto = await pool.query("SELECT idProducto from productos where clave = ?" , [partidas_info.Hoja1[i].B]);
+        if (validacion_pedidio.length == 0) {
 
-            if(producto.length == 0 &&  partidas_info.Hoja1[i].B != undefined ){
-                await pool.query(`INSERT INTO  productos VALUES (?,?,?) `,[partidas_info.Hoja1[i].B,partidas_info.Hoja1[i].D,null]);
+             await pool.query("INSERT INTO pedidos set ? ", [insert]);
+             await pool.query(`INSERT INTO  partidas VALUES (null,(select id_pedido from pedidos where num_pedido = "${req.body.numeroPedido}" ),1)`); 
 
-                let productoG = await pool.query("SELECT idProducto from productos where clave = ?" , [partidas_info.Hoja1[i].B]);
-                if(productoG.length !=  0)   await pool.query(`INSERT INTO partidas_productos VALUES (null , ${partidas_pedido[0].idPartida} , ${productoG[0].idProducto},${parseInt(partidas_info.Hoja1[i].A)},${0}) `);
 
-            }else{
+             const partidas_pedido  = await pool.query("SELECT a.id_pedido, idPartida FROM  pedidos a inner join partidas  using(id_pedido) where num_pedido = ?",req.body.numeroPedido); 
+             await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,partidas_pedido[0].id_pedido,time,(req.body.tipos_pago == 1  && req.body.comprobante_pago == '')? 7 : 1,empleado[0].id_empleados]);
+             let cont_partidas = -1; 
+             for (let i = 4; i < partidas_info.Hoja1.length; i++) {
 
-                if(producto.length != 0)   await pool.query(`INSERT INTO partidas_productos VALUES (null , ${partidas_pedido[0].idPartida} , ${producto[0].idProducto},${parseInt(partidas_info.Hoja1[i].A)},${0}) `);
+                 let producto = await pool.query("SELECT idProducto from productos where clave = ?" , [partidas_info.Hoja1[i].B]);
+
+                 if(producto.length == 0 &&  partidas_info.Hoja1[i].B != undefined ){
+                     await pool.query(`INSERT INTO  productos VALUES (?,?,?) `,[partidas_info.Hoja1[i].B,partidas_info.Hoja1[i].D,null]);
+
+                     let productoG = await pool.query("SELECT idProducto from productos where clave = ?" , [partidas_info.Hoja1[i].B]);
+                     if(productoG.length !=  0)   await pool.query(`INSERT INTO partidas_productos VALUES (null , ${partidas_pedido[0].idPartida} , ${productoG[0].idProducto},${parseInt(partidas_info.Hoja1[i].A)},${0}) `);
+
+                 }else{
+
+                     if(producto.length != 0)   await pool.query(`INSERT INTO partidas_productos VALUES (null , ${partidas_pedido[0].idPartida} , ${producto[0].idProducto},${parseInt(partidas_info.Hoja1[i].A)},${0}) `);
+
+                 }                
+             }
+
+    }else{
+            await pool.query(`UPDATE pedidos  
+                              SET id_empleado = ${insert.id_empleado},idcliente = ${insert.idcliente},orden_de_compra='${insert.orden_de_compra}',
+                                   ruta=${insert.ruta},estatus =${insert.estatus},ruta_pdf_orden_compra='${insert.ruta_pdf_orden_compra}',ruta_pdf_pedido ='${insert.ruta_pdf_pedido}',
+                                   ruta_pdf_comprobante_pago = '${insert.ruta_pdf_orden_compra}',num_pedido ='${insert.num_pedido}',observacion='${insert.observacion}',fecha_inicial='${insert.fecha_inicial}',
+                                   comprobante_pago='${insert.comprobante_pago}',importe =${insert.importe},motivo_de_cancelacion='',prioridad=${insert.prioridad},tipo_de_pago=${insert.tipo_de_pago},numero_partidas=${insert.numero_partidas},
+                                   prioridadE=${insert.prioridadE} 
+                              where id_pedido = ${validacion_pedidio[0].id_pedido} `);
+                 
                 
-            }                
-        }
+             const partidas_pedido  = await pool.query("SELECT a.id_pedido, idPartida FROM  pedidos a inner join partidas  using(id_pedido) where num_pedido = ?",req.body.numeroPedido); 
+             await pool.query(`DELETE FROM partidas_productos where idPartida  = ${partidas_pedido[0].idPartida}`);
+            //  console.log(empleado[0].id_empleados);
+             await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,partidas_pedido[0].id_pedido,time,(req.body.tipos_pago == 1  && req.body.comprobante_pago == '')? 7 : 1,empleado[0].id_empleados]);
+             let cont_partidas = -1; 
+             for (let i = 4; i < partidas_info.Hoja1.length; i++) {
+                
+                 let producto = await pool.query("SELECT idProducto from productos where clave = ?" , [partidas_info.Hoja1[i].B]);
+                
+                 if(producto.length == 0 &&  partidas_info.Hoja1[i].B != undefined ){
+                     await pool.query(`INSERT INTO  productos VALUES (?,?,?) `,[partidas_info.Hoja1[i].B,partidas_info.Hoja1[i].D,null]);
+                    
+                     let productoG = await pool.query("SELECT idProducto from productos where clave = ?" , [partidas_info.Hoja1[i].B]);
+                     if(productoG.length !=  0)   await pool.query(`INSERT INTO partidas_productos VALUES (null , ${partidas_pedido[0].idPartida} , ${productoG[0].idProducto},${parseInt(partidas_info.Hoja1[i].A)},${0}) `);
+                    
+                 }else{
+                    
+                     if(producto.length != 0)   await pool.query(`INSERT INTO partidas_productos VALUES (null , ${partidas_pedido[0].idPartida} , ${producto[0].idProducto},${parseInt(partidas_info.Hoja1[i].A)},${0}) `);
+                     
+                 }                
+             }
+
+    }
         const pedidos = await pool.query(`SELECT orden_de_compra,ruta,estatus,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%y-%m-%d %H:%i %p') fecha_inicial,comprobante_pago,importe 
                                         FROM pedidos`);
 

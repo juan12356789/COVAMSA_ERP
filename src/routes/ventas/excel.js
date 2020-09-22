@@ -65,8 +65,8 @@ router.post('/', (req , res) => {
                                                           where idacceso = ? AND tipo_usuario  = 'Administrador' `,req.user[0].idacceso);                 
                 
                  const pedidos = await pool.query(`SELECT * FROM pedidos where num_pedido  = ?`,infoPedidos.cotizacion);
-
-                if(pedidos.length > 0 ) return res.send('enProceso'); 
+                 
+                if(pedidos.length > 0  && pedidos[0].estatus !=1 && pedidos[0].estatus != 6 && pedidos[0].estatus != 7   ) return res.send('enProceso'); 
                 if(clientes_verndedor.length == 0  && usario_permiso.length == 0  ) {
                   
                     return  res.send(false); 
