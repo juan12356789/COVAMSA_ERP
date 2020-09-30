@@ -8,6 +8,7 @@ const upl = require('express-fileupload');
 const importExcel  =  require('convert-excel-to-json');
 const fs = require('fs');
 const rutimage = path.join(__dirname, "../../files");
+const upFormats = require('express-fileupload');
 
 const storage = multer.diskStorage({
     destination: function(res, file, cb) {
@@ -19,7 +20,7 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage })
+const upload = multer({ storage: storage });
 
 
 router.get('/', isLoggedIn, async(req, res) => {
@@ -55,9 +56,13 @@ router.post('/importe', async(req, res) => {
 
 });
 
-router.post("/updateTrasferencia",upload.fields([{ name: 'comprobante_pago', maxCount: 1  }]), async(req , res)=>{
+router.post("/updateTrasferencia", async(req , res)=>{
+    let file = req.files.excel;
+    let filename = file.name;
         const  updateComprobante  =  await pool.query(`UPDATE pedidos SET comprobante_pago='${req.body.comprobante_pago}'  ,ruta_pdf_comprobante_pago='${req.files.comprobante_pago[0].filename}', estatus = 1 WHERE num_pedido = ?`,req.body.num_pedido); 
         res.end(req.body.comprobante_pago);
+    
+
 }); 
 // se   usa para confirmar que la  se muestre la  ventana modal en la sesion que debe de ser
 router.post('/notificacionEntregado',  async (req , res)=>{
@@ -71,7 +76,7 @@ router.post('/notificacionEntregado',  async (req , res)=>{
 router.post('/log' , async (req , res )=>{
 
         const log = await pool.query(`SELECT  IF(prioridadE = 0,'Sí','No') entrega ,if(prioridad = 0,"Normal","Urgente") prioridad,
-		                                      DATE_FORMAT( cambio_estado,'%d-%m-%Y %H:%i:%s %p')  fecha ,estado,nombre
+		                                      DATE_FORMAT( cambio_estado,'%d-%m-%Y %H:%i:%s %p')  fecha ,estado,nombre,descripcion
                                       FROM  pedidos  inner join  log  using(id_pedido) 
 		                                             inner join empleados e  using(id_empleados) 
                                       where id_pedido = ?`,req.body.id);
@@ -111,13 +116,14 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
         const empleado  = await pool.query(`select id_empleados from empleados  where idacceso = ? `,req.user[0].idacceso); 
 
         if (validacion_pedidio.length == 0) {
+            let descipcionNuevaOrden  = `se ha creado la  orden en el sistema con el número  de pedido #${req.body.numeroPedido}`;
 
              await pool.query("INSERT INTO pedidos set ? ", [insert]);
              await pool.query(`INSERT INTO  partidas VALUES (null,(select id_pedido from pedidos where num_pedido = "${req.body.numeroPedido}" ),1)`); 
 
 
              const partidas_pedido  = await pool.query("SELECT a.id_pedido, idPartida FROM  pedidos a inner join partidas  using(id_pedido) where num_pedido = ?",req.body.numeroPedido); 
-             await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,partidas_pedido[0].id_pedido,time,(req.body.tipos_pago == 1  && req.body.comprobante_pago == '')? 7 : 1,empleado[0].id_empleados]);
+             await pool.query(`INSERT INTO log VALUES (?,?,?,?,?,?)`,[null,partidas_pedido[0].id_pedido,time,(req.body.tipos_pago == 1  && req.body.comprobante_pago == '')? 7 : 1,empleado[0].id_empleados,descipcionNuevaOrden ]);
              let cont_partidas = -1; 
              for (let i = 4; i < partidas_info.Hoja1.length; i++) {
 
@@ -137,6 +143,7 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
              }
 
     }else{
+            let descripcionLogActualizar  = `Se ha actualizado la información de la orden de compra cambiando su estado a nuevo`;
             await pool.query(`UPDATE pedidos  
                               SET id_empleado = ${insert.id_empleado},idcliente = ${insert.idcliente},orden_de_compra='${insert.orden_de_compra}',
                                    ruta=${insert.ruta},estatus =${insert.estatus},ruta_pdf_orden_compra='${insert.ruta_pdf_orden_compra}',ruta_pdf_pedido ='${insert.ruta_pdf_pedido}',
@@ -148,8 +155,8 @@ router.post("/add",  upload.fields([{ name: 'orden_compra', maxCount: 1  }, { na
                 
              const partidas_pedido  = await pool.query("SELECT a.id_pedido, idPartida FROM  pedidos a inner join partidas  using(id_pedido) where num_pedido = ?",req.body.numeroPedido); 
              await pool.query(`DELETE FROM partidas_productos where idPartida  = ${partidas_pedido[0].idPartida}`);
-            //  console.log(empleado[0].id_empleados);
-             await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,partidas_pedido[0].id_pedido,time,(req.body.tipos_pago == 1  && req.body.comprobante_pago == '')? 7 : 1,empleado[0].id_empleados]);
+
+             await pool.query(`INSERT INTO log VALUES (?,?,?,?,?,?)`,[null,partidas_pedido[0].id_pedido,time,(req.body.tipos_pago == 1  && req.body.comprobante_pago == '')? 7 : 1,empleado[0].id_empleados,descripcionLogActualizar]);
              let cont_partidas = -1; 
              for (let i = 4; i < partidas_info.Hoja1.length; i++) {
                 
@@ -219,10 +226,11 @@ router.post('/pedidos_vendedor', async(req, res) => {
 router.post('/cancel', async(req, res) => {
 
     let f = new Date();
+    let descripcioCancelar  = `La orden de compra ha sido cancelada por el siguiente motivo "${req.body.reason}" `;
     let time =  f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
     await pool.query(`update pedidos set estatus = 6 , motivo_de_cancelacion = '${req.body.reason}' where  id_pedido  = ?`, req.body.data);
     const empleado  = await pool.query(`select id_empleados from empleados  where idacceso = ? `,req.user[0].idacceso); 
-    await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,req.body.data,time,6,empleado[0].id_empleados]);
+    await pool.query(`INSERT INTO log VALUES (?,?,?,?,?,?)`,[null,req.body.data,time,6,empleado[0].id_empleados,descripcioCancelar]);
     res.send('Guardado');
 
 });

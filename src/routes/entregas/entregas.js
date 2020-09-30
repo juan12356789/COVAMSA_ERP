@@ -73,7 +73,8 @@ router.post('/eliminarArchivo',async (req , res )=>{
     let f = new Date();
     let fecha = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes();
     const empleado  = await pool.query(`select id_empleados from empleados  where idacceso = ? `,req.user[0].idacceso); 
-    await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,req.body.id,fecha,10,empleado[0].id_empleados]);
+    await pool.query(`INSERT INTO log VALUES (?,?,?,?,?,?)`,[null,req.body.id,fecha,10,empleado[0].id_empleados,
+    'La entrega fue cancelada por el repartidor y se cambió de nuevo al estado de "En ruta"']);
 
     fs.unlink(rutimage+archivo[0].comprobante_ruta,(err)=>{
         if(err) console.log(err);
@@ -96,7 +97,8 @@ router.post('/', async (req , res) => {
         let f = new Date();
         let fecha = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes();
         const empleado  = await pool.query(`select id_empleados from empleados  where idacceso = ? `,req.user[0].idacceso); 
-        await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,req.body.num_pedido,fecha,11,empleado[0].id_empleados]);
+        await pool.query(`INSERT INTO log VALUES (?,?,?,?,?,?)`,[null,req.body.num_pedido,fecha,11,empleado[0].id_empleados
+        ,`El pedido ha sido entregado <a href="/almacen/pdf/${filename}"   >Comprobante</a><br>  Notas: "${req.body.observaciones}" `]);
         res.send(true); 
     });
 
@@ -112,7 +114,8 @@ router.post('/cancelar_entrega', async (req , res )=>{
     for (let i = 0; i < idPedidos.length; i++) {
       await  pool.query(`UPDATE pedidos SET estatus = 12  where id_pedido = ${idPedidos[i]}`);
       await  pool.query(`UPDATE entregas SET motivo_detencion  = "${req.body.observacion}"  where id_pedido =  ${idPedidos[i]}`);
-      await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,idPedidos[i],fecha,12,empleado[0].id_empleados]);
+      await pool.query(`INSERT INTO log VALUES (?,?,?,?,?,?)`,[null,idPedidos[i],fecha,12,empleado[0].id_empleados
+      ,`La entrega ha sido suspendida por el siguinete motivo: "${req.body.observacion}" `]);
     }
     res.send(true); 
 }); 

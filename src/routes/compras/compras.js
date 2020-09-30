@@ -32,9 +32,8 @@ router.post('/partidas',async (req , res)=>{
 });
 
 router.post('/faltantes_partida', async(req , res ) =>{
-
         const faltantesPorPartida  = await pool.query(`
-        select clave, p.cantidad, a.cantidad_surtida,v.nombre nombre_proveedor,a.idFaltantePartida ,d.nombre,estatus, DATE_FORMAT(fecha_llegada,'%d-%m-%Y %H:%i %p') fechaL,
+        select clave, p.cantidad, a.cantidad_surtida,referencia,v.nombre nombre_proveedor,a.idFaltantePartida ,d.nombre,estatus, DATE_FORMAT(fecha_llegada,'%d-%m-%Y %H:%i %p') fechaL,
                if(fecha_faltante =null,'',DATE_FORMAT(fecha_faltante,'%d-%m-%Y %H:%i %p')  ) fechaF
         from productos  d		inner join partidas_productos p using(idProducto) 
 						        inner join faltantes_partidas a using(id_partidas_productos)
@@ -44,7 +43,7 @@ router.post('/faltantes_partida', async(req , res ) =>{
 
 	    UNION 
 
-        select clave, p.cantidad, a.cantidad_surtida,v.nombre nombre_proveedor,a.idFaltantePartida,d.nombre,estatus,DATE_FORMAT(fecha_llegada,'%d-%m-%Y %H:%i %p') fechaL,
+        select clave, p.cantidad, a.cantidad_surtida,referencia,v.nombre nombre_proveedor,a.idFaltantePartida,d.nombre,estatus,DATE_FORMAT(fecha_llegada,'%d-%m-%Y %H:%i %p') fechaL,
               if(fecha_faltante =null,'',DATE_FORMAT(fecha_faltante,'%d-%m-%Y %H:%i %p')  ) fechaF
         from productos d         inner join partidas_productos p using(idProducto) 
         						 inner join faltantes_partidas a using(id_partidas_productos)
@@ -65,21 +64,26 @@ router.post('/proveedores',  async(req , res)=>{
 });
 
 router.post('/guardar', async (req , res )=>{
-    let partidas =  JSON.parse(req.body.idPartidas), f = new Date(),a = new Date(),todasLasPartidas =JSON.parse(req.body.select) ;
-    const proveedor  = await pool.query(`SELECT idProveedor,tiempoEntrega FROM proveedores where nombre = ?`,req.body.proveedor);
-    console.log( f.setHours(f.getHours() + 40));
+    let partidas =  JSON.parse(req.body.idPartidas),
+                    f = new Date(),a = new Date(),todasLasPartidas =JSON.parse(req.body.select), deleteProveedor = JSON.parse(req.body.cancelar_proveedor) ;
+    const proveedor  = await pool.query(`SELECT idProveedor,tiempoEntrega,nombre FROM proveedores where nombre = ?`,req.body.proveedor);
     let tiempoActual  = a.getFullYear() + "-" + (a.getMonth() + 1) + "-" + a.getDate() + ' ' + a.getHours()  + ':' + a.getMinutes() + ':' + a.getSeconds();
     let time  = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate() + ' ' + f.getHours()  + ':' + f.getMinutes() + ':' + f.getSeconds();
+    const empleado  = await pool.query(`select id_empleados from empleados  where idacceso = ? `,req.user[0].idacceso);
+    let descripcion = `El faltante fue requerido al proveedor "${proveedor[0].nombre}" con la referencia "#${req.body.referencia}"`; 
     if(req.body.select  ==  'false' ){
-
+       
         for (let i = 0; i < partidas.length; i++) {
-            await pool.query(`INSERT INTO proveedores_faltantes_partidas VALUE (?,?,?,?,?,?)`,[null,proveedor[0].idProveedor,partidas[i],0,tiempoActual,time]);
+            await pool.query(`INSERT INTO proveedores_faltantes_partidas VALUE (?,?,?,?,?,?,?)`,[null,proveedor[0].idProveedor,partidas[i],0,tiempoActual,time,req.body.referencia]);
+            await pool.query(`INSERT INTO log_faltantes VALUE (?,?,?,?,?,?)`,[null,partidas[i],0,time,empleado[0].id_empleados,descripcion]);
         }
-
+        for (let i = 0; i < deleteProveedor.length; i++) {
+            await  pool.query(`DELETE FROM proveedores_faltantes_partidas where idFaltantePartida = ${deleteProveedor[i]} `);
+        }
     }else{
 
         for (let i = 0; i < todasLasPartidas.length; i++) {
-            await pool.query(`INSERT INTO proveedores_faltantes_partidas VALUE (?,?,?,?,?,?)`,[null,proveedor[0].idProveedor,todasLasPartidas[i],0,tiempoActual,time]);
+            await pool.query(`INSERT INTO proveedores_faltantes_partidas VALUE (?,?,?,?,?,?,?)`,[null,proveedor[0].idProveedor,todasLasPartidas[i],0,tiempoActual,time,req.body.referencia]);
         }
 
     }
@@ -98,7 +102,7 @@ router.post('/selectAllSupplier',async ( req , res )=>{
 
 router.post('/log_faltante', async (req , res)=>{
 
-    const idFaltante  = await pool.query(`SELECT estado,DATE_FORMAT(cambio_estado,'%d-%m-%Y %H:%i %p')  fecha ,nombre 
+    const idFaltante  = await pool.query(`SELECT estado,DATE_FORMAT(cambio_estado,'%d-%m-%Y %H:%i %p')  fecha ,nombre ,descripcion
                                           FROM log_faltantes inner join empleados on id_empleado = id_empleados
                                           WHERE idFaltantePartida = ?`,req.body.id);
 

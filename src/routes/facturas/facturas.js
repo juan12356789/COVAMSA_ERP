@@ -23,13 +23,16 @@ router.post('/status', async (req , res)=>{
     if(req.body.status  != "Facturando")  {
 
         await pool.query(`UPDATE pedidos SET estatus= 8  where id_pedido = ${req.body.id}` );
-        await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,req.body.id,fecha,8,empleado[0].id_empleados]);
+        await pool.query(`INSERT INTO log VALUES (?,?,?,?,?,?)`,[null,req.body.id,fecha,8,empleado[0].id_empleados,
+        'Esta orden se encunetra en proceso de  facturación'
+        ]);
 
     } else{
 
         await pool.query(`UPDATE pedidos SET estatus= 9  where id_pedido = ${req.body.id}` );
         await pool.query(`UPDATE facturas SET numero_factura = "${req.body.factura}"  where id_pedido = ${req.body.id} ` );
-        await pool.query(`INSERT INTO log VALUES (?,?,?,?,?)`,[null,req.body.id,fecha,9,empleado[0].id_empleados]);
+        await pool.query(`INSERT INTO log VALUES (?,?,?,?,?,?)`,[null,req.body.id,fecha,9,empleado[0].id_empleados,
+        `Esta orden  ha sido facturada con el #${req.body.factura}`]);
     }  
     if(req.body.status != 'Facturando' ) await pool.query(`INSERT INTO facturas VALUES (null ,(select id_pedido from pedidos where id_pedido =${req.body.id}),'${fecha}','')`);
     res.send(true);

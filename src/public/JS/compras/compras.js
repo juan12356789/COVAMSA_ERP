@@ -21,7 +21,7 @@ const partidas = () =>{
                       <td>${data.prioridad}</td>
                       <td style="background-color:${colores[data.estatus]}" >${statusFaltante[data.estatus]}</td>
                       <td> ${ data.numero_factura == null ? '' : data.numero_factura } </td>
-                      <td><i class="fas fa-list-ul"onclick="modalFaltantes('${data.idPartida}',${ data.num_subpedido == null ? `${data.num_pedido}` : `${data.num_subpedido}` })"></i></td>
+                      <td><i class="fas fa-list-ul" onclick="modalFaltantes('${data.idPartida}',${ data.num_subpedido == null ? `'${data.num_pedido}'` : `'${data.num_subpedido}'` }) "></i></td>
                     </tr>`;
         });
         document.getElementById('pedidos').innerHTML = table;
@@ -37,12 +37,13 @@ socket.on('data:compras', function(data) {
 
 });
 // Se manda a llamar los faltantes que se tienen por cada una da las   partidas 
-let arregloIdcheck = [] , idFaltante = []; ;
+let arregloIdcheck = [] , idFaltante = [],selectFalse = []; 
 const modalFaltantes  = ( id , num_pedido ) =>{
     $("#logFaltantes").modal('hide'); 
+    $("#referenciaProveedores").modal('hide');
     $.ajax({type: "POST",url: "/compras/faltantes_partida",data: {id:id},success: function (response) {
         console.log(response);
-        let table = ``,cont = 1 ,estatus = ["Faltante","Incompleto","Completo"] ;
+        let table = ``,cont = 1 ,estatus = ["Faltante","Incompleto","Completo"] ,contFaltanteProveedor = 0;
         proveedores();
         arregloIdcheck = []; 
             response.forEach(element => {
@@ -58,12 +59,15 @@ const modalFaltantes  = ( id , num_pedido ) =>{
                     <td> <input type="text"  readonly value="${element.cantidad_surtida == null ? 0 : element.cantidad_surtida}" id="cantidadSurtida">  </td>
                     <td>${ estatus[element.estatus ]}</td>
                     <td>${element.nombre_proveedor == null ? '' : element.nombre_proveedor }</td>
+                    <td>${element.referencia == null ? '' : element.referencia }</td>
                     <td><input type="text" value="${element.fechaF == null ? '' : element.fechaF}" readonly  id="fechaPedido${element.idFaltantePartida}" > </td>
                     <td>${element.fechaL == null ? '' : element.fechaL}</td>
                 </tr>
                 `; 
+                if(element.nombre_proveedor != null) contFaltanteProveedor++; 
             }); 
             idFaltante = [];  
+            selectFalse = []; 
            let modal  = `
            <div class="modal fade" id="modalFaltantes" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
            <div class="modal-dialog modal-dialog-scrollable  modal-xl">
@@ -81,7 +85,7 @@ const modalFaltantes  = ( id , num_pedido ) =>{
                     </div>
                     <div  class="col-6" >
                         <lable>Todos los faltantes </label>
-                        <input type="checkbox" onclick="selectAllsupplier('${id}')" id="selectAll">   
+                        <input type="checkbox" ${response.length == contFaltanteProveedor? 'checked':''} onclick="selectAllsupplier('${id}')" id="selectAll">   
                     </div>
                 </div>
 
@@ -99,7 +103,8 @@ const modalFaltantes  = ( id , num_pedido ) =>{
                              <th>Cantidad Surtida</th>
                              <th>Estatus</th>
                              <th>Proveedor</th>
-                             <th>Fecha  requerida  </th>
+                             <th>Referencia</th>
+                             <th>Fecha de requiscion</th>
                              <th>llegada </th>
                          </tr>
                      </thead>
@@ -111,7 +116,7 @@ const modalFaltantes  = ( id , num_pedido ) =>{
                </div>
                <div class="modal-footer">
                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                 <button type="button" class="btn btn-primary" onclick="saveChanges('${id}')"  >Guardar</button>
+                 <button type="button" class="btn btn-primary" onclick="modalRefefrencia(${id},'${num_pedido}')"  data-toggle="modal" data-target="#referenciaProvreedor" >Guardar</button>
                </div>
              </div>
            </div>
@@ -125,7 +130,46 @@ const modalFaltantes  = ( id , num_pedido ) =>{
     });
 };  
 
-const log_faltantes  = (id , idFaltantes,num) =>{
+const modalRefefrencia  = (id , num_pedido) =>{
+    if(idFaltante.length == 0 & selectFalse.length !=0) return saveChanges(`${id}`,`${num_pedido}`); 
+    if($("#browser").val() == '')return notifications("Para realizar esta acción seleccione algún proveedor","warning");
+    let table =`
+       <div class="modal fade" id="referenciaProveedores" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+       <div class="modal-dialog">
+         <div class="modal-content">
+           <div class="modal-header">
+             <h5 class="modal-title" id="exampleModalLabel">Referencia del faltante</h5>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+             </button>
+           </div>
+           <div class="modal-body">
+             <label>Ingrese el número de referencia </label>
+             <input type="text" maxlength="50" id="referencia" class="form-control" onkeypress="return justLetters(event)" id="referencia" placeholder="Numero de refenrencia">
+           </div>
+           <div class="modal-footer">
+             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+             <button type="button" onclick="saveChanges('${id}','${num_pedido}')" class="btn btn-primary">Guardar</button>
+           </div>
+         </div>
+       </div>
+     </div>`;    
+     $("#modalFaltantes").modal('hide');
+     document.getElementById('refProveedores').innerHTML = table;
+    $("#referenciaProveedores").modal('show');
+}
+let justLetters = event =>{
+    let  x = event.which || event.keyCode;
+    let validas  = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM123456789-'; 
+    concatenarNumeros += String.fromCharCode(x);
+    if( validas.indexOf(String.fromCharCode(x)) == -1  ){
+      return false ;
+    }
+  
+  }
+
+const log_faltantes  = (id , idFaltantes , num) =>{
+  console.log('hola');
     $.ajax({type: "POST", url: "/compras/log_faltante",data: {id : id},success: function (response) {
         let table = ``,cont = 1 ,estatus = ["Faltante","Incompleto","Completo"] ;
             response.forEach(element => {
@@ -134,12 +178,12 @@ const log_faltantes  = (id , idFaltantes,num) =>{
                     <td>${cont++}</td>
                     <td >${element.nombre}  </td>
                     <td>${estatus[element.estado]}</td>
+                    <td>${element.descripcion}</td>
                     <td>${element.fecha}</td>
                     
                 </tr>
                 `; 
             }); 
-
            let modal  = `
            <div class="modal fade" id="logFaltantes" tabindex="-1" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
            <div class="modal-dialog   modal-lg">
@@ -158,6 +202,7 @@ const log_faltantes  = (id , idFaltantes,num) =>{
                              <th>#</th>
                              <th>Usuario</th>
                              <th>Estado</th>
+                             <th>Descripción</th>
                              <th>Fecha y Hora </th>
                          </tr>
                      </thead>
@@ -198,14 +243,17 @@ const proveedores = () =>{
 }; 
  
 // SE SELECCIONA UNO POR UNO AL PROVEEDOR 
-const selectProveedor  = id => {
+const selectProveedor  = (id ) => {
     console.log(document.getElementById("seleccion"+id).checked);
-    if( document.getElementById("seleccion"+id).checked == false &&  arregloIdcheck.length != 0 ){
-        arregloIdcheck.splice(arregloIdcheck.indexOf(parseInt(id)) , 1 );
-        // console.log(parseInt(id));
-        // console.log(arregloIdcheck);
-    }  
-    if( document.getElementById("seleccion"+id).checked == false) return idFaltante.splice(idFaltante.indexOf(id) , 1 );
+    if( document.getElementById("seleccion"+id).checked == false &&  arregloIdcheck.length != 0 )arregloIdcheck.splice(arregloIdcheck.indexOf(parseInt(id)) , 1 );
+    
+    if( document.getElementById("seleccion"+id).checked == false){
+      if(idFaltante.indexOf(id) != -1) idFaltante.splice(idFaltante.indexOf(id) , 1 );
+      selectFalse.push(id); 
+      return ;
+    } 
+ 
+    if(selectFalse.indexOf(id) != -1)  selectFalse.splice(selectFalse.indexOf(id) , 1 );
     idFaltante.push(id);
 
 }
@@ -214,7 +262,7 @@ const selectProveedor  = id => {
 const selectAllsupplier = id  =>{
 //    console.log(document.getElementById("selectAll").checked); 
     $.ajax({type: "POST",url: "/compras/selectAllSupplier",data: { id : id },success: function (response) {
-             
+             console.log(document.getElementById("selectAll").checked);
              for (let i = 0; i < response.length; i++) {
                  
                   $("#seleccion"+response[i].idFaltantePartida).attr('checked',document.getElementById("selectAll").checked);
@@ -225,8 +273,9 @@ const selectAllsupplier = id  =>{
 
 }; 
  
-const saveChanges  =  id =>{
-    if($("#browser").val() == '')  return notifications("Para realizar esta acción seleccione algún proveedor","warning");
+const saveChanges  =  (id , num )=>{
+  $("#referenciaProveedores").modal('hide');
+    if($("#referencia").val() == '') return notifications("Para realizar esta acción ingrese alguna referencia","warning");
     let  allFaltantes  =  document.getElementById("selectAll").checked ? arregloIdcheck : false ; 
     console.log(arregloIdcheck.length);
     $.ajax({type: "POST",
@@ -234,12 +283,14 @@ const saveChanges  =  id =>{
             data:
             {proveedor:$("#browser").val(),
             idPartidas: JSON.stringify(idFaltante),
-            select :  JSON.stringify(allFaltantes)}, 
+            select :  JSON.stringify(allFaltantes),
+            referencia: $("#referencia").val(),
+            cancelar_proveedor: JSON.stringify(selectFalse)}, 
             success: function (response) {
             $("#modalFaltantes").modal('hide');
             idFaltante = [];
             notifications("Las partidas  vhan sido guardadas de manera correcta","success");
-            modalFaltantes(id);
+            modalFaltantes(id, num );
         } 
     });
 

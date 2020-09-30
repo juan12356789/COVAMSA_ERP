@@ -40,11 +40,9 @@ let sendData = (data) => {
                   <td> <button  class="btn btn-primary" onclick="cambioStatus('${data.id_pedido}')" ${estatus[data.estatus - 1] == "Suspendida" ? "disabled" : "" } >${estatus[data.estatus - 1] == "Ruta" ? "Entregado" : "Actualizar" }</button> </td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
                   <td>${data.idEntregas}</td>
-                  <td>${data.nombreRepartidor}</td>
                   <td>${data.numero_factura} </td>
                   <td  style="background-color:${data.ruta ==  1 ? "#DFBC92" : "#92C1DF"} " >${ruta[data.ruta - 1]}</td>
-                  <td id="userinput" >${data.importe}</td> 
-                  <td style="background-color:${colores[data.estatus - 1]}" >${estatus[data.estatus - 1]}</td>
+                  <td id="userinput" >${data.importe}</td>
                   <td >${prioridad_info[data.prioridad]}</td>
                   <td>${data.fecha_facturas}</td>
                   <td> <center><i class="fas fa-tools" onclick="orderDatailMisPedidos('${data.id_pedido}')"  ></i></center> </td>

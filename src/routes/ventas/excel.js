@@ -55,7 +55,7 @@ router.post('/', (req , res) => {
              try {
                 
                  const cliente  = await pool.query("SELECT nombre , prioridadE FROM clientes inner join preferencias_cliente using(idcliente) where numero_interno = ?",infoPedidos.cliente);
-            
+                
                  const clientes_verndedor =  await pool.query(`select * from acceso inner join empleados using(idacceso) 
                     	                                                            inner  join clientes using(id_empleados)  
                                                                 where idacceso = ${req.user[0].idacceso}  and numero_interno  = ${infoPedidos.cliente} `);

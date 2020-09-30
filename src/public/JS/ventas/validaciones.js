@@ -92,6 +92,7 @@ $(document).ready(function() {
                             },{
                                     sortable: false,
                                     "render": function(data, type, full, meta) {
+                                     
                                         return `<a href="/almacen/pdf/${full.ruta_pdf_orden_compra}"  style="a {color:#130705;} " >${full.orden_de_compra}</a>`;
                                     }
                                 },  {
@@ -137,7 +138,8 @@ $(document).ready(function() {
                   {
                     sortable:false,
                     "render": function(data, type, full ,meta){
-                     return `<i class="fas fa-list-ul" onclick="logPartidas('${full.id_pedido}','${full.orden_de_compra}','${full.num_pedido}','${full.ruta}','${full.fecha_inicial}')" ></i>`;
+                        console.log(full.num_subpedido);
+                     return `<i class="fas fa-list-ul" onclick="logPartidas('${full.id_pedido}','${full.orden_de_compra}','${full.num_subpedido == null ?full.num_pedido:full.num_subpedido}','${full.ruta}','${full.fecha_inicial}','${full.prioridadE}')" ></i>`;
                     }  
                   },
                     {
@@ -181,25 +183,13 @@ let pedidos_vendedores = () => {
 
 };
 
-const logPartidas  = ( id , ordenCompra ,num_pedido, ruta , fecha_pedido )  =>{
+const logPartidas  = ( id , ordenCompra ,num_pedido, ruta , fecha_pedido,prioridadE )  =>{
     console.log( ordenCompra );
     $.ajax({type: "POST",url: "/ventas/log",data: {id : id},success: function (response) {
             let table = ``,cont = 1; 
             let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida','Comprado'];
             let colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078"];
-            let descripcion = ['Se ha creado la orden en el sistema',
-                                'La order esta siendo surtida ',
-                                'La orden está lista para ser facturada',
-                                'La orden ha sido requerida al modulo de compras ',
-                                'La orden ha sido requerida al modulo de compras',
-                                'La orden ha sido cancelada',
-                                'La orden ha sido detenida',
-                                'La orden esta en proceso de factura',
-                                'La orden ha sido facturada',
-                                'La orden está en ruta',
-                                'La orden ha sido entregada',
-                                'La orden ha sido suspendida',
-                                'Se han comprado los faltantes de la orden'];
+         
             response.forEach(element => {
                 table += `
                     <tr>
@@ -207,13 +197,13 @@ const logPartidas  = ( id , ordenCompra ,num_pedido, ruta , fecha_pedido )  =>{
                         <td>${element.nombre}</td>
                         <td style="background-color: ${colores[element.estado - 1]}" >${estatus[element.estado - 1]}</td>
                         <td>${element.fecha}</td>
-                        <td><p>${descripcion[element.estado - 1]}</p></td>
+                        <td><p>${element.descripcion}</p></td>
                     </tr>
                 `;
             });
             let modalLog = `
               <div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-lg">
+              <div class="modal-dialog modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Bitacora de Requerimiento  #${num_pedido} </h5>
@@ -223,10 +213,11 @@ const logPartidas  = ( id , ordenCompra ,num_pedido, ruta , fecha_pedido )  =>{
                   </div>
                   <div class="modal-body">
                     <div class="row" >
-                        <div class="col-3" >Orden de compra: ${ordenCompra} </div>
-                        <div class="col-3">No.pedido: ${num_pedido} </div>
-                        <div class="col-3">Ruta: ${ruta}</div>
-                        <div class="col-3">Fecha de pedido: ${fecha_pedido} </div>
+                        <div class="col-2" >Orden de compra: ${ordenCompra} </div>
+                        <div class="col-2">No.pedido: ${num_pedido} </div>
+                        <div class="col-2">Entrega parcial: ${prioridadE} </div>
+                        <div class="col-2">Ruta: ${ruta}</div>
+                        <div class="col-4">Fecha de pedido: ${fecha_pedido} </div>
                     </div>
                     <br>
                     <table class="table table-striped table-bordered " >
