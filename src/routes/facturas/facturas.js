@@ -7,7 +7,7 @@ const { isLoggedIn } = require('../../lib/auth');
 
 router.get('/',isLoggedIn , async (req , res)=>{
 
-    const permisoUsuario = await pool.query(`SELECT tipo_usuario  FROM ACCESO WHERE idacceso = ?`,req.user[0].idacceso);
+    const permisoUsuario = await pool.query(`SELECT tipo_usuario  FROM acceso WHERE idacceso = ?`,req.user[0].idacceso);
     if(permisoUsuario[0].tipo_usuario == "Administrador" || permisoUsuario[0].tipo_usuario == "Facturas") return res.render('links/facturas/facturas');
     res.redirect('/menu'); 
 
