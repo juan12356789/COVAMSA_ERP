@@ -37,7 +37,7 @@ let sendData = (data) => {
         table += `<tr>
 
                   <th scope="row">${numeracion_pedidos++}</th>
-                  <td> <button  class="btn btn-primary" onclick="cambioStatus('${data.id_pedido}')" ${estatus[data.estatus - 1] == "Suspendida" ? "disabled" : "" } >${estatus[data.estatus - 1] == "Ruta" ? "Entregado" : "Actualizar" }</button> </td>
+                  <td> <button  class="btn btn-primary" id="cambioStatus" onclick="cambioStatus('${data.id_pedido}')" ${estatus[data.estatus - 1] == "Suspendida" ? "disabled" : "" } >${estatus[data.estatus - 1] == "Ruta" ? "Entregado" : "Actualizar" }</button> </td>
                   <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_pedido}</a></td>
                   <td>${data.idEntregas}</td>
                   <td>${data.numero_factura} </td>
@@ -45,7 +45,7 @@ let sendData = (data) => {
                   <td id="userinput" >${data.importe}</td>
                   <td >${prioridad_info[data.prioridad]}</td>
                   <td>${data.fecha_facturas}</td>
-                  <td> <center><i class="fas fa-tools" onclick="orderDatailMisPedidos('${data.id_pedido}')"  ></i></center> </td>
+                  <td> <center><i class="fas fa-tools"id="orderDatailMisPedidos"  onclick="orderDatailMisPedidos('${data.id_pedido}')"  ></i></center> </td>
                   <td> ${estatus[data.estatus - 1] == "Ruta"?`<input type="checkbox" id="${data.id_pedido}" onclick="suspenderEntregas('${data.id_pedido}')" name="" id="suspenderPedido">`:'' }</td>
 
                 </tr>`;
@@ -104,13 +104,13 @@ const cambioStatus  = id  =>{
             <div class="modal-footer">
                 <div class="row" >
                     <div class="col" >
-                        <button type="button" class="btn btn-primary" ${response == true? 'disabled':''}  onclick="uploadExcel('${id}')">Guardar</button>
+                        <button type="button" class="btn btn-primary" ${response == true? 'disabled':''} id="uploadExcel"  onclick="uploadExcel('${id}')">Guardar</button>
                     </div>
                     <div class="col" >
-                        <button  class="btn btn-danger" ${response == false ? 'disabled':''}    onclick="deleteFile('${id}')" >Borrar</button>
+                        <button  class="btn btn-danger" ${response == false ? 'disabled':''}  id="deleteFile"  onclick="deleteFile('${id}')" >Borrar</button>
                     </div>
                     <div class="col" >
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary" id="cancelar"  data-dismiss="modal">Cancelar</button>
                     </div>
                 </div>
             </div>
@@ -211,8 +211,8 @@ const modalSuspender  = () =>{
             </div>
 
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-primary" onclick="idSuspender()" >Aceptar</button>
+              <button type="button" id="cancelar"  class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="button" id="aceptar" class="btn btn-primary" onclick="idSuspender()" >Aceptar</button>
             </div>
           </div>
         </div>

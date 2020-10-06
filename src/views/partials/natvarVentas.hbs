@@ -34,12 +34,12 @@
         <a class="nav-link" href=""></a></a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" href="#" id="id_modulos_nadvar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Mis Módulos
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="dropdown-menu" id="id_select_modules" aria-labelledby="navbarDropdown">
            {{#each user}}
-             <a class="dropdown-item" href="{{this.direccion}}">{{this.modulos}}</a>
+             <a class="dropdown-item" id="id_modulo_{{this.modulos}}" href="{{this.direccion}}">{{this.modulos}}</a>
            {{/each }}
         </div>
       </li>
@@ -55,7 +55,7 @@
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
-    <a   id="cerrar" href="/logout"   class="btn btn-danger"> Cerrar Sesión </a>
+    <a   id="id_close_sesion" href="/logout"   class="btn btn-danger"> Cerrar Sesión </a>
     </form>
   </div>
 </nav>

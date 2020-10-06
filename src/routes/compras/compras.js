@@ -6,8 +6,11 @@ const pool = require('../../database');
 const { isLoggedIn } = require('../../lib/auth');
 const { json } = require("express");
 
-router.get('/',isLoggedIn, (req , res )=>{
-    res.render('links/compras/compras');
+router.get('/',isLoggedIn,async (req , res )=>{
+    const permisoUsuario = await pool.query(`SELECT tipo_usuario  FROM ACCESO WHERE idacceso = ?`,req.user[0].idacceso);
+    if(permisoUsuario[0].tipo_usuario == "Administrador" || permisoUsuario[0].tipo_usuario == "Compras") return res.render('links/compras/compras');
+    res.redirect('/menu');
+    
 });
 
 router.post('/partidas',async (req , res)=>{

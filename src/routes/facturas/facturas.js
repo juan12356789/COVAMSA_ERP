@@ -5,7 +5,13 @@ const multer = require("multer");
 const pool = require('../../database');
 const { isLoggedIn } = require('../../lib/auth');
 
-router.get('/',isLoggedIn ,(req , res)=> res.render('links/facturas/facturas') );  
+router.get('/',isLoggedIn , async (req , res)=>{
+
+    const permisoUsuario = await pool.query(`SELECT tipo_usuario  FROM ACCESO WHERE idacceso = ?`,req.user[0].idacceso);
+    if(permisoUsuario[0].tipo_usuario == "Administrador" || permisoUsuario[0].tipo_usuario == "Facturas") return res.render('links/facturas/facturas');
+    res.redirect('/menu'); 
+
+});  
 router.post('/', async (req , res) =>{
 
  const pedidos_facturar = await pool.query(`SELECT num_subpedido ,id_pedido ,orden_de_compra,ruta,estatus,prioridadE,ruta_pdf_orden_compra,ruta_pdf_pedido,ruta_pdf_comprobante_pago ,num_pedido,observacion,DATE_FORMAT(fecha_inicial,'%d-%m-%Y %H:%i %p') fecha_inicial,comprobante_pago,concat( "$",FORMAT(importe, 2)) importe,IF(prioridad = 1,0,prioridad) prioridadA,prioridad

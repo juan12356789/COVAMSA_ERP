@@ -66,17 +66,17 @@ const userId = () => {
             let buttons = '';
             if (response == "Administrador") {
                 buttons = `
-                <button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <button class="btn btn-secondary btn-lg" id="mi_perfil" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                   Mi perfil
                 </button>
-                <button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" id="empleadosControl" data-target="#collapseExampletwo" aria-expanded="false" aria-controls="collapseExample">
+                <button class="btn btn-secondary btn-lg"  id="id_empleados" type="button" data-toggle="collapse" id="empleadosControl" data-target="#collapseExampletwo" aria-expanded="false" aria-controls="collapseExample">
                   Empleados
                 </button>
                
                 `;
             } else {
                 buttons = `
-                <button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <button class="btn btn-secondary id="mi_perfil" btn-lg" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                  Mi perfil
                 </button>`;
             }
@@ -108,7 +108,6 @@ const selectUserc = id => {
     
 
     $.ajax({type: "POST",url:"/user/selectIdUser",data:{id} ,success: function (response) {
-            console.log(response);
                     
             let form_usuario = `
             <div class="container" >

@@ -3,7 +3,13 @@ const router =  express.Router();
 const path=require("path"); 
 const pool = require('../../database');
 const { isLoggedIn } = require('../../lib/auth');
-router.get('/'  , isLoggedIn,(req , res) =>  res.render('links/admin/admin.hbs') );
+router.get('/'  , isLoggedIn,async (req , res) => {
+
+    const permisoUsuario = await pool.query(`SELECT tipo_usuario  FROM ACCESO WHERE idacceso = ?`,req.user[0].idacceso);
+    if(permisoUsuario[0].tipo_usuario == "Administrador") return res.render('links/admin/admin.hbs');
+    res.redirect('/menu');
+    
+} );
 router.post('/urgentes' ,  async (req , res)=>{
        
     switch (req.body.tipo_de_pedido) {

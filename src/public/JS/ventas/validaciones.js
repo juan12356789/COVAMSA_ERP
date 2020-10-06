@@ -67,7 +67,7 @@ $("#pagos_transferencia").click(function(e) {
 $(document).ready(function() {
 
 
-            document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`;
+            document.getElementById('button_send').innerHTML = `<button  type="submit" id="id_submir_order"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`;
 
             dataTable = $("#orders").DataTable({
                         "order": [
@@ -138,19 +138,19 @@ $(document).ready(function() {
                   {
                     sortable:false,
                     "render": function(data, type, full ,meta){
-                        console.log(full.num_subpedido);
-                     return `<i class="fas fa-list-ul" onclick="logPartidas('${full.id_pedido}','${full.orden_de_compra}','${full.num_subpedido == null ?full.num_pedido:full.num_subpedido}','${full.ruta}','${full.fecha_inicial}','${full.prioridadE}')" ></i>`;
+
+                     return `<i class="fas fa-list-ul"  id="logPartidas"  onclick="logPartidas('${full.id_pedido}','${full.orden_de_compra}','${full.num_subpedido == null ?full.num_pedido:full.num_subpedido}','${full.ruta}','${full.fecha_inicial}','${full.prioridadE}')" ></i>`;
                     }  
                   },
                     {
                     sortable: false,
                     "render": function(data, type, full, meta) {
-                        return `<i class="fas fa-tools" onclick="orderDatailMisPedidos('${full.id_pedido}')"  ></i>`;
+                        return `<i class="fas fa-tools"  id="orderDatailMisPedidos"  onclick="orderDatailMisPedidos('${full.id_pedido}')"  ></i>`;
                     }
                 },{
                    sortable:false,
                    "render": function(data, type, full ,meta){
-                    if(full.estatus != 6 && full.estatus != 11)return `<center><i  class="fas fa-trash-alt" onclick="cancelOrder('${full.id_pedido}')" ></i></center>`;
+                    if(full.estatus != 6 && full.estatus != 11)return `<center><i  id="calncelOrder"  class="fas fa-trash-alt" onclick="cancelOrder('${full.id_pedido}')" ></i></center>`;
                     return ' '; 
                    }  
                  }
@@ -308,9 +308,9 @@ var correoPrioridad = document.getElementById('prioridad');
 $("#prioridad").click(function(e) {
 
     if (correoPrioridad.value == 0) {
-        document.getElementById('button_send').innerHTML = `<button  type="submit"  class="btn btn-success btn-lg btn-block"   >Enviar</button>`;
+        document.getElementById('button_send').innerHTML = `<button  type="submit" id="id_submir_order" class="btn btn-success btn-lg btn-block"   >Enviar</button>`;
     } else {
-        document.getElementById('button_send').innerHTML = `<button   type="button"  class="btn btn-success btn-lg btn-block"  onclick="order_priority()" >Enviar</button>`;
+        document.getElementById('button_send').innerHTML = `<button   type="button" id="id_submir_order" class="btn btn-success btn-lg btn-block"  onclick="order_priority()" >Enviar</button>`;
     }
     
 });

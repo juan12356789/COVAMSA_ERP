@@ -9,8 +9,10 @@ const { query } = require("express");
 const { isLoggedIn } = require('../../lib/auth');
 router.get('/', isLoggedIn , async(req, res) => {
 
-    res.render('links/almacen/pedidos');
-
+  const permisoUsuario = await pool.query(`SELECT tipo_usuario  FROM ACCESO WHERE idacceso = ?`,req.user[0].idacceso);
+  if(permisoUsuario[0].tipo_usuario == "Administrador" || permisoUsuario[0].tipo_usuario == "Almacen") return res.render('links/almacen/pedidos');
+  res.redirect('/menu');
+    
 });
 
 

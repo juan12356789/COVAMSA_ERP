@@ -114,7 +114,7 @@
     <div class="card">
       <div class="card-body">
         <div id="profile" ></div>
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+          <button type="button" class="btn btn-primary" id="cambiar_contra" data-toggle="modal" data-target="#exampleModal">
                Cambiar contraseña
           </button>
       </div>
@@ -139,8 +139,8 @@
         <input type="password"  pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*"   minlength="8" title="El formato requerido es Mayúsculas, minusculas, 5 caracteres o más  y número ejemplo:1aA"   maxlength="30" class="form-control" name="confirmarContra" id="confirmarContra" placeholder="Contraseña">
       </div>
       <div class="modal-footer">
-        <button type="submit"    class="btn btn-primary">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="submit"  id="aceptar_nueva_contra"  class="btn btn-primary">Aceptar</button>
+        <button type="button"  id="cancelar_contra" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
         
 
         {{!-- Update User  --}}

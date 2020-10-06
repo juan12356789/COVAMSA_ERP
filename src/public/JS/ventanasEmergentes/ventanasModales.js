@@ -83,7 +83,7 @@ let cambios_status_pedidos = (current_status, order) => {
 
         <div class="row">
             <div class="col">
-                <button value="0"  class="btn btn-primary"  onclick= "chanche_estatus_almacen('${order}')" >Aceptar</button>
+                <button value="0"  class="btn btn-primary" id="chanche_estatus_almacen" onclick= "chanche_estatus_almacen('${order}')" >Aceptar</button>
                 <button value="1" type="button" class="btn btn-secondary"  id="cancelar"  data-dismiss="modal">Cancelar</button>
             </div>
         </div>
@@ -136,8 +136,8 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
                     <td col="2">${response.clave}</td>
                     <td col="3">${response.nombre}</td>  
                     <td col="2">${response.cantidad}</td>
-                    ${ status == "Surtiendo" || status == "Comprado" ? `<td col="2"><input type='text' maxlength="11"  onclick="cleanFunction()" onkeypress=" return justNumbers(event ,'numero${numero}','${response.cantidad}')"    value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  name='numero' id='numero${numero}' ></td>`:`<td ><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </td>` }
-                    ${ status == "Surtiendo" || status == "Comprado" ?`<td  col="2"><input type="checkbox" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"   ${response.cantidad_surtida == response.cantidad?"checked":" "} name="completo${cont}" id="completo${cont}"></td>`:`<td ><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></td>`}
+                    ${ status == "Surtiendo" || status == "Comprado" ? `<td col="2"><input type='text' maxlength="11" id="cleanFunction"  onclick="cleanFunction()" onkeypress=" return justNumbers(event ,'numero${numero}','${response.cantidad}')"    value="${response.cantidad_surtida == null?0:response.cantidad_surtida}"  name='numero' id='numero${numero}' ></td>`:`<td ><input type="numbre"  maxlength="5"  min="1" max="5" disabled value="${response.cantidad_surtida == null? 0 :response.cantidad_surtida}" </td>` }
+                    ${ status == "Surtiendo" || status == "Comprado" ?`<td  col="2"><input type="checkbox" id="cantidadProducto" onclick="cantidadProducto(${response.cantidad},${response.id_partidas_productos},${numero},'${id_pedido}','${status}')"   ${response.cantidad_surtida == response.cantidad?"checked":" "} name="completo${cont}" id="completo${cont}"></td>`:`<td ><input type="checkbox" name="competo${cont}"  disabled id="completo${cont}"></td>`}
                 </tr>`;
 
                 if(response.cantidad_surtida == response.cantidad)  numero_partidas++; 
@@ -148,7 +148,7 @@ const tabla_partidas  = (id_pedido , status, checkbox = false ) =>{
             if(status == "Surtiendo" || status == "Comprado"){
                 document.getElementById('button').innerHTML = `
                 <div class="modal-footer">
-                    <button onclick="guardarPartidas('${id_pedido}', '${status}')" class="btn btn-primary" >Guardar</button>
+                    <button id="guardarPartidas" onclick="guardarPartidas('${id_pedido}', '${status}')" class="btn btn-primary" >Guardar</button>
                 </div>
                 `;
             }

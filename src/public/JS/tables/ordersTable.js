@@ -62,18 +62,18 @@ let orderTable = () => {
                 sortable:false,
                 "render": function(data, type, full ,meta){
                     
-                 return `  <i class="fas fa-list-ul"  onclick="logPartidas('${full.id_pedido}')" ></i>`;
+                 return `  <i class="fas fa-list-ul" id="log_partidas" onclick="logPartidas('${full.id_pedido}')" ></i>`;
                 }  
               },
                 {
                 sortable: false,
                 "render": function(data, type, full, meta) {
-                    return `<i class="fas fa-tools" onclick="orderDatailMisPedidos('${full.id_pedido}')"  ></i>`;
+                    return `<i class="fas fa-tools" id="detalle_pedidos"  onclick="orderDatailMisPedidos('${full.id_pedido}')"  ></i>`;
                 }
             },{
                sortable:false,
                "render": function(data, type, full ,meta){
-                if(full.estatus != 6 )return `<center><i class="fas fa-trash-alt" onclick="cancelOrder('${full.id_pedido}')" ></i></center>`;
+                if(full.estatus != 6 )return `<center><i class="fas fa-trash-alt" id="cancelar_orden" onclick="cancelOrder('${full.id_pedido}')" ></i></center>`;
                 return ' '; 
                }  
              }
@@ -133,7 +133,7 @@ let piorityTable = () => {
             },{ data: 'fecha_inicial' },{
                 sortable: false,
                 "render": function(data, type, full, meta) {
-                   return `<i class="fas fa-tools" onclick="orderDatailMisPedidosUrgentes('${full.id_pedido}',1)"  ></i>`;
+                   return `<i class="fas fa-tools" id="pedidosUrgentes" onclick="orderDatailMisPedidosUrgentes('${full.id_pedido}',1)"  ></i>`;
                }
            },
              {
@@ -141,8 +141,8 @@ let piorityTable = () => {
                 "render": function(data, type, full, meta) {
                     let disabled = ''
                     if (full.estatus == "CANCELADO") disabled = 'disabled';
-                    return `<button type="button" class="btn btn-success  btn-sm" style="width: 100%;" onclick="pedidos_urgentes_normales(${3},'${full.num_pedido}',${2})"    >Aceptar</button>
-                            <button type="button" class="btn btn-danger btn-sm" style="width: 100%;" onclick="pedidos_urgentes_normales(${3},'${full.num_pedido}',${0})"    >Rechazar</button>`;
+                    return `<button type="button" class="btn btn-success  btn-sm" style="width: 100%;" id="aceptar_urgencia" onclick="pedidos_urgentes_normales(${3},'${full.num_pedido}',${2})"    >Aceptar</button>
+                            <button type="button" class="btn btn-danger btn-sm" style="width: 100%;"  id="rechazar_urgencia" onclick="pedidos_urgentes_normales(${3},'${full.num_pedido}',${0})"    >Rechazar</button>`;
                 }
             }
 
@@ -202,19 +202,7 @@ const logPartidas  = id  =>{
             let table = ``,cont = 1; 
             let estatus = ['Nuevo', 'Surtiendo', 'Facturable', 'Requerir y facturar ', 'Requerir', 'Cancelado', 'Detenido','Facturando','Facturado','Ruta','Entregado','Suspendida','Comprado'];
             let colores = ["#C6AED8", "#A1DEDB ", "#DECAA1 ", "#C1DEA1 ", "#DBE09A", "#E0A09A", "#817E7E","#B4EFED","#98F290","#F2FE9C","#D4FEA8","#F1C078","#E1FCE3"];
-            let descripcion = ['Se ha creado la orden en el sistema',
-                                'La order esta siendo surtida ',
-                                'La orden está lista para ser facturada',
-                                'La orden ha sido requerida al modulo de compras ',
-                                'La orden ha sido requerida al modulo de compras',
-                                'La orden ha sido cancelada',
-                                'La orden ha sido detenida',
-                                'La orden esta en proceso de factura',
-                                'La orden ha sido facturada',
-                                'La orden está en ruta',
-                                'La orden ha sido entregada',
-                                'La orden ha sido suspendida',
-                                'Se han comprado los faltantes de la orden'];
+            console.log(response);
             response.forEach(element => {
                 table += `
                     <tr>
@@ -222,7 +210,7 @@ const logPartidas  = id  =>{
                         <td>${element.nombre}</td>
                         <td style="background-color: ${colores[element.estado - 1]}" >${estatus[element.estado - 1]}</td>
                         <td>${element.fecha}</td>
-                        <td><p>${descripcion[element.estado - 1]}</p></td>
+                        <td><p>${element.descripcion}</p></td>
                     </tr>
                 `;
             });

@@ -100,15 +100,15 @@ textarea {
   <div class="accordion" id="accordionExample">
     <div class="card">
       <div class="card-header" id="headingOne">
-        <button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" data-target="#collapseOne"
+        <button class="btn btn-secondary btn-lg" id="id_add_orders" type="button" data-toggle="collapse" data-target="#collapseOne"
           aria-expanded="true" aria-controls="collapseOne">
           Agregar Pedidos
         </button>
-        <button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" data-target="#collapseTwo"
+        <button class="btn btn-secondary btn-lg"  id="id_my_orders" type="button" data-toggle="collapse" data-target="#collapseTwo"
           aria-expanded="false" aria-controls="collapseTwo">
           Mis Pedidos
         </button>
-        <button type="button" class="close"><a href="/menu"><img
+        <button type="button"  id="close_module" class="close"><a href="/menu"><img
               src="https://image.flaticon.com/icons/svg/1936/1936477.svg" height="30" alt=""></a> </button><br>
         <br>
       </div>
@@ -116,7 +116,7 @@ textarea {
         <div class="card-body">
           <div  id="ocultar_excel">
             <input type="file" name="excel" id="excel">
-            <button onclick="uploadExcel()" > Importar </button>
+            <button onclick="uploadExcel()" id="send_order" > Importar </button>
       
           </div>     
           <form enctype="multipart/form-data" method="post" id="imgct" class="columinput">
@@ -139,7 +139,7 @@ textarea {
                   <div class="col-sm-4">
                     
                     {{#each cliente }}
-                    <input type="text" class="form-control border border-secondary" value="{{nombre}}" name="cliente">
+                    <input type="text" id="select_client" class="form-control border border-secondary" value="{{nombre}}" name="cliente">
                     {{/each}}
                     
                     <div id="spinner">
@@ -180,7 +180,7 @@ textarea {
                   <label for="" class="col-sm-2 col-form-label ">Ruta:</label>
                   {{!-- <div class="row"> --}}
                   <div class="col-sm-4">
-                    <select class="form-control border border-secondary " name="ruta">
+                    <select class="form-control border border-secondary " id="select_route" name="ruta">
                       <option value="1">Norte</option>
                       <option value="2">Sur</option>
                     </select>
@@ -241,7 +241,7 @@ textarea {
                 </div>
                 <div>
                 Nota: Si la prioridad del Pedido fue "Urgente" mandar un correo a su Administrador para su confirmacion:
-                <a href="#" onclick="enviarCorreo('Hay un Pedido Urgente')">Enviar Mensaje</a>
+                <a href="#" id="open_email" onclick="enviarCorreo('Hay un Pedido Urgente')">Enviar Mensaje</a>
                 </div>
                 <div class="correo"></div>
                 <br>
@@ -261,7 +261,7 @@ textarea {
                
                 <br> 
                 Observaciones:
-                <textarea class="form-control border border-secondary" name="observaciones"
+                <textarea class="form-control border border-secondary" name="observaciones" id="observacion_pedido"
                   {{!-- title="En caso de ques sea necesario poner observaciones" --}}
                   placeholder="Escribe aquí tus observaciones (como máximo 250 caracteres)"
                    maxlength="250" 
@@ -272,13 +272,13 @@ textarea {
                   <div class="col-sm-4">
                     <div class="row">
                         <div class="col">
-                          <button   type="button"class="btn btn-primary btn-lg btn-block"  onclick="orderDetail()" >Detalle</button>
+                          <button   type="button"class="btn btn-primary btn-lg btn-block"  id="orderDetail()"  onclick="orderDetail()" >Detalle</button>
                         </div>
                         <div class="col">
                           <div id="button_send"></div>
                         </div>
                         <div class="col" >
-                          <button  type="button" class="btn btn-danger btn-lg btn-block" onclick="cancelarOrden()" >Cancelar</button>
+                          <button  type="button" class="btn btn-danger btn-lg btn-block" id="cancelarOrden"  onclick="cancelarOrden()" >Cancelar</button>
                         </div>
                     </div>
                   </div>

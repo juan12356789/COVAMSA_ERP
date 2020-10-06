@@ -21,7 +21,7 @@ const partidas = () =>{
                       <td>${data.prioridad}</td>
                       <td style="background-color:${colores[data.estatus]}" >${statusFaltante[data.estatus]}</td>
                       <td> ${ data.numero_factura == null ? '' : data.numero_factura } </td>
-                      <td><i class="fas fa-list-ul" onclick="modalFaltantes('${data.idPartida}',${ data.num_subpedido == null ? `'${data.num_pedido}'` : `'${data.num_subpedido}'` }) "></i></td>
+                      <td><i class="fas fa-list-ul" id="modalFaltantes${data.idPartida}" onclick="modalFaltantes('${data.idPartida}',${ data.num_subpedido == null ? `'${data.num_pedido}'` : `'${data.num_subpedido}'` }) "></i></td>
                     </tr>`;
         });
         document.getElementById('pedidos').innerHTML = table;
@@ -40,6 +40,7 @@ socket.on('data:compras', function(data) {
 let arregloIdcheck = [] , idFaltante = [],selectFalse = []; 
 const modalFaltantes  = ( id , num_pedido ) =>{
     $("#logFaltantes").modal('hide'); 
+    console.log('hola');
     $("#referenciaProveedores").modal('hide');
     $.ajax({type: "POST",url: "/compras/faltantes_partida",data: {id:id},success: function (response) {
         console.log(response);
@@ -52,7 +53,7 @@ const modalFaltantes  = ( id , num_pedido ) =>{
                 <tr>
                     <td>${cont++}</td>
                     <td ><input type="checkbox"  ${element.nombre_proveedor == null ? '' : 'checked'} id="seleccion${element.idFaltantePartida}" onclick="selectProveedor('${element.idFaltantePartida}')" >  </td>
-                    <td><i class="fas fa-list-ul" onclick="log_faltantes('${element.idFaltantePartida}','${id}','${num_pedido}')"  ></i></td>
+                    <td><i class="fas fa-list-ul" id="log_faltantes${element.idFaltantePartida}"  onclick="log_faltantes('${element.idFaltantePartida}','${id}','${num_pedido}')"  ></i></td>
                     <td>${element.clave}</td>
                     <td>${element.nombre}</td>
                     <td>${element.cantidad}</td>
@@ -115,8 +116,8 @@ const modalFaltantes  = ( id , num_pedido ) =>{
                 </div>
                </div>
                <div class="modal-footer">
-                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                 <button type="button" class="btn btn-primary" onclick="modalRefefrencia(${id},'${num_pedido}')"  data-toggle="modal" data-target="#referenciaProvreedor" >Guardar</button>
+                 <button type="button" class="btn btn-secondary" id="Cerrar" data-dismiss="modal">Cerrar</button>
+                 <button type="button" class="btn btn-primary" id="Guardar" onclick="modalRefefrencia(${id},'${num_pedido}')"  data-toggle="modal" data-target="#referenciaProvreedor" >Guardar</button>
                </div>
              </div>
            </div>
@@ -148,8 +149,8 @@ const modalRefefrencia  = (id , num_pedido) =>{
              <input type="text" maxlength="50" id="referencia" class="form-control" onkeypress="return justLetters(event)" id="referencia" placeholder="Numero de refenrencia">
            </div>
            <div class="modal-footer">
-             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-             <button type="button" onclick="saveChanges('${id}','${num_pedido}')" class="btn btn-primary">Guardar</button>
+             <button type="button" class="btn btn-secondary" id="Cerrar" data-dismiss="modal">Cerrar</button>
+             <button type="button" id="saveChanges" onclick="saveChanges('${id}','${num_pedido}')" class="btn btn-primary">Guardar</button>
            </div>
          </div>
        </div>
@@ -190,7 +191,7 @@ const log_faltantes  = (id , idFaltantes , num) =>{
              <div class="modal-content">
                <div class="modal-header">
                  <h5 class="modal-title" id="exampleModalLabel">Bitacora de  Faltantes </h5>
-                 <button type="button" onclick="modalFaltantes('${idFaltantes}','${num}')" class="close" data-dismiss="modal" aria-label="Close">
+                 <button type="button" id="close" onclick="modalFaltantes('${idFaltantes}','${num}')" class="close" data-dismiss="modal" aria-label="Close">
                    <span aria-hidden="true">&times;</span>
                  </button>
                </div>
@@ -213,7 +214,7 @@ const log_faltantes  = (id , idFaltantes , num) =>{
                 </div>
                </div>
                <div class="modal-footer">
-                 <button type="button"  onclick="modalFaltantes('${idFaltantes}','${num}')" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                 <button type="button" id="aceptar" onclick="modalFaltantes('${idFaltantes}','${num}')" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
                </div>
              </div>
            </div>

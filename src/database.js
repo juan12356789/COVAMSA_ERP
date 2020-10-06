@@ -5,7 +5,8 @@ const database = {
     user: 'root',
     password: 'password',
     database: 'covamsa_desarrollo',
-    port: 3307
+    port:3307
+        
 }
 
 //ver si se pueden subir cambios al servidor xd

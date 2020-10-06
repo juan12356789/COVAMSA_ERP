@@ -72,7 +72,7 @@ let sendData = (data) => {
                   <td >${prioridad_info[data.prioridad]}</td>
                   <td >  <p class="line-clamp" >  ${data.observacion} </p> </td>
                   <td>${data.fecha_inicial}</td>
-                  <td><i class="fas fa-tools" onclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.id_pedido}')"></i>  </td>
+                  <td><i class="fas fa-tools" id="cambios_status_pedidos${data.id_pedido}" onclick="cambios_status_pedidos('${estatus[data.estatus - 1]}','${data.id_pedido}')"></i>  </td>
                   <td> ${estatus[data.estatus - 1] == "Facturado"?`<input type="checkbox" id="${data.num_subpedido == null? data.num_pedido:data.num_subpedido}"  onclick="enviarPedidos('${data.num_subpedido == null? data.num_pedido:data.num_subpedido}','${ruta[data.ruta - 1]}','${prioridad_info[data.prioridad]}','${data.id_pedido}')" ></input>`:''} </td>
                
                 </tr>`;
@@ -87,7 +87,7 @@ let sendData = (data) => {
         Pedidos Urgentes: <input type="text"  value="${numero_de_pedidos_urgentes}" disabled>
         </diV>
         <div class="col" >
-        <button  class="btn btn-secondary"  onclick="enviar()" disabled id="enviar"> Preparar envio </button>
+        <button  class="btn btn-secondary"  id="enviar_pedido"  onclick="enviar()" disabled id="enviar"> Preparar envio </button>
         </diV>
     </div>`;
 
@@ -150,7 +150,7 @@ const enviar = () =>{
                             </div>
                             <div class="col" >
                                 <label>Intrucciones especiales</label>
-                                <textarea class="form-control" maxlength="29"  id="texto" ></textarea>  
+                                <textarea id="observaciones_repartidores" class="form-control" maxlength="29"  id="texto" ></textarea>  
                             </div>
                         </div>
                             <br>
@@ -172,8 +172,8 @@ const enviar = () =>{
                         </div>
                    </div>
                    <div class="modal-footer">
-                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                     <button type="button" class="btn btn-primary"  onclick="sendRuta()" >Comenzar ruta</button>
+                     <button type="button" class="btn btn-secondary" id="cancelar_envio"  data-dismiss="modal">Cancelar</button>
+                     <button type="button" class="btn btn-primary"  id="comenzar_ruta" onclick="sendRuta()" >Comenzar ruta</button>
                    </div>
                  </div>
                </div>

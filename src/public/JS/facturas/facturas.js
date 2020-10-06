@@ -28,8 +28,8 @@ const facturas  = () =>{
             table += `<tr>
     
                       <th scope="row">${numeracion_pedidos++}</th>
-                      <td> ${estatus[data.estatus - 1] != "Facturando"?`<button  type="button"  class="btn btn-secondary"  onclick="procesando('${data.id_pedido}','${estatus[data.estatus - 1]}')"   > Procesar </button>`:`<button  type="button"  class="btn btn-success"  onclick="procesando('${data.id_pedido}','${estatus[data.estatus - 1]}')"   > Completo</button>`} </td>
-                      <td><button   class="btn btn-primary" onclick="partidas('${data.id_pedido}')" > Partidas </button></td>
+                      <td> ${estatus[data.estatus - 1] != "Facturando"?`<button  type="button"  class="btn btn-secondary" id="procesando" onclick="procesando('${data.id_pedido}','${estatus[data.estatus - 1]}')"   > Procesar </button>`:`<button  type="button"  class="btn btn-success"  onclick="procesando('${data.id_pedido}','${estatus[data.estatus - 1]}')"   > Completo</button>`} </td>
+                      <td><button   class="btn btn-primary" id="partidas" onclick="partidas('${data.id_pedido}')" > Partidas </button></td>
                       <td><a  href="/almacen/pdf/${data.ruta_pdf_orden_compra}">${data.orden_de_compra}</a></td>
                       <td><a  href="/almacen/pdf/${data.ruta_pdf_pedido}">${data.num_subpedido == null ?data.num_pedido : data.num_subpedido}</a></td>
                       <td><a  href="/almacen/pdf/${data.ruta_pdf_comprobante_pago}">${data.comprobante_pago}</a></td>
@@ -139,8 +139,8 @@ const procesando = (id , status)  =>{
                         </div>
           
                             <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                            <button type="button" onclick="change_status('${id}','${status}')"  class="btn btn-primary">Aceptar</button>
+                            <button type="button" class="btn btn-secondary" id="cancelar" data-dismiss="modal">Cancelar</button>
+                            <button type="button" id="change_status" onclick="change_status('${id}','${status}')"  class="btn btn-primary">Aceptar</button>
                             </div>
 
                         <div>
